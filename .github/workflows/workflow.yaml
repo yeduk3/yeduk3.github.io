@@ -25,7 +25,7 @@ jobs:
       - name: access to secrets
         run: |
           touch .well-known
-          echo "${{ secrets.MEALI_APP_FINGERPRINT }}" | base64 --decode >> .well-known/assetlinks.json
+          echo "${{ secrets.MEALI_APP_FINGERPRINT }}" | base64 --decode > .well-known/assetlinks.json
 
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
