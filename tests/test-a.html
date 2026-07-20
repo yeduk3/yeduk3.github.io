@@ -2,38 +2,48 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
 <title>파충류 집사 유형 테스트 | 당신은 어떤 집사?</title>
 <meta name="description" content="게코, 뱀, 타란튤라... 당신의 파충류 사육 스타일은? 12문항으로 알아보는 파충류 집사 유형 테스트.">
 <script data-goatcounter="https://neli3307.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
 <style>
   :root{
-    --bg-1:#FFE8A3;
-    --bg-2:#FFB6D9;
-    --card:#FFFFFF;
-    --ink:#2B2140;
-    --ink-dim:#6B6280;
-    --ink-faint:#9C93AC;
-    --accent:#FF5D8F;
-    --accent-2:#6C5CE7;
-    --line:#F0E6FF;
-    --track-color:var(--type-color, #FF5D8F);
-    --radius-lg:28px;
-    --radius-md:18px;
-    --radius-sm:12px;
-    --font:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",Roboto,Helvetica,Arial,sans-serif;
+    /* ===== ELDS design tokens ===== */
+    --gray5:#F9FAFB;
+    --gray10:#EEF0F2;
+    --gray20:#E2E7EB;
+    --gray50:#8B95A1;
+    --gray60:#6B7684;
+    --gray70:#4E5968;
+    --gray90:#191F28;
+    --white:#FFFFFF;
+    --primary:#EEA759;
+    --primary50:#F6D3AC;
+    --primary10:#FDF5EC;
+    --primary-light:rgba(238,167,89,.1);
+    --success:#03B26C;
+    --tag-orange:#FF7700;
+    --tag-orange-light:rgba(255,119,0,.1);
+    --shadow-card:0 4px 8px rgba(0,0,0,.12);
+    --shadow-strong:0 4px 20px rgba(0,0,0,.20);
+    /* Round: ELDS 문서에 명시 스펙 없음 — Round 컴포넌트 계열 추정치(카드20/버튼pill/인풋12) */
+    --radius-card:20px;
+    --radius-btn:999px;
+    --radius-input:12px;
+    --font:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;
   }
   *,*::before,*::after{box-sizing:border-box;}
   html{-webkit-text-size-adjust:100%;}
   body{
     margin:0;
     font-family:var(--font);
-    color:var(--ink);
+    color:var(--gray90);
     min-height:100vh;
-    background:linear-gradient(160deg,var(--bg-1) 0%,var(--bg-2) 60%,#C9B6FF 100%);
-    background-attachment:fixed;
+    background:var(--gray5);
     line-height:1.55;
+    letter-spacing:-0.025em;
     -webkit-font-smoothing:antialiased;
     display:flex;
     justify-content:center;
@@ -53,17 +63,17 @@
 
   /* ---------- shared card shell ---------- */
   .card{
-    background:var(--card);
-    border-radius:var(--radius-lg);
+    background:var(--white);
+    border-radius:var(--radius-card);
     padding:28px 22px;
-    box-shadow:0 18px 40px -18px rgba(60,30,90,0.35);
+    box-shadow:var(--shadow-card);
   }
 
   /* ---------- decorations ---------- */
   .deco-row{
     display:flex;justify-content:center;gap:14px;
     font-size:34px;margin-bottom:6px;
-    filter:drop-shadow(0 6px 10px rgba(60,30,90,0.15));
+    filter:drop-shadow(0 6px 10px rgba(0,0,0,0.10));
   }
   .deco-row span{display:inline-block;animation:bob 2.6s ease-in-out infinite;}
   .deco-row span:nth-child(2){animation-delay:.3s;}
@@ -76,75 +86,89 @@
   /* ---------- intro screen ---------- */
   #screen-intro{text-align:center;padding-top:18px;}
   .intro-badge{
-    display:inline-block;background:var(--accent);color:#fff;
-    font-size:12px;font-weight:700;letter-spacing:.04em;
-    padding:6px 14px;border-radius:99px;margin-bottom:18px;
+    display:inline-block;background:var(--tag-orange-light);color:var(--tag-orange);
+    font-size:13px;line-height:1.5;font-weight:600;
+    padding:6px 14px;border-radius:var(--radius-btn);margin-bottom:18px;
   }
   .intro-title{
-    font-size:clamp(26px,7vw,32px);font-weight:800;line-height:1.35;
-    letter-spacing:-0.01em;color:var(--ink);
+    font-size:24px;line-height:1.45;font-weight:500;color:var(--gray90);
   }
-  .intro-title .hl{color:var(--accent);}
+  .intro-title .hl{color:var(--tag-orange);}
   .intro-sub{
-    margin-top:14px;font-size:15.5px;color:var(--ink-dim);
+    margin-top:14px;font-size:14px;line-height:1.7;font-weight:400;color:var(--gray70);
     max-width:340px;margin-left:auto;margin-right:auto;
   }
   .participant-count{
     margin-top:20px;display:inline-flex;align-items:center;gap:8px;
-    background:var(--line);border-radius:99px;padding:8px 16px;
-    font-size:13px;color:var(--ink-dim);font-weight:600;
+    background:var(--gray10);border-radius:var(--radius-btn);padding:8px 16px;
+    font-size:13px;line-height:1.5;color:var(--gray70);font-weight:400;
   }
-  .participant-count b{color:var(--accent-2);font-size:14px;}
+  .participant-count b{color:var(--tag-orange);font-weight:600;}
   .start-btn{
     margin-top:30px;width:100%;
-    background:linear-gradient(135deg,var(--accent),var(--accent-2));
-    color:#fff;font-size:17px;font-weight:800;
-    padding:17px;border-radius:99px;
-    box-shadow:0 14px 26px -10px rgba(108,92,231,0.55);
+    background:var(--primary);
+    color:var(--gray90);font-size:16px;line-height:1.4;font-weight:600;
+    padding:17px;border-radius:var(--radius-btn);
     transition:transform .12s ease;
   }
   .start-btn:active{transform:scale(0.97);}
   .anon-note{
-    margin-top:16px;font-size:12px;color:var(--ink-faint);
+    margin-top:16px;font-size:13px;line-height:1.5;color:var(--gray50);
   }
   .intro-preview{
     margin-top:26px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;
   }
   .type-pill{
-    font-size:11.5px;background:#fff;border:1px solid var(--line);
-    border-radius:99px;padding:6px 11px;color:var(--ink-dim);font-weight:600;
+    font-size:13px;line-height:1.5;background:var(--white);border:1px solid var(--gray20);
+    border-radius:var(--radius-btn);padding:6px 11px;color:var(--gray70);font-weight:400;
   }
 
   /* ---------- quiz screen ---------- */
-  #screen-quiz{padding-top:6px;}
-  .progress-wrap{margin-bottom:22px;}
-  .progress-meta{
-    display:flex;justify-content:space-between;align-items:baseline;
-    font-size:12.5px;color:var(--ink-dim);font-weight:700;margin-bottom:8px;
+  #screen-quiz{padding-top:10px;padding-bottom:108px;}
+  .quiz-topbar{display:flex;align-items:center;gap:12px;margin-bottom:30px;}
+  .quiz-back{
+    flex:0 0 auto;width:34px;height:34px;display:flex;align-items:center;justify-content:center;
+    font-size:22px;line-height:1;color:var(--gray70);border-radius:50%;
+    transition:background .12s ease;
   }
-  .progress-meta .q-current{color:var(--accent);font-size:15px;}
-  .progress-track{
-    height:10px;background:var(--line);border-radius:99px;overflow:hidden;
-  }
-  .progress-fill{
-    height:100%;width:0%;border-radius:99px;
-    background:linear-gradient(90deg,var(--accent),var(--accent-2));
-    transition:width .35s cubic-bezier(.4,0,.2,1);
-  }
+  .quiz-back:active{background:var(--gray10);}
+  .segments{flex:1;display:flex;gap:6px;}
+  .segment{flex:1;height:5px;border-radius:999px;background:var(--gray20);}
+  .segment.filled{background:var(--primary);}
+  .q-eyebrow{font-size:13px;line-height:1.4;font-weight:600;color:var(--gray50);margin-bottom:12px;}
   .question-text{
-    font-size:21px;font-weight:800;line-height:1.4;color:var(--ink);
-    margin-bottom:22px;min-height:56px;
+    font-size:24px;font-weight:500;line-height:1.4;color:var(--gray90);
+    margin-bottom:26px;
   }
   .choices{display:flex;flex-direction:column;gap:12px;}
   .choice-btn{
-    text-align:left;background:#fff;border:2px solid var(--line);
-    border-radius:var(--radius-md);padding:16px 18px;
-    font-size:15px;font-weight:600;color:var(--ink);
-    transition:border-color .15s ease, transform .1s ease, background .15s ease;
+    text-align:left;background:var(--white);border:1px solid var(--gray20);
+    border-radius:var(--radius-card);padding:18px 20px;
+    font-size:16px;line-height:1.5;font-weight:600;color:var(--gray90);
+    transition:border-color .15s ease, transform .1s ease;
   }
   .choice-btn:active{transform:scale(0.98);}
-  .choice-btn:hover{border-color:var(--accent-2);background:#FBF9FF;}
-  .choice-btn.picked{border-color:var(--accent);background:#FFF0F5;}
+  .choice-btn:hover{background:var(--gray10);}
+  .choice-btn.picked{border:2px solid var(--primary);background:var(--white);}
+
+  .quiz-cta{
+    position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:center;
+    padding:16px 18px calc(16px + env(safe-area-inset-bottom));
+    pointer-events:none;
+  }
+  .quiz-cta::before{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(to top, var(--gray5) 55%, rgba(249,250,251,0));
+  }
+  .quiz-cta-inner{position:relative;width:100%;max-width:480px;pointer-events:auto;}
+  .next-btn{
+    width:100%;padding:17px;border-radius:var(--radius-btn);
+    font-size:16px;line-height:1.4;font-weight:600;
+    background:var(--primary);color:var(--gray90);
+    transition:transform .12s ease, background .15s ease, color .15s ease;
+  }
+  .next-btn:active{transform:scale(0.97);}
+  .next-btn:disabled{background:var(--gray20);color:var(--gray50);}
 
   /* ---------- loading screen ---------- */
   #screen-loading{
@@ -153,104 +177,113 @@
   .spinner{
     width:64px;height:64px;margin:0 auto 26px;
     border-radius:50%;
-    border:6px solid var(--line);
-    border-top-color:var(--accent);
+    border:6px solid var(--gray20);
+    border-top-color:var(--primary);
     animation:spin 0.9s linear infinite;
   }
   @keyframes spin{to{transform:rotate(360deg);}}
-  .loading-text{font-size:16px;font-weight:700;color:var(--ink-dim);}
+  .loading-text{font-size:14px;line-height:1.7;font-weight:400;color:var(--gray70);}
   .loading-emoji{font-size:30px;margin-top:14px;animation:pulse 1.2s ease-in-out infinite;}
   @keyframes pulse{0%,100%{opacity:.4;}50%{opacity:1;}}
 
   /* ---------- result screen ---------- */
   #screen-result{}
   .result-card{
-    background:linear-gradient(160deg, var(--type-color, #FF5D8F) 0%, #fff 130%);
-    border-radius:var(--radius-lg);
+    background:var(--white);
+    border-radius:var(--radius-card);
     padding:32px 22px 26px;
     text-align:center;
-    box-shadow:0 18px 40px -18px rgba(60,30,90,0.4);
+    box-shadow:var(--shadow-strong);
   }
   .result-emoji{
-    font-size:64px;line-height:1;
-    filter:drop-shadow(0 8px 14px rgba(0,0,0,0.15));
+    width:88px;height:88px;margin:0 auto;
+    display:flex;align-items:center;justify-content:center;
+    border-radius:50%;
+    /* 유형별 전체 카드 그라디언트 대신 소형 원형 뱃지에만 유형색 적용 — JS가 주입하는 --type-color(유형별 파스텔) 재사용, 라이트 톤이라 tag-light 배지와 동일한 역할 */
+    background:var(--type-color, var(--tag-orange-light));
+    font-size:40px;line-height:1;
   }
   .result-kicker{
-    margin-top:10px;font-size:13px;font-weight:700;color:rgba(43,33,64,0.65);
-    letter-spacing:.03em;
+    margin-top:14px;font-size:13px;line-height:1.5;font-weight:400;color:var(--gray70);
+    letter-spacing:.02em;
   }
   .result-name{
-    margin-top:6px;font-size:27px;font-weight:800;color:var(--ink);
+    margin-top:6px;font-size:24px;line-height:1.45;font-weight:500;color:var(--gray90);
   }
   .result-desc{
-    margin-top:16px;background:rgba(255,255,255,0.75);border-radius:var(--radius-md);
-    padding:16px 16px;font-size:14.5px;color:var(--ink);line-height:1.7;text-align:left;
+    margin-top:16px;background:var(--gray5);border-radius:var(--radius-input);
+    padding:16px 16px;font-size:14px;line-height:1.7;font-weight:400;color:var(--gray90);text-align:left;
   }
   .result-compat{
-    margin-top:14px;background:rgba(255,255,255,0.55);border-radius:var(--radius-md);
+    margin-top:14px;background:var(--gray5);border-radius:var(--radius-input);
     padding:14px 16px;text-align:left;
   }
   .result-compat .compat-label{
-    font-size:12px;font-weight:800;color:var(--accent-2);margin-bottom:6px;
+    font-size:13px;line-height:1.5;font-weight:600;color:var(--tag-orange);margin-bottom:6px;
   }
   .result-compat .compat-body{
-    display:flex;align-items:center;gap:10px;font-size:14px;color:var(--ink);font-weight:600;
+    display:flex;align-items:center;gap:10px;font-size:14px;line-height:1.7;color:var(--gray90);font-weight:400;
   }
-  .result-compat .compat-emoji{font-size:26px;}
+  .result-compat .compat-emoji{
+    font-size:20px;width:36px;height:36px;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+    border-radius:50%;background:var(--gray10);
+  }
   .result-compat .compat-reason{
-    margin-top:6px;font-size:13px;color:var(--ink-dim);font-weight:400;
+    margin-top:6px;font-size:13px;line-height:1.5;color:var(--gray70);font-weight:400;
   }
 
   .action-row{display:flex;gap:10px;margin-top:20px;}
   .btn-share,.btn-restart{
-    flex:1;padding:14px;border-radius:99px;font-size:14.5px;font-weight:800;
+    flex:1;padding:14px;border-radius:var(--radius-btn);
     transition:transform .12s ease;
   }
   .btn-share:active,.btn-restart:active{transform:scale(0.97);}
-  .btn-share{background:var(--ink);color:#fff;}
-  .btn-restart{background:#fff;color:var(--ink);border:2px solid var(--line);}
+  .btn-share{background:var(--primary);color:var(--gray90);font-size:16px;line-height:1.4;font-weight:600;}
+  .btn-restart{background:var(--white);color:var(--gray70);border:1.5px solid var(--gray20);font-size:14px;line-height:1.4;font-weight:600;}
   .share-toast{
-    margin-top:10px;font-size:12.5px;color:var(--accent-2);font-weight:700;
+    margin-top:10px;font-size:13px;line-height:1.5;color:var(--success);font-weight:600;
     text-align:center;opacity:0;transition:opacity .2s ease;
   }
   .share-toast.show{opacity:1;}
 
   /* ---------- opt-in ---------- */
   .optin-card{
-    margin-top:16px;background:#fff;border-radius:var(--radius-md);
-    padding:18px 18px 16px;border:1.5px dashed var(--line);
+    margin-top:16px;background:var(--white);border-radius:var(--radius-card);
+    padding:18px 18px 16px;border:1.5px solid var(--gray20);
   }
-  .optin-title{font-size:14.5px;font-weight:800;color:var(--ink);}
-  .optin-sub{font-size:12.5px;color:var(--ink-dim);margin-top:4px;}
+  .optin-title{font-size:13px;line-height:1.5;font-weight:600;color:var(--gray90);}
+  .optin-sub{font-size:13px;line-height:1.5;font-weight:400;color:var(--gray70);margin-top:4px;}
   .optin-row{display:flex;gap:8px;margin-top:12px;}
   .optin-row input[type="email"]{
-    flex:1;min-width:0;background:var(--line);border:1.5px solid transparent;
-    border-radius:99px;padding:11px 14px;font-size:14px;color:var(--ink);font-family:var(--font);
+    flex:1;min-width:0;background:var(--gray10);border:1.5px solid transparent;
+    border-radius:var(--radius-btn);padding:11px 14px;font-size:14px;color:var(--gray90);font-family:var(--font);
   }
-  .optin-row input[type="email"]:focus{outline:none;border-color:var(--accent-2);}
+  .optin-row input[type="email"]::placeholder{color:var(--gray50);}
+  .optin-row input[type="email"]:focus{outline:none;border-color:var(--primary);}
   .optin-row button{
-    flex-shrink:0;background:var(--accent-2);color:#fff;font-weight:800;
-    font-size:13.5px;padding:0 18px;border-radius:99px;
+    flex-shrink:0;background:var(--white);color:var(--gray70);font-weight:600;
+    font-size:14px;line-height:1.4;padding:0 18px;border-radius:var(--radius-btn);
+    border:1.5px solid var(--gray20);
   }
-  .optin-done{font-size:13px;color:var(--accent-2);font-weight:700;margin-top:10px;display:none;}
+  .optin-done{font-size:13px;line-height:1.5;color:var(--success);font-weight:600;margin-top:10px;display:none;}
 
   /* ---------- footer ---------- */
   .site-footer{
-    margin-top:28px;text-align:center;font-size:11.5px;color:var(--ink-faint);
+    margin-top:28px;text-align:center;font-size:13px;line-height:1.5;color:var(--gray50);
     padding:0 6px;
   }
   .site-footer a{text-decoration:underline;}
 
-  /* ---------- hub return link ---------- */
+  /* ---------- hub return link (ghost) ---------- */
   .hub-link-wrap{margin-top:18px;text-align:center;}
   .hub-link{
-    display:inline-block;font-size:14px;font-weight:800;color:#fff;
-    padding:13px 24px;border-radius:99px;
-    background:linear-gradient(135deg,var(--accent-2),var(--accent));
-    box-shadow:0 10px 20px -8px rgba(108,92,231,0.5);
-    transition:transform .12s ease;
+    display:inline-block;font-size:14px;line-height:1.4;font-weight:600;color:var(--gray60);
+    padding:12px 22px;border-radius:var(--radius-btn);
+    background:transparent;
+    transition:opacity .12s ease;
   }
-  .hub-link:active{transform:scale(0.97);}
+  .hub-link:active{opacity:.6;}
 
   @media (min-width:520px){
     .app{padding-top:40px;}
@@ -278,16 +311,19 @@
   </section>
 
   <!-- ============ QUIZ ============ -->
-  <section id="screen-quiz" class="card hidden">
-    <div class="progress-wrap">
-      <div class="progress-meta">
-        <span><span class="q-current" id="q-current">1</span> / <span id="q-total">12</span></span>
-        <span id="q-percent">8%</span>
-      </div>
-      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+  <section id="screen-quiz" class="hidden">
+    <div class="quiz-topbar">
+      <button class="quiz-back" id="btn-quiz-back" type="button" aria-label="이전으로">‹</button>
+      <div class="segments" id="segments"></div>
     </div>
+    <p class="q-eyebrow" id="q-eyebrow">Q1</p>
     <h2 class="question-text" id="question-text">문항을 불러오는 중...</h2>
     <div class="choices" id="choices"></div>
+    <div class="quiz-cta">
+      <div class="quiz-cta-inner">
+        <button class="next-btn" id="btn-next" type="button" disabled>다음</button>
+      </div>
+    </div>
   </section>
 
   <!-- ============ LOADING ============ -->
@@ -550,21 +586,21 @@ const TYPES = {
 const state = {
   index: 0,
   answers: {},              // { q1: 'solo_one', ... }
-  scores: { p: 0, i: 0, d: 0, g: 0, s: 0, m: 0 },
   resultType: null
 };
+let currentPick = null;      // 현재 문항에서 탭했지만 아직 "다음"으로 커밋되지 않은 선택
 
 const el = {
   intro: document.getElementById('screen-intro'),
   quiz: document.getElementById('screen-quiz'),
   loading: document.getElementById('screen-loading'),
   result: document.getElementById('screen-result'),
-  qCurrent: document.getElementById('q-current'),
-  qTotal: document.getElementById('q-total'),
-  qPercent: document.getElementById('q-percent'),
-  progressFill: document.getElementById('progress-fill'),
+  segments: document.getElementById('segments'),
+  qEyebrow: document.getElementById('q-eyebrow'),
   questionText: document.getElementById('question-text'),
   choices: document.getElementById('choices'),
+  btnQuizBack: document.getElementById('btn-quiz-back'),
+  btnNext: document.getElementById('btn-next'),
   resultCard: document.getElementById('result-card'),
   resultEmoji: document.getElementById('result-emoji'),
   resultName: document.getElementById('result-name'),
@@ -577,49 +613,80 @@ const el = {
   optinDone: document.getElementById('optin-done')
 };
 
-el.qTotal.textContent = QUESTIONS.length;
-
 function showScreen(name){
   [el.intro, el.quiz, el.loading, el.result].forEach(s => s.classList.add('hidden'));
   el[name].classList.remove('hidden');
 }
 
-function renderQuestion(){
-  const q = QUESTIONS[state.index];
-  el.qCurrent.textContent = state.index + 1;
-  const pct = Math.round(((state.index) / QUESTIONS.length) * 100);
-  el.qPercent.textContent = pct + '%';
-  el.progressFill.style.width = pct + '%';
-  el.questionText.textContent = q.text;
-  el.choices.innerHTML = '';
-  q.choices.forEach(choice => {
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'choice-btn';
-    btn.textContent = choice.label;
-    btn.addEventListener('click', () => selectChoice(q, choice, btn));
-    el.choices.appendChild(btn);
+function renderSegments(){
+  el.segments.innerHTML = '';
+  QUESTIONS.forEach((_, i) => {
+    const seg = document.createElement('div');
+    seg.className = 'segment' + (i <= state.index ? ' filled' : '');
+    el.segments.appendChild(seg);
   });
 }
 
-function selectChoice(question, choice, btnEl){
-  // lock further clicks on this question
-  Array.from(el.choices.children).forEach(b => b.disabled = true);
+function renderQuestion(){
+  const q = QUESTIONS[state.index];
+  renderSegments();
+  el.qEyebrow.textContent = 'Q' + (state.index + 1);
+  el.questionText.textContent = q.text;
+  el.choices.innerHTML = '';
+
+  currentPick = state.answers[q.id] ? q.choices.find(c => c.code === state.answers[q.id]) : null;
+
+  q.choices.forEach(choice => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'choice-btn' + (currentPick && currentPick.code === choice.code ? ' picked' : '');
+    btn.textContent = choice.label;
+    btn.addEventListener('click', () => pickChoice(choice, btn));
+    el.choices.appendChild(btn);
+  });
+
+  updateNextButton();
+}
+
+function pickChoice(choice, btnEl){
+  currentPick = choice;
+  Array.from(el.choices.children).forEach(b => b.classList.remove('picked'));
   btnEl.classList.add('picked');
+  updateNextButton();
+}
 
-  state.answers[question.id] = choice.code;
-  Object.keys(choice.axis || {}).forEach(k => { state.scores[k] += choice.axis[k]; });
+function updateNextButton(){
+  el.btnNext.disabled = !currentPick;
+}
 
-  setTimeout(() => {
+function goNext(){
+  if(!currentPick) return;
+  const q = QUESTIONS[state.index];
+  state.answers[q.id] = currentPick.code;
+  if(state.index < QUESTIONS.length - 1){
     state.index += 1;
-    if(state.index < QUESTIONS.length){
-      renderQuestion();
-    } else {
-      el.progressFill.style.width = '100%';
-      el.qPercent.textContent = '100%';
-      finishQuiz();
-    }
-  }, 220);
+    renderQuestion();
+  } else {
+    finishQuiz();
+  }
+}
+
+function goBack(){
+  if(state.index === 0){
+    showScreen('intro');
+    return;
+  }
+  state.index -= 1;
+  renderQuestion();
+}
+
+function computeScores(){
+  const scores = { p: 0, i: 0, d: 0, g: 0, s: 0, m: 0 };
+  QUESTIONS.forEach(q => {
+    const choice = q.choices.find(c => c.code === state.answers[q.id]);
+    Object.keys((choice && choice.axis) || {}).forEach(k => { scores[k] += choice.axis[k]; });
+  });
+  return scores;
 }
 
 function computeResultType(scores){
@@ -634,7 +701,7 @@ function buildSubmitPayload(formName, fields){
 }
 
 function submitResponses(){
-  const code = computeResultType(state.scores);
+  const code = computeResultType(computeScores());
   state.resultType = code;
 
   const fields = Object.assign({}, state.answers, { result_type: code, pid: getPid() });
@@ -685,8 +752,8 @@ function renderResult(code){
 function resetQuiz(){
   state.index = 0;
   state.answers = {};
-  state.scores = { p: 0, i: 0, d: 0, g: 0, s: 0, m: 0 };
   state.resultType = null;
+  currentPick = null;
   el.shareToast.classList.remove('show');
   showScreen('intro');
 }
@@ -699,6 +766,9 @@ document.getElementById('btn-start').addEventListener('click', () => {
   renderQuestion();
   showScreen('quiz');
 });
+
+el.btnQuizBack.addEventListener('click', goBack);
+el.btnNext.addEventListener('click', goNext);
 
 document.getElementById('btn-restart').addEventListener('click', resetQuiz);
 

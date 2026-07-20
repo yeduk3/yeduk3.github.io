@@ -7,34 +7,37 @@
 <meta name="description" content="파충류 집사라면 3분 안에 끝내는 테스트 3종 — 집사 유형, 우리 아이 행복도, 사육 기록 티어. 지금 바로 확인해보세요.">
 <script data-goatcounter="https://neli3307.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
 <style>
   :root{
-    --bg-1:#12081f;
-    --bg-2:#1c1030;
-    --bg-3:#2a1440;
-    --card:#1f1433;
-    --card-line:rgba(255,255,255,0.08);
-    --text:#f4f0ff;
-    --text-dim:#b7abd6;
-    --text-faint:#7d6f9e;
-    --accent:#ff5d8f;
-    --accent-2:#6c5ce7;
-    --accent-3:#2cd9c5;
-    --font:-apple-system,BlinkMacSystemFont,"Segoe UI","Apple SD Gothic Neo","Malgun Gothic",Roboto,Helvetica,Arial,sans-serif;
+    /* ===== ELDS design tokens ===== */
+    --gray5:#F9FAFB;
+    --gray10:#EEF0F2;
+    --gray20:#E2E7EB;
+    --gray50:#8B95A1;
+    --gray60:#6B7684;
+    --gray70:#4E5968;
+    --gray90:#191F28;
+    --white:#FFFFFF;
+    --tag-orange:#FF7700;   --tag-orange-light:rgba(255,119,0,.1);
+    --tag-mint:#00B29A;     --tag-mint-light:rgba(0,178,154,.1);
+    --tag-blue:#168AFF;     --tag-blue-light:rgba(22,138,255,.1);
+    --shadow-card:0 4px 8px rgba(0,0,0,.12);
+    /* Round: ELDS 문서에 명시 스펙 없음 — Round 컴포넌트 계열 추정치(카드20/버튼pill) */
+    --radius-card:20px;
+    --radius-btn:999px;
+    --font:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;
   }
   *,*::before,*::after{box-sizing:border-box;}
   html{-webkit-text-size-adjust:100%;}
   body{
     margin:0;
     font-family:var(--font);
-    color:var(--text);
+    color:var(--gray90);
     min-height:100vh;
-    background:
-      radial-gradient(circle at 15% -10%, rgba(255,93,143,0.28), transparent 55%),
-      radial-gradient(circle at 90% 0%, rgba(44,217,197,0.18), transparent 45%),
-      linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 45%, var(--bg-3) 100%);
-    background-attachment:fixed;
+    background:var(--gray5);
     line-height:1.55;
+    letter-spacing:-0.025em;
     -webkit-font-smoothing:antialiased;
   }
   h1,h2,h3,p{margin:0;}
@@ -49,7 +52,7 @@
   .hero{text-align:center;}
   .hero-emoji-row{
     font-size:34px;display:flex;justify-content:center;gap:14px;margin-bottom:14px;
-    filter:drop-shadow(0 6px 14px rgba(0,0,0,0.35));
+    filter:drop-shadow(0 6px 14px rgba(0,0,0,0.10));
   }
   .hero-emoji-row span{display:inline-block;animation:bob 2.6s ease-in-out infinite;}
   .hero-emoji-row span:nth-child(2){animation-delay:.25s;}
@@ -59,12 +62,10 @@
     50%{transform:translateY(-7px) rotate(4deg);}
   }
   .hero-title{
-    font-size:clamp(26px,7.5vw,32px);font-weight:800;letter-spacing:-0.01em;
-    background:linear-gradient(120deg,#fff,#d9c8ff 60%,var(--accent-3));
-    -webkit-background-clip:text;background-clip:text;color:transparent;
+    font-size:24px;line-height:1.45;font-weight:500;color:var(--gray90);
   }
   .hero-sub{
-    margin-top:12px;font-size:14.5px;color:var(--text-dim);
+    margin-top:12px;font-size:14px;line-height:1.7;font-weight:400;color:var(--gray70);
     max-width:340px;margin-left:auto;margin-right:auto;
   }
 
@@ -72,52 +73,47 @@
   .card-list{margin-top:30px;display:flex;flex-direction:column;gap:16px;}
   .test-card{
     display:block;
-    background:var(--card);
-    border:1px solid var(--card-line);
-    border-radius:22px;
+    background:var(--white);
+    border-radius:var(--radius-card);
     padding:20px 20px 18px;
     position:relative;
-    overflow:hidden;
-    transition:transform .15s ease, border-color .15s ease;
+    box-shadow:var(--shadow-card);
+    transition:transform .15s ease;
   }
   .test-card:active{transform:scale(0.98);}
-  .test-card::before{
-    content:'';position:absolute;inset:0;opacity:0.55;pointer-events:none;
-  }
-  .test-card.card-a::before{background:radial-gradient(circle at 100% 0%, rgba(255,93,143,0.22), transparent 60%);}
-  .test-card.card-b::before{background:radial-gradient(circle at 100% 0%, rgba(123,165,126,0.28), transparent 60%);}
-  .test-card.card-c::before{background:radial-gradient(circle at 100% 0%, rgba(44,217,197,0.24), transparent 60%);}
 
-  .card-top{display:flex;align-items:center;gap:12px;position:relative;}
+  .card-top{display:flex;align-items:center;gap:12px;}
   .card-emoji{
-    flex-shrink:0;font-size:28px;width:52px;height:52px;
+    flex-shrink:0;font-size:26px;width:48px;height:48px;
     display:flex;align-items:center;justify-content:center;
-    border-radius:16px;background:rgba(255,255,255,0.06);
+    border-radius:14px;background:var(--gray10);
   }
-  .card-title{font-size:17.5px;font-weight:800;color:var(--text);}
-  .card-meta{margin-top:3px;font-size:12px;color:var(--text-faint);font-weight:600;}
+  .card-title{font-size:16px;line-height:1.45;font-weight:600;color:var(--gray90);}
+  .card-meta{margin-top:3px;font-size:13px;line-height:1.5;color:var(--gray50);font-weight:400;}
+
+  .card-tag{
+    display:inline-block;margin-top:10px;font-size:13px;line-height:1.5;font-weight:600;
+    padding:4px 10px;border-radius:var(--radius-btn);
+  }
+  .card-a .card-tag{background:var(--tag-orange-light);color:var(--tag-orange);}
+  .card-b .card-tag{background:var(--tag-mint-light);color:var(--tag-mint);}
+  .card-c .card-tag{background:var(--tag-blue-light);color:var(--tag-blue);}
 
   .card-hook{
-    margin-top:14px;font-size:14px;color:var(--text-dim);line-height:1.6;position:relative;
+    margin-top:10px;font-size:14px;line-height:1.7;font-weight:400;color:var(--gray70);
   }
 
   .card-cta{
-    margin-top:16px;display:flex;align-items:center;justify-content:space-between;
-    position:relative;
+    margin-top:14px;display:flex;align-items:center;justify-content:flex-end;gap:4px;
   }
   .card-cta-btn{
-    display:inline-flex;align-items:center;gap:6px;
-    font-size:13.5px;font-weight:800;color:#0f0a1a;
-    padding:11px 18px;border-radius:99px;
+    font-size:14px;line-height:1.4;font-weight:600;color:var(--gray70);
   }
-  .card-a .card-cta-btn{background:linear-gradient(135deg,#ff5d8f,#ff9ec2);}
-  .card-b .card-cta-btn{background:linear-gradient(135deg,#7ba57e,#a9d1ac);}
-  .card-c .card-cta-btn{background:linear-gradient(135deg,#2cd9c5,#7f5af0);color:#0a0c12;}
-  .card-cta-arrow{font-size:12px;color:var(--text-faint);}
+  .card-cta-arrow{font-size:13px;color:var(--gray50);}
 
   /* ---------- footnote ---------- */
   .footnote{
-    margin-top:26px;text-align:center;font-size:12px;color:var(--text-faint);
+    margin-top:26px;text-align:center;font-size:13px;line-height:1.5;color:var(--gray50);
   }
 
   @media (min-width:520px){
@@ -143,9 +139,10 @@
           <div class="card-meta">⏱ 1~2분 · 8가지 유형</div>
         </div>
       </div>
+      <span class="card-tag">TEST A</span>
       <p class="card-hook">나는 어떤 집사? 12문항으로 알아보는 나의 사육 스타일.</p>
       <div class="card-cta">
-        <span class="card-cta-btn">시작하기 🦎</span>
+        <span class="card-cta-btn">시작하기</span>
         <span class="card-cta-arrow">→</span>
       </div>
     </a>
@@ -158,9 +155,10 @@
           <div class="card-meta">⏱ 1~2분 · 축별 케어 점수</div>
         </div>
       </div>
+      <span class="card-tag">TEST B</span>
       <p class="card-hook">우리 개체 케어 점수는? 환경·급여·관찰·기록 4축으로 진단해요.</p>
       <div class="card-cta">
-        <span class="card-cta-btn">진단하기 🐸</span>
+        <span class="card-cta-btn">진단하기</span>
         <span class="card-cta-arrow">→</span>
       </div>
     </a>
@@ -173,9 +171,10 @@
           <div class="card-meta">⏱ 1~2분 · 아이언~챌린저</div>
         </div>
       </div>
+      <span class="card-tag">TEST C</span>
       <p class="card-hook">내 기록력은 무슨 티어? 8문항으로 측정하는 기록 습관 랭크.</p>
       <div class="card-cta">
-        <span class="card-cta-btn">측정하기 🏆</span>
+        <span class="card-cta-btn">측정하기</span>
         <span class="card-cta-arrow">→</span>
       </div>
     </a>
