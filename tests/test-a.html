@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>파충류 집사 유형 테스트 | 당신은 어떤 집사?</title>
+<meta name="description" content="게코, 뱀, 타란튤라... 당신의 파충류 사육 스타일은? 12문항으로 알아보는 파충류 집사 유형 테스트.">
+<script data-goatcounter="https://neli3307.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+<style>
+  :root{
+    --bg-1:#FFE8A3;
+    --bg-2:#FFB6D9;
+    --card:#FFFFFF;
+    --ink:#2B2140;
+    --ink-dim:#6B6280;
+    --ink-faint:#9C93AC;
+    --accent:#FF5D8F;
+    --accent-2:#6C5CE7;
+    --line:#F0E6FF;
+    --track-color:var(--type-color, #FF5D8F);
+    --radius-lg:28px;
+    --radius-md:18px;
+    --radius-sm:12px;
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *,*::before,*::after{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    font-family:var(--font);
+    color:var(--ink);
+    min-height:100vh;
+    background:linear-gradient(160deg,var(--bg-1) 0%,var(--bg-2) 60%,#C9B6FF 100%);
+    background-attachment:fixed;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    display:flex;
+    justify-content:center;
+    padding:0;
+  }
+  .app{
+    width:100%;
+    max-width:480px;
+    min-height:100vh;
+    padding:24px 18px 40px;
+    position:relative;
+  }
+  h1,h2,h3,p{margin:0;}
+  button{font-family:inherit;border:none;cursor:pointer;background:none;}
+  a{color:inherit;}
+  .hidden{display:none !important;}
+
+  /* ---------- shared card shell ---------- */
+  .card{
+    background:var(--card);
+    border-radius:var(--radius-lg);
+    padding:28px 22px;
+    box-shadow:0 18px 40px -18px rgba(60,30,90,0.35);
+  }
+
+  /* ---------- decorations ---------- */
+  .deco-row{
+    display:flex;justify-content:center;gap:14px;
+    font-size:34px;margin-bottom:6px;
+    filter:drop-shadow(0 6px 10px rgba(60,30,90,0.15));
+  }
+  .deco-row span{display:inline-block;animation:bob 2.6s ease-in-out infinite;}
+  .deco-row span:nth-child(2){animation-delay:.3s;}
+  .deco-row span:nth-child(3){animation-delay:.6s;}
+  @keyframes bob{
+    0%,100%{transform:translateY(0) rotate(-4deg);}
+    50%{transform:translateY(-8px) rotate(4deg);}
+  }
+
+  /* ---------- intro screen ---------- */
+  #screen-intro{text-align:center;padding-top:18px;}
+  .intro-badge{
+    display:inline-block;background:var(--accent);color:#fff;
+    font-size:12px;font-weight:700;letter-spacing:.04em;
+    padding:6px 14px;border-radius:99px;margin-bottom:18px;
+  }
+  .intro-title{
+    font-size:clamp(26px,7vw,32px);font-weight:800;line-height:1.35;
+    letter-spacing:-0.01em;color:var(--ink);
+  }
+  .intro-title .hl{color:var(--accent);}
+  .intro-sub{
+    margin-top:14px;font-size:15.5px;color:var(--ink-dim);
+    max-width:340px;margin-left:auto;margin-right:auto;
+  }
+  .participant-count{
+    margin-top:20px;display:inline-flex;align-items:center;gap:8px;
+    background:var(--line);border-radius:99px;padding:8px 16px;
+    font-size:13px;color:var(--ink-dim);font-weight:600;
+  }
+  .participant-count b{color:var(--accent-2);font-size:14px;}
+  .start-btn{
+    margin-top:30px;width:100%;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    color:#fff;font-size:17px;font-weight:800;
+    padding:17px;border-radius:99px;
+    box-shadow:0 14px 26px -10px rgba(108,92,231,0.55);
+    transition:transform .12s ease;
+  }
+  .start-btn:active{transform:scale(0.97);}
+  .anon-note{
+    margin-top:16px;font-size:12px;color:var(--ink-faint);
+  }
+  .intro-preview{
+    margin-top:26px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;
+  }
+  .type-pill{
+    font-size:11.5px;background:#fff;border:1px solid var(--line);
+    border-radius:99px;padding:6px 11px;color:var(--ink-dim);font-weight:600;
+  }
+
+  /* ---------- quiz screen ---------- */
+  #screen-quiz{padding-top:6px;}
+  .progress-wrap{margin-bottom:22px;}
+  .progress-meta{
+    display:flex;justify-content:space-between;align-items:baseline;
+    font-size:12.5px;color:var(--ink-dim);font-weight:700;margin-bottom:8px;
+  }
+  .progress-meta .q-current{color:var(--accent);font-size:15px;}
+  .progress-track{
+    height:10px;background:var(--line);border-radius:99px;overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;width:0%;border-radius:99px;
+    background:linear-gradient(90deg,var(--accent),var(--accent-2));
+    transition:width .35s cubic-bezier(.4,0,.2,1);
+  }
+  .question-text{
+    font-size:21px;font-weight:800;line-height:1.4;color:var(--ink);
+    margin-bottom:22px;min-height:56px;
+  }
+  .choices{display:flex;flex-direction:column;gap:12px;}
+  .choice-btn{
+    text-align:left;background:#fff;border:2px solid var(--line);
+    border-radius:var(--radius-md);padding:16px 18px;
+    font-size:15px;font-weight:600;color:var(--ink);
+    transition:border-color .15s ease, transform .1s ease, background .15s ease;
+  }
+  .choice-btn:active{transform:scale(0.98);}
+  .choice-btn:hover{border-color:var(--accent-2);background:#FBF9FF;}
+  .choice-btn.picked{border-color:var(--accent);background:#FFF0F5;}
+
+  /* ---------- loading screen ---------- */
+  #screen-loading{
+    text-align:center;padding:70px 10px;
+  }
+  .spinner{
+    width:64px;height:64px;margin:0 auto 26px;
+    border-radius:50%;
+    border:6px solid var(--line);
+    border-top-color:var(--accent);
+    animation:spin 0.9s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .loading-text{font-size:16px;font-weight:700;color:var(--ink-dim);}
+  .loading-emoji{font-size:30px;margin-top:14px;animation:pulse 1.2s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:.4;}50%{opacity:1;}}
+
+  /* ---------- result screen ---------- */
+  #screen-result{}
+  .result-card{
+    background:linear-gradient(160deg, var(--type-color, #FF5D8F) 0%, #fff 130%);
+    border-radius:var(--radius-lg);
+    padding:32px 22px 26px;
+    text-align:center;
+    box-shadow:0 18px 40px -18px rgba(60,30,90,0.4);
+  }
+  .result-emoji{
+    font-size:64px;line-height:1;
+    filter:drop-shadow(0 8px 14px rgba(0,0,0,0.15));
+  }
+  .result-kicker{
+    margin-top:10px;font-size:13px;font-weight:700;color:rgba(43,33,64,0.65);
+    letter-spacing:.03em;
+  }
+  .result-name{
+    margin-top:6px;font-size:27px;font-weight:800;color:var(--ink);
+  }
+  .result-desc{
+    margin-top:16px;background:rgba(255,255,255,0.75);border-radius:var(--radius-md);
+    padding:16px 16px;font-size:14.5px;color:var(--ink);line-height:1.7;text-align:left;
+  }
+  .result-compat{
+    margin-top:14px;background:rgba(255,255,255,0.55);border-radius:var(--radius-md);
+    padding:14px 16px;text-align:left;
+  }
+  .result-compat .compat-label{
+    font-size:12px;font-weight:800;color:var(--accent-2);margin-bottom:6px;
+  }
+  .result-compat .compat-body{
+    display:flex;align-items:center;gap:10px;font-size:14px;color:var(--ink);font-weight:600;
+  }
+  .result-compat .compat-emoji{font-size:26px;}
+  .result-compat .compat-reason{
+    margin-top:6px;font-size:13px;color:var(--ink-dim);font-weight:400;
+  }
+
+  .action-row{display:flex;gap:10px;margin-top:20px;}
+  .btn-share,.btn-restart{
+    flex:1;padding:14px;border-radius:99px;font-size:14.5px;font-weight:800;
+    transition:transform .12s ease;
+  }
+  .btn-share:active,.btn-restart:active{transform:scale(0.97);}
+  .btn-share{background:var(--ink);color:#fff;}
+  .btn-restart{background:#fff;color:var(--ink);border:2px solid var(--line);}
+  .share-toast{
+    margin-top:10px;font-size:12.5px;color:var(--accent-2);font-weight:700;
+    text-align:center;opacity:0;transition:opacity .2s ease;
+  }
+  .share-toast.show{opacity:1;}
+
+  /* ---------- opt-in ---------- */
+  .optin-card{
+    margin-top:16px;background:#fff;border-radius:var(--radius-md);
+    padding:18px 18px 16px;border:1.5px dashed var(--line);
+  }
+  .optin-title{font-size:14.5px;font-weight:800;color:var(--ink);}
+  .optin-sub{font-size:12.5px;color:var(--ink-dim);margin-top:4px;}
+  .optin-row{display:flex;gap:8px;margin-top:12px;}
+  .optin-row input[type="email"]{
+    flex:1;min-width:0;background:var(--line);border:1.5px solid transparent;
+    border-radius:99px;padding:11px 14px;font-size:14px;color:var(--ink);font-family:var(--font);
+  }
+  .optin-row input[type="email"]:focus{outline:none;border-color:var(--accent-2);}
+  .optin-row button{
+    flex-shrink:0;background:var(--accent-2);color:#fff;font-weight:800;
+    font-size:13.5px;padding:0 18px;border-radius:99px;
+  }
+  .optin-done{font-size:13px;color:var(--accent-2);font-weight:700;margin-top:10px;display:none;}
+
+  /* ---------- footer ---------- */
+  .site-footer{
+    margin-top:28px;text-align:center;font-size:11.5px;color:var(--ink-faint);
+    padding:0 6px;
+  }
+  .site-footer a{text-decoration:underline;}
+
+  /* ---------- hub return link ---------- */
+  .hub-link-wrap{margin-top:18px;text-align:center;}
+  .hub-link{
+    display:inline-block;font-size:14px;font-weight:800;color:#fff;
+    padding:13px 24px;border-radius:99px;
+    background:linear-gradient(135deg,var(--accent-2),var(--accent));
+    box-shadow:0 10px 20px -8px rgba(108,92,231,0.5);
+    transition:transform .12s ease;
+  }
+  .hub-link:active{transform:scale(0.97);}
+
+  @media (min-width:520px){
+    .app{padding-top:40px;}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ============ INTRO ============ -->
+  <section id="screen-intro" class="card">
+    <div class="deco-row"><span>🦎</span><span>🐍</span><span>🕷️</span></div>
+    <div class="intro-badge">파충류 집사 성격유형 검사</div>
+    <h1 class="intro-title">당신은 어떤 <span class="hl">집사</span>인가요?</h1>
+    <p class="intro-sub">먹이 급여부터 탈피 관찰까지, 12가지 상황으로 알아보는 나의 사육 스타일. 8가지 집사 유형 중 당신은?</p>
+    <div class="participant-count"><!-- PARTICIPANT_COUNT_PLACEHOLDER -->지금까지 <b id="participant-count-num">12,834</b>명의 집사가 참여했어요</div>
+    <div class="intro-preview">
+      <span class="type-pill">🌡️ 온습도 강박러</span>
+      <span class="type-pill">🦎 종 컬렉터</span>
+      <span class="type-pill">🐾 야생의 감 집사</span>
+      <span class="type-pill">📊 엑셀 박사 집사</span>
+    </div>
+    <button class="start-btn" id="btn-start" type="button">테스트 시작하기 🦎</button>
+    <p class="anon-note">응답은 익명으로 통계에만 활용됩니다.</p>
+  </section>
+
+  <!-- ============ QUIZ ============ -->
+  <section id="screen-quiz" class="card hidden">
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span><span class="q-current" id="q-current">1</span> / <span id="q-total">12</span></span>
+        <span id="q-percent">8%</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    </div>
+    <h2 class="question-text" id="question-text">문항을 불러오는 중...</h2>
+    <div class="choices" id="choices"></div>
+  </section>
+
+  <!-- ============ LOADING ============ -->
+  <section id="screen-loading" class="card hidden">
+    <div class="spinner"></div>
+    <p class="loading-text">당신의 집사 DNA 분석 중...</p>
+    <div class="loading-emoji">🧬</div>
+  </section>
+
+  <!-- ============ RESULT ============ -->
+  <section id="screen-result" class="hidden">
+    <div class="result-card" id="result-card">
+      <div class="result-emoji" id="result-emoji">🦎</div>
+      <div class="result-kicker">당신의 파충류 집사 유형은</div>
+      <div class="result-name" id="result-name">로딩 중</div>
+      <div class="result-desc" id="result-desc"></div>
+      <div class="result-compat">
+        <div class="compat-label">이런 집사와 잘 맞아요</div>
+        <div class="compat-body"><span class="compat-emoji" id="compat-emoji">🦎</span><span id="compat-name"></span></div>
+        <div class="compat-reason" id="compat-reason"></div>
+      </div>
+      <div class="action-row">
+        <button class="btn-share" id="btn-share" type="button">결과 공유하기 🔗</button>
+        <button class="btn-restart" id="btn-restart" type="button">다시하기 ↺</button>
+      </div>
+      <div class="share-toast" id="share-toast">링크가 복사됐어요!</div>
+    </div>
+
+    <div class="optin-card">
+      <div class="optin-title">📱 기록 앱 만드는 중</div>
+      <div class="optin-sub">유형별 맞춤 소식 받기 (선택 사항이에요)</div>
+      <form name="test-a-optin" id="optin-form" class="optin-row">
+        <input type="hidden" name="result_type" id="optin-result-type" value="" />
+        <input type="email" id="optin-email" name="email" placeholder="이메일 주소" autocomplete="email">
+        <button type="submit">알림받기</button>
+      </form>
+      <div class="optin-done" id="optin-done">감사합니다! 소식 준비되면 알려드릴게요 🎉</div>
+    </div>
+
+    <div class="hub-link-wrap">
+      <a class="hub-link" href="./">🦎 다른 테스트도 해보기</a>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <p>파충류 집사들을 위해 만들고 있어요.</p>
+  </footer>
+</div>
+
+<script>
+const SUBMIT_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxzA7PSYbFaOcaP1UCI1OlA0tYNj7WiFU5l0b1yjbjG7R1aIqI261lqChI0tdFluu3J/exec';
+const PID_KEY = 'herptrack_pid';
+const SUBMITTED_KEY = 'submitted_test-a';
+
+function getPid(){
+  let pid = localStorage.getItem(PID_KEY);
+  if(!pid){
+    pid = (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : (Date.now().toString(36) + Math.random().toString(36).slice(2));
+    localStorage.setItem(PID_KEY, pid);
+  }
+  return pid;
+}
+
+/* =====================================================================
+   QUESTION_SCHEMA — 문항 ↔ 데이터 필드 매핑 (분석 시 참조용)
+   각 문항은 (1) 성격유형 3축 점수와 (2) 사육 실태 데이터 필드를 동시에 수집한다.
+   axis: p=계획형 / i=즉흥형, d=데이터형 / g=직감형, s=외길형 / m=다다익선형
+   pid: 참여자 고유 식별자 (localStorage herptrack_pid, 테스트 a/b/c 공통 공유)
+   ===================================================================== */
+const QUESTION_SCHEMA = {
+  q1:  { field: 'pet_count',          desc: '현재 사육 개체 수 · 다종 여부' },
+  q2:  { field: 'experience_years',   desc: '사육 연차' },
+  q3:  { field: 'track_method',       desc: '현재 기록 방법 (앱/시트/기억/무기록)' },
+  q4:  { field: 'feeding_routine',    desc: '급여 루틴 규칙성' },
+  q5:  { field: 'shed_habit',         desc: '탈피 관찰 습관' },
+  q6:  { field: 'data_loss',          desc: '기록 손실·공백 경험' },
+  q7:  { field: 'species_curiosity',  desc: '신규 종 유입 성향' },
+  q8:  { field: 'monitoring',         desc: '온습도 모니터링 방식' },
+  q9:  { field: 'spending_priority',  desc: 'WTP 간접 신호 (지출 우선순위)' },
+  q10: { field: 'vlog_reaction',      desc: '타 집사 콘텐츠 반응' },
+  q11: { field: 'vacation_planning',  desc: '돌봄 공백(휴가) 대응 방식' },
+  q12: { field: 'dream_retirement',   desc: '이상적 사육 미래상 (가치관 종합)' }
+};
+
+/* ---------------------------------------------------------------------
+   문항 데이터: 각 choice는 data-field 코드(code)와 axis 가중치를 가진다.
+   --------------------------------------------------------------------- */
+const QUESTIONS = [
+  {
+    id: 'q1', field: 'pet_count',
+    text: '지금 집에 있는 아이들은?',
+    choices: [
+      { label: '1마리, 외길 인생 중', code: 'solo_one', axis: { s: 2 } },
+      { label: '2~3마리, 취향이 확고해요', code: 'pair_few', axis: { m: 1 } },
+      { label: '4마리 이상, 다종 왕국 운영 중', code: 'multi_kingdom', axis: { m: 2 } },
+      { label: '아직 입양 준비 중, 공부하는 단계', code: 'adopting_soon', axis: { p: 1 } }
+    ]
+  },
+  {
+    id: 'q2', field: 'experience_years',
+    text: '파충류 사육 연차는 어느 정도인가요?',
+    choices: [
+      { label: '이제 막 시작, 1년 미만', code: 'year_lt1', axis: { i: 1 } },
+      { label: '1~3년차, 요령이 좀 생겼어요', code: 'year_1to3', axis: { p: 1 } },
+      { label: '3~7년차, 제 방식이 확고해요', code: 'year_3to7', axis: { d: 1 } },
+      { label: '7년 이상, 이 바닥 산증인', code: 'year_7plus', axis: { d: 2 } }
+    ]
+  },
+  {
+    id: 'q3', field: 'track_method',
+    text: '새 먹이를 급여한 날, 당신은?',
+    choices: [
+      { label: '기록 앱에 바로 입력한다', code: 'track_app', axis: { d: 2 } },
+      { label: '엑셀·메모장에 적어둔다', code: 'track_sheet', axis: { d: 2 } },
+      { label: '그냥 머릿속에 저장한다', code: 'track_memory', axis: { g: 1 } },
+      { label: '기록? 그게 뭐죠', code: 'track_none', axis: { g: 2 } }
+    ]
+  },
+  {
+    id: 'q4', field: 'feeding_routine',
+    text: '급여 시간이 다가오면 당신은?',
+    choices: [
+      { label: '알람 맞춰둔 시간에 정확히', code: 'alarm_fixed', axis: { p: 2 } },
+      { label: '대략 이 시간쯤이다 싶으면', code: 'flexible_window', axis: { p: 1 } },
+      { label: '생각날 때 준다', code: 'whenever_remember', axis: { i: 1 } },
+      { label: '들쭉날쭉, 그때그때 다르다', code: 'irregular', axis: { i: 2 } }
+    ]
+  },
+  {
+    id: 'q5', field: 'shed_habit',
+    text: '탈피 시기가 되면 당신은?',
+    choices: [
+      { label: '지난 탈피일 계산해서 날짜를 예측한다', code: 'track_dates', axis: { d: 2 } },
+      { label: '피부색·눈 상태 등 징후를 관찰한다', code: 'watch_signs', axis: { d: 1 } },
+      { label: '탈피 껍질을 보고 나서야 안다', code: 'notice_after', axis: { g: 1 } },
+      { label: '솔직히 잘 못 알아챈다', code: 'rarely_notice', axis: { g: 2 } }
+    ]
+  },
+  {
+    id: 'q6', field: 'data_loss',
+    text: '기록하던 걸 날려본 적 있나요?',
+    choices: [
+      { label: '파일이 날아가서 며칠 앓아누웠다', code: 'lost_devastated', axis: { d: 2 } },
+      { label: '어차피 머릿속에 있어서 괜찮았다', code: 'lost_shrugged', axis: { g: 2 } },
+      { label: '백업을 3중으로 해놔서 무사했다', code: 'backup_safe', axis: { p: 2, d: 1 } },
+      { label: '애초에 기록한 적이 없어서 잃을 것도 없었다', code: 'never_recorded', axis: { i: 1, g: 1 } }
+    ]
+  },
+  {
+    id: 'q7', field: 'species_curiosity',
+    text: '처음 보는 파충류 종을 마주치면?',
+    choices: [
+      { label: '일단 데려온다, 고민은 나중에', code: 'adopt_impulse', axis: { i: 2, m: 1 } },
+      { label: '며칠 밤새 조사하고 결정한다', code: 'research_first', axis: { p: 2 } },
+      { label: '예쁘다 하고 지나간다, 내 아이만으로 충분', code: 'admire_only', axis: { s: 2 } },
+      { label: '이미 케이지 놓을 자리까지 계획해뒀다', code: 'expansion_planned', axis: { p: 1, m: 2 } }
+    ]
+  },
+  {
+    id: 'q8', field: 'monitoring',
+    text: '사육장 온습도 체크는 어떻게 하나요?',
+    choices: [
+      { label: '디지털 로거로 그래프까지 뽑아본다', code: 'digital_logger', axis: { d: 2 } },
+      { label: '매일 정해진 시간에 눈으로 확인한다', code: 'manual_daily', axis: { d: 1, p: 1 } },
+      { label: '손 넣어보면 대충 감이 온다', code: 'gut_feel', axis: { g: 2 } },
+      { label: '아이가 편해 보이면 그걸로 됐다', code: 'rarely_check', axis: { g: 1, i: 1 } }
+    ]
+  },
+  {
+    id: 'q9', field: 'spending_priority',
+    text: '주말에 파충류 용품점에 갔다, 지갑이 열리는 순간은?',
+    choices: [
+      { label: '새 배경·인테리어 용품을 보다가', code: 'gear_decor', axis: { i: 1 } },
+      { label: '프리미엄 먹이·영양제를 보다가', code: 'food_premium', axis: { d: 1 } },
+      { label: '기록·관리 도구(앱 유료 기능 등)를 보다가', code: 'track_tool', axis: { d: 2, p: 1 } },
+      { label: '건강검진 패키지를 보다가', code: 'vet_checkup', axis: { p: 2 } }
+    ]
+  },
+  {
+    id: 'q10', field: 'vlog_reaction',
+    text: '다른 집사의 사육 브이로그를 보다가 드는 생각은?',
+    choices: [
+      { label: '저 종도 키워보고 싶다는 생각이 스멀스멀', code: 'curious_new_species', axis: { m: 2 } },
+      { label: '우리 애 사육법이랑 다른 점을 비교 분석한다', code: 'compare_analysis', axis: { d: 1, s: 1 } },
+      { label: '역시 우리 애가 제일 예쁘다', code: 'proud_of_mine', axis: { s: 2 } },
+      { label: '저 사람 관리 스케줄표 탐난다, 나도 만들어야지', code: 'want_schedule', axis: { p: 2 } }
+    ]
+  },
+  {
+    id: 'q11', field: 'vacation_planning',
+    text: '여행 계획을 짤 때, 우리 아이들은?',
+    choices: [
+      { label: '펫시터 예약·먹이 소분까지 한 달 전에 끝', code: 'prep_month_ahead', axis: { p: 2 } },
+      { label: '떠나기 전날 부랴부랴 챙긴다', code: 'prep_last_minute', axis: { i: 2 } },
+      { label: '이웃 집사에게 실시간으로 알려주며 부탁한다', code: 'prep_realtime_guide', axis: { i: 1, d: 1 } },
+      { label: '개체별 담당 표를 만들어 나눠준다', code: 'prep_multi_chart', axis: { p: 1, m: 2 } }
+    ]
+  },
+  {
+    id: 'q12', field: 'dream_retirement',
+    text: '먼 훗날, 이상적인 나의 사육 라이프는?',
+    choices: [
+      { label: '한 종만 깊이 파고든 그 분야 최고 전문가', code: 'dream_specialist', axis: { s: 2 } },
+      { label: '온갖 파충류가 모인 나만의 작은 동물원', code: 'dream_zoo', axis: { m: 2 } },
+      { label: '쌓인 데이터로 책이나 논문 한 권 내기', code: 'dream_publish', axis: { d: 2 } },
+      { label: '그날그날 내키는 대로 새 친구를 들이는 삶', code: 'dream_freeform', axis: { i: 2 } }
+    ]
+  }
+];
+
+/* ---------------------------------------------------------------------
+   결과 유형 8종 (2^3: 계획/즉흥 × 데이터/직감 × 외길/다다익선)
+   --------------------------------------------------------------------- */
+const TYPES = {
+  PDS: {
+    name: '온습도 강박러', emoji: '🌡️', color: '#FFC98B',
+    desc: '계획적으로 데이터를 쌓고, 한 종에 깊게 몰입하는 타입이에요. 온습도 로그와 급여 스케줄까지 전부 체계적으로 관리하죠. 사랑하는 아이를 위해서라면 엑셀 시트 정도는 기본값이라고 생각하는 정성파 집사입니다.',
+    compat: 'PDM', compatReason: '같은 데이터 감성이라 정보 공유가 즐겁고, 서로의 스프레드시트를 보며 감탄할 거예요.'
+  },
+  PDM: {
+    name: '엑셀 박사 집사', emoji: '📊', color: '#8FD3FF',
+    desc: '여러 종을 동시에 데이터로 관리하는 관리의 신이에요. 개체별 시트, 급여표, 탈피 주기까지 스프레드시트 하나로 통제하죠. 다종 사육의 복잡함을 데이터로 정면 돌파하는 든든한 집사입니다.',
+    compat: 'PGM', compatReason: '둘 다 다종 사육자라 케이지 배치나 스케줄 조율 이야기가 끝없이 이어질 거예요.'
+  },
+  PGS: {
+    name: '고요한 구도자', emoji: '🧘', color: '#B7E8A8',
+    desc: '루틴은 확고하지만 그 안에서는 감으로 아이 상태를 읽는 타입이에요. 매뉴얼보다 매일 마주하는 눈빛과 몸짓을 더 신뢰하죠. 한 종과 오랜 시간을 함께하며 내공을 쌓아온 집사입니다.',
+    compat: 'IGS', compatReason: '둘 다 감으로 아이를 읽는 스타일이라, 말 없이도 서로의 방식을 이해할 거예요.'
+  },
+  PGM: {
+    name: '다종 조율사', emoji: '🎻', color: '#D3B8FF',
+    desc: '여러 종을 키우면서도 각자의 루틴을 감으로 조율하는 능력자예요. 표는 안 만들지만 누가 언제 뭘 원하는지 몸으로 기억하죠. 오케스트라 지휘자 같은 다종 사육 밸런스 감각을 가졌습니다.',
+    compat: 'PDM', compatReason: '다종 사육 선배로서 서로의 관리 노하우를 주고받기 딱 좋은 조합이에요.'
+  },
+  IDS: {
+    name: '관찰일지 덕후', emoji: '📔', color: '#FFE08A',
+    desc: '정해진 루틴은 없지만 그때그때 꼼꼼히 기록하는 타입이에요. 즉흥적으로 급여하고 관찰하지만 메모만큼은 습관처럼 남기죠. 한 종을 향한 애정이 차곡차곡 기록으로 쌓이는 스타일입니다.',
+    compat: 'PDS', compatReason: '기록에 진심인 서로를 보며 즉흥성과 꼼꼼함의 균형을 배울 수 있어요.'
+  },
+  IDM: {
+    name: '즉흥 기록가', emoji: '🗒️', color: '#FFA8D6',
+    desc: '즉흥적으로 새 종을 들이면서도 기록만큼은 놓치지 않는 밸런스형이에요. 계획 없이 저지르지만 뒷수습은 데이터로 깔끔하게 마무리하죠. 다종 사육의 즉흥성과 꼼꼼함을 동시에 가진 집사입니다.',
+    compat: 'IGM', compatReason: '둘 다 새로운 종에 대한 호기심이 넘쳐서, 다음엔 어떤 아이를 들일지 이야기가 마르지 않을 거예요.'
+  },
+  IGS: {
+    name: '야생의 감 집사', emoji: '🐾', color: '#7FE0C4',
+    desc: '계획도 기록도 최소, 대신 아이와의 교감으로 모든 걸 판단하는 감각파예요. 매뉴얼보다 매일의 눈맞춤이 우선이죠. 한 종에 깊이 몰입해 누구보다 그 아이를 잘 아는 집사입니다.',
+    compat: 'PGS', compatReason: '감으로 사육하는 서로를 보며 "역시 데이터보다 교감이지"라며 통할 거예요.'
+  },
+  IGM: {
+    name: '종 컬렉터', emoji: '🦎', color: '#FF9E8F',
+    desc: '새로운 종을 보면 일단 마음이 동하는 자유로운 영혼이에요. 계획도 기록도 최소지만 다양한 아이들과의 인연을 마음껏 즐기죠. 사육장이 늘어날수록 행복도 함께 늘어나는 집사입니다.',
+    compat: 'PGM', compatReason: '다종 사육의 즐거움을 아는 사이라, 새 케이지 들일 때마다 제일 먼저 축하해줄 거예요.'
+  }
+};
+
+/* ---------------------------------------------------------------------
+   상태 및 진행 로직
+   --------------------------------------------------------------------- */
+const state = {
+  index: 0,
+  answers: {},              // { q1: 'solo_one', ... }
+  scores: { p: 0, i: 0, d: 0, g: 0, s: 0, m: 0 },
+  resultType: null
+};
+
+const el = {
+  intro: document.getElementById('screen-intro'),
+  quiz: document.getElementById('screen-quiz'),
+  loading: document.getElementById('screen-loading'),
+  result: document.getElementById('screen-result'),
+  qCurrent: document.getElementById('q-current'),
+  qTotal: document.getElementById('q-total'),
+  qPercent: document.getElementById('q-percent'),
+  progressFill: document.getElementById('progress-fill'),
+  questionText: document.getElementById('question-text'),
+  choices: document.getElementById('choices'),
+  resultCard: document.getElementById('result-card'),
+  resultEmoji: document.getElementById('result-emoji'),
+  resultName: document.getElementById('result-name'),
+  resultDesc: document.getElementById('result-desc'),
+  compatEmoji: document.getElementById('compat-emoji'),
+  compatName: document.getElementById('compat-name'),
+  compatReason: document.getElementById('compat-reason'),
+  shareToast: document.getElementById('share-toast'),
+  optinForm: document.getElementById('optin-form'),
+  optinDone: document.getElementById('optin-done')
+};
+
+el.qTotal.textContent = QUESTIONS.length;
+
+function showScreen(name){
+  [el.intro, el.quiz, el.loading, el.result].forEach(s => s.classList.add('hidden'));
+  el[name].classList.remove('hidden');
+}
+
+function renderQuestion(){
+  const q = QUESTIONS[state.index];
+  el.qCurrent.textContent = state.index + 1;
+  const pct = Math.round(((state.index) / QUESTIONS.length) * 100);
+  el.qPercent.textContent = pct + '%';
+  el.progressFill.style.width = pct + '%';
+  el.questionText.textContent = q.text;
+  el.choices.innerHTML = '';
+  q.choices.forEach(choice => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'choice-btn';
+    btn.textContent = choice.label;
+    btn.addEventListener('click', () => selectChoice(q, choice, btn));
+    el.choices.appendChild(btn);
+  });
+}
+
+function selectChoice(question, choice, btnEl){
+  // lock further clicks on this question
+  Array.from(el.choices.children).forEach(b => b.disabled = true);
+  btnEl.classList.add('picked');
+
+  state.answers[question.id] = choice.code;
+  Object.keys(choice.axis || {}).forEach(k => { state.scores[k] += choice.axis[k]; });
+
+  setTimeout(() => {
+    state.index += 1;
+    if(state.index < QUESTIONS.length){
+      renderQuestion();
+    } else {
+      el.progressFill.style.width = '100%';
+      el.qPercent.textContent = '100%';
+      finishQuiz();
+    }
+  }, 220);
+}
+
+function computeResultType(scores){
+  const p = scores.p >= scores.i ? 'P' : 'I';
+  const d = scores.d >= scores.g ? 'D' : 'G';
+  const s = scores.s >= scores.m ? 'S' : 'M';
+  return p + d + s;
+}
+
+function buildSubmitPayload(formName, fields){
+  return Object.assign({ form: formName }, fields);
+}
+
+function submitResponses(){
+  const code = computeResultType(state.scores);
+  state.resultType = code;
+
+  const fields = Object.assign({}, state.answers, { result_type: code, pid: getPid() });
+  const payload = buildSubmitPayload('test-a-responses', fields);
+
+  // expose last payload for verification/debugging
+  window.__lastResponsePayload = payload;
+
+  if(!localStorage.getItem(SUBMITTED_KEY)){
+    fetch(SUBMIT_ENDPOINT, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    }).catch(function(){});
+    localStorage.setItem(SUBMITTED_KEY, '1');
+  }
+
+  return code;
+}
+
+function finishQuiz(){
+  showScreen('loading');
+  const code = submitResponses();
+  setTimeout(() => renderResult(code), 1500);
+}
+
+function renderResult(code){
+  const type = TYPES[code];
+  const compat = TYPES[type.compat];
+
+  el.resultCard.style.setProperty('--type-color', type.color);
+  el.resultEmoji.textContent = type.emoji;
+  el.resultName.textContent = type.name;
+  el.resultDesc.textContent = type.desc;
+  el.compatEmoji.textContent = compat.emoji;
+  el.compatName.textContent = compat.name;
+  el.compatReason.textContent = type.compatReason;
+
+  document.getElementById('optin-done').style.display = 'none';
+  el.optinForm.classList.remove('hidden');
+  el.optinForm.reset();
+  document.getElementById('optin-result-type').value = code;
+
+  showScreen('result');
+}
+
+function resetQuiz(){
+  state.index = 0;
+  state.answers = {};
+  state.scores = { p: 0, i: 0, d: 0, g: 0, s: 0, m: 0 };
+  state.resultType = null;
+  el.shareToast.classList.remove('show');
+  showScreen('intro');
+}
+
+/* ---------------------------------------------------------------------
+   이벤트 바인딩
+   --------------------------------------------------------------------- */
+document.getElementById('btn-start').addEventListener('click', () => {
+  state.index = 0;
+  renderQuestion();
+  showScreen('quiz');
+});
+
+document.getElementById('btn-restart').addEventListener('click', resetQuiz);
+
+document.getElementById('btn-share').addEventListener('click', () => {
+  const type = TYPES[state.resultType];
+  const text = (type ? type.name : '파충류 집사 유형 테스트') + ' - ' + location.href;
+  const showToast = () => {
+    el.shareToast.classList.add('show');
+    setTimeout(() => el.shareToast.classList.remove('show'), 1800);
+  };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(showToast).catch(() => fallbackCopy(text, showToast));
+  } else {
+    fallbackCopy(text, showToast);
+  }
+});
+
+function fallbackCopy(text, cb){
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); } catch(e){ /* noop */ }
+  document.body.removeChild(ta);
+  if(cb) cb();
+}
+
+el.optinForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const email = document.getElementById('optin-email').value.trim();
+  if(!email) return;
+
+  const payload = buildSubmitPayload('test-a-optin', {
+    email: email,
+    result_type: state.resultType || '',
+    pid: getPid()
+  });
+  window.__lastOptinPayload = payload;
+
+  fetch(SUBMIT_ENDPOINT, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload)
+  }).catch(function(){}).finally(function(){
+    el.optinForm.classList.add('hidden');
+    document.getElementById('optin-done').style.display = 'block';
+  });
+});
+
+// expose for debugging / automated verification
+window.RDT = { state, QUESTIONS, TYPES, computeResultType, QUESTION_SCHEMA };
+</script>
+</body>
+</html>

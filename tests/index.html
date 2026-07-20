@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>파충류 집사 테스트관</title>
+<meta name="description" content="파충류 집사라면 3분 안에 끝내는 테스트 3종 — 집사 유형, 우리 아이 행복도, 사육 기록 티어. 지금 바로 확인해보세요.">
+<script data-goatcounter="https://neli3307.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+<style>
+  :root{
+    --bg-1:#12081f;
+    --bg-2:#1c1030;
+    --bg-3:#2a1440;
+    --card:#1f1433;
+    --card-line:rgba(255,255,255,0.08);
+    --text:#f4f0ff;
+    --text-dim:#b7abd6;
+    --text-faint:#7d6f9e;
+    --accent:#ff5d8f;
+    --accent-2:#6c5ce7;
+    --accent-3:#2cd9c5;
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI","Apple SD Gothic Neo","Malgun Gothic",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *,*::before,*::after{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    font-family:var(--font);
+    color:var(--text);
+    min-height:100vh;
+    background:
+      radial-gradient(circle at 15% -10%, rgba(255,93,143,0.28), transparent 55%),
+      radial-gradient(circle at 90% 0%, rgba(44,217,197,0.18), transparent 45%),
+      linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 45%, var(--bg-3) 100%);
+    background-attachment:fixed;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,p{margin:0;}
+  a{color:inherit;text-decoration:none;}
+  .wrap{
+    width:100%;max-width:480px;margin:0 auto;
+    padding:34px 20px 40px;
+    min-height:100vh;
+  }
+
+  /* ---------- hero ---------- */
+  .hero{text-align:center;}
+  .hero-emoji-row{
+    font-size:34px;display:flex;justify-content:center;gap:14px;margin-bottom:14px;
+    filter:drop-shadow(0 6px 14px rgba(0,0,0,0.35));
+  }
+  .hero-emoji-row span{display:inline-block;animation:bob 2.6s ease-in-out infinite;}
+  .hero-emoji-row span:nth-child(2){animation-delay:.25s;}
+  .hero-emoji-row span:nth-child(3){animation-delay:.5s;}
+  @keyframes bob{
+    0%,100%{transform:translateY(0) rotate(-4deg);}
+    50%{transform:translateY(-7px) rotate(4deg);}
+  }
+  .hero-title{
+    font-size:clamp(26px,7.5vw,32px);font-weight:800;letter-spacing:-0.01em;
+    background:linear-gradient(120deg,#fff,#d9c8ff 60%,var(--accent-3));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .hero-sub{
+    margin-top:12px;font-size:14.5px;color:var(--text-dim);
+    max-width:340px;margin-left:auto;margin-right:auto;
+  }
+
+  /* ---------- cards ---------- */
+  .card-list{margin-top:30px;display:flex;flex-direction:column;gap:16px;}
+  .test-card{
+    display:block;
+    background:var(--card);
+    border:1px solid var(--card-line);
+    border-radius:22px;
+    padding:20px 20px 18px;
+    position:relative;
+    overflow:hidden;
+    transition:transform .15s ease, border-color .15s ease;
+  }
+  .test-card:active{transform:scale(0.98);}
+  .test-card::before{
+    content:'';position:absolute;inset:0;opacity:0.55;pointer-events:none;
+  }
+  .test-card.card-a::before{background:radial-gradient(circle at 100% 0%, rgba(255,93,143,0.22), transparent 60%);}
+  .test-card.card-b::before{background:radial-gradient(circle at 100% 0%, rgba(123,165,126,0.28), transparent 60%);}
+  .test-card.card-c::before{background:radial-gradient(circle at 100% 0%, rgba(44,217,197,0.24), transparent 60%);}
+
+  .card-top{display:flex;align-items:center;gap:12px;position:relative;}
+  .card-emoji{
+    flex-shrink:0;font-size:28px;width:52px;height:52px;
+    display:flex;align-items:center;justify-content:center;
+    border-radius:16px;background:rgba(255,255,255,0.06);
+  }
+  .card-title{font-size:17.5px;font-weight:800;color:var(--text);}
+  .card-meta{margin-top:3px;font-size:12px;color:var(--text-faint);font-weight:600;}
+
+  .card-hook{
+    margin-top:14px;font-size:14px;color:var(--text-dim);line-height:1.6;position:relative;
+  }
+
+  .card-cta{
+    margin-top:16px;display:flex;align-items:center;justify-content:space-between;
+    position:relative;
+  }
+  .card-cta-btn{
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:13.5px;font-weight:800;color:#0f0a1a;
+    padding:11px 18px;border-radius:99px;
+  }
+  .card-a .card-cta-btn{background:linear-gradient(135deg,#ff5d8f,#ff9ec2);}
+  .card-b .card-cta-btn{background:linear-gradient(135deg,#7ba57e,#a9d1ac);}
+  .card-c .card-cta-btn{background:linear-gradient(135deg,#2cd9c5,#7f5af0);color:#0a0c12;}
+  .card-cta-arrow{font-size:12px;color:var(--text-faint);}
+
+  /* ---------- footnote ---------- */
+  .footnote{
+    margin-top:26px;text-align:center;font-size:12px;color:var(--text-faint);
+  }
+
+  /* ---------- home link ---------- */
+  .home-link{
+    margin-top:44px;text-align:center;
+  }
+  .home-link a{
+    font-size:12px;color:var(--text-faint);
+    border-bottom:1px solid transparent;
+    transition:color .15s ease, border-color .15s ease;
+  }
+  .home-link a:active{color:var(--text-dim);}
+
+  @media (min-width:520px){
+    .wrap{padding-top:56px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <div class="hero-emoji-row"><span>🦎</span><span>🐍</span><span>🕷️</span></div>
+    <h1 class="hero-title">파충류 집사 테스트관</h1>
+    <p class="hero-sub">1~2분이면 끝나요. 취향껏 골라서 시작해보세요 — 결과 화면에서 다른 테스트로 바로 넘어갈 수 있어요.</p>
+  </div>
+
+  <div class="card-list" id="card-list">
+    <a class="test-card card-a" href="./test-a.html" data-test-link>
+      <div class="card-top">
+        <div class="card-emoji">🦎</div>
+        <div>
+          <div class="card-title">파충류 집사 유형 테스트</div>
+          <div class="card-meta">⏱ 1~2분 · 8가지 유형</div>
+        </div>
+      </div>
+      <p class="card-hook">나는 어떤 집사? 12문항으로 알아보는 나의 사육 스타일.</p>
+      <div class="card-cta">
+        <span class="card-cta-btn">시작하기 🦎</span>
+        <span class="card-cta-arrow">→</span>
+      </div>
+    </a>
+
+    <a class="test-card card-b" href="./test-b.html" data-test-link>
+      <div class="card-top">
+        <div class="card-emoji">🐸</div>
+        <div>
+          <div class="card-title">우리 아이 행복도 진단</div>
+          <div class="card-meta">⏱ 1~2분 · 축별 케어 점수</div>
+        </div>
+      </div>
+      <p class="card-hook">우리 개체 케어 점수는? 환경·급여·관찰·기록 4축으로 진단해요.</p>
+      <div class="card-cta">
+        <span class="card-cta-btn">진단하기 🐸</span>
+        <span class="card-cta-arrow">→</span>
+      </div>
+    </a>
+
+    <a class="test-card card-c" href="./test-c.html" data-test-link>
+      <div class="card-top">
+        <div class="card-emoji">🏆</div>
+        <div>
+          <div class="card-title">사육 기록 티어 테스트</div>
+          <div class="card-meta">⏱ 1~2분 · 아이언~챌린저</div>
+        </div>
+      </div>
+      <p class="card-hook">내 기록력은 무슨 티어? 8문항으로 측정하는 기록 습관 랭크.</p>
+      <div class="card-cta">
+        <span class="card-cta-btn">측정하기 🏆</span>
+        <span class="card-cta-arrow">→</span>
+      </div>
+    </a>
+  </div>
+
+  <p class="footnote">응답은 익명으로 통계에만 활용됩니다.</p>
+
+  <div class="home-link">
+    <a href="https://yeduk3.github.io/">← yeduk3.github.io</a>
+  </div>
+
+</div>
+
+<script>
+// 허브 URL의 쿼리스트링(예: ?utm_source=x)을 각 테스트 카드 링크에 그대로 이어붙여
+// 채널 추적이 테스트 페이지 방문까지 이어지도록 한다.
+(function(){
+  var qs = location.search; // 예: "?utm_source=x&utm_medium=y"
+  if(!qs) return;
+  document.querySelectorAll('[data-test-link]').forEach(function(a){
+    var base = a.getAttribute('href'); // 예: "./test-a.html"
+    var sep = base.indexOf('?') === -1 ? '?' : '&';
+    a.setAttribute('href', base + sep + qs.slice(1));
+  });
+})();
+</script>
+
+</body>
+</html>

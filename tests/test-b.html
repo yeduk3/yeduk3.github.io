@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>우리 아이 행복도 진단 — 파충류 케어 테스트</title>
+<meta name="description" content="게코, 뱀, 도마뱀, 타란튤라까지 — 내 파충류 아이의 행복 점수를 10문항으로 진단하고 맞춤 케어 팁을 받아보세요.">
+<script data-goatcounter="https://neli3307.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+<style>
+  :root{
+    --bg:#faf6ec;
+    --bg-soft:#f2ecdb;
+    --card:#fffdf6;
+    --accent:#7ba57e;
+    --accent-strong:#578a5c;
+    --accent-soft:#e4efe0;
+    --amber:#eda863;
+    --amber-strong:#e2924a;
+    --text:#33392f;
+    --text-dim:#6c7565;
+    --text-faint:#9aa290;
+    --border:#e6dfc9;
+    --border-soft:#eee8d8;
+    --warn:#d97b5f;
+    --radius-lg:22px;
+    --radius-md:14px;
+    --radius-sm:10px;
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  }
+  *,*::before,*::after{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    font-family:var(--font);
+    background:var(--bg);
+    background-image:radial-gradient(ellipse 700px 420px at 50% -8%, rgba(123,165,126,0.16), transparent 60%);
+    background-repeat:no-repeat;
+    color:var(--text);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  button{font-family:inherit;}
+  h1,h2,h3,p{margin:0;}
+  .wrap{width:100%;max-width:480px;margin:0 auto;padding:24px 18px 48px;min-height:100vh;}
+  .screen{display:none;}
+  .screen.active{display:block;animation:fadein .28s ease;}
+  @keyframes fadein{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+  .eyebrow{
+    text-align:center;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;
+    color:var(--accent-strong);font-weight:700;margin-bottom:10px;
+  }
+
+  /* ---------- intro ---------- */
+  .intro h1{font-size:clamp(24px,7vw,32px);font-weight:800;text-align:center;letter-spacing:-0.01em;}
+  .intro-sub{text-align:center;margin-top:12px;color:var(--text-dim);font-size:15px;max-width:360px;margin-left:auto;margin-right:auto;}
+  .section-label{margin:30px 0 12px;font-size:14px;font-weight:700;color:var(--text);text-align:center;}
+  .species-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .species-option{
+    display:flex;flex-direction:column;align-items:center;gap:6px;
+    background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius-md);
+    padding:16px 8px;cursor:pointer;text-align:center;transition:border-color .15s ease, background .15s ease, transform .1s ease;
+  }
+  .species-option .sp-emoji{font-size:26px;}
+  .species-option .sp-label{font-size:13.5px;font-weight:600;color:var(--text-dim);}
+  .species-option.selected{border-color:var(--accent);background:var(--accent-soft);}
+  .species-option.selected .sp-label{color:var(--accent-strong);}
+  .species-option:active{transform:scale(0.97);}
+
+  .btn{
+    display:block;width:100%;border:none;cursor:pointer;
+    border-radius:99px;font-weight:700;font-size:16px;
+    padding:15px 20px;text-align:center;text-decoration:none;
+    transition:filter .15s ease, transform .1s ease, opacity .15s ease;
+  }
+  .btn:active{transform:scale(0.98);}
+  .btn-primary{background:linear-gradient(145deg,var(--amber),var(--amber-strong));color:#3a2210;}
+  .btn-primary:disabled{opacity:0.42;cursor:not-allowed;}
+  .btn-ghost{background:var(--card);border:1.5px solid var(--border);color:var(--text);}
+  .btn-text{background:transparent;color:var(--text-dim);font-weight:600;font-size:13.5px;padding:8px;width:auto;}
+
+  .intro-cta{margin-top:26px;}
+  .intro-privacy{margin-top:14px;text-align:center;font-size:12px;color:var(--text-faint);}
+
+  /* ---------- quiz ---------- */
+  .quiz-top{display:flex;align-items:center;gap:10px;margin-bottom:18px;}
+  .progress-track{flex:1;height:8px;background:var(--border-soft);border-radius:99px;overflow:hidden;}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-strong));border-radius:99px;transition:width .35s ease;width:0%;}
+  .progress-count{font-size:12.5px;color:var(--text-faint);font-weight:600;white-space:nowrap;}
+
+  .q-card{background:var(--card);border:1px solid var(--border-soft);border-radius:var(--radius-lg);padding:26px 20px;box-shadow:0 14px 34px -22px rgba(60,50,20,0.25);}
+  .q-text{font-size:19px;font-weight:700;line-height:1.42;margin-bottom:20px;}
+  .q-options{display:flex;flex-direction:column;gap:10px;}
+  .q-option{
+    display:block;width:100%;text-align:left;background:var(--bg-soft);border:1.5px solid transparent;
+    border-radius:var(--radius-sm);padding:14px 16px;font-size:14.5px;color:var(--text);cursor:pointer;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .q-option:active{transform:scale(0.99);}
+  .q-option.picked{border-color:var(--accent);background:var(--accent-soft);color:var(--accent-strong);font-weight:600;}
+
+  .quiz-back{margin-top:14px;text-align:center;}
+
+  /* ---------- loading ---------- */
+  .loading{text-align:center;padding:80px 10px 40px;}
+  .loading-spinner{
+    width:56px;height:56px;margin:0 auto 26px;border-radius:50%;
+    border:5px solid var(--border-soft);border-top-color:var(--accent);
+    animation:spin .8s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .loading-text{font-size:15px;color:var(--text-dim);font-weight:600;min-height:22px;}
+
+  /* ---------- result ---------- */
+  .result-head{text-align:center;}
+  .result-score{font-size:56px;font-weight:800;color:var(--accent-strong);line-height:1;}
+  .result-score .unit{font-size:20px;color:var(--text-faint);font-weight:700;margin-left:2px;}
+  .result-grade{margin-top:8px;font-size:20px;font-weight:800;}
+  .result-species{margin-top:6px;font-size:13.5px;color:var(--text-faint);}
+  .result-desc{margin-top:14px;font-size:14.5px;color:var(--text-dim);text-align:center;}
+
+  .axis-block{margin-top:30px;background:var(--card);border:1px solid var(--border-soft);border-radius:var(--radius-lg);padding:22px 20px;}
+  .axis-block h3{font-size:14px;font-weight:700;margin-bottom:16px;}
+  .axis-row{margin-bottom:14px;}
+  .axis-row:last-child{margin-bottom:0;}
+  .axis-row-head{display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;}
+  .axis-row-head .axis-name{font-weight:700;color:var(--text);}
+  .axis-row-head .axis-val{color:var(--text-faint);font-weight:600;}
+  .axis-track{height:9px;background:var(--bg-soft);border-radius:99px;overflow:hidden;}
+  .axis-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--accent-strong));width:0%;transition:width .6s ease;}
+
+  .tips-block{margin-top:22px;}
+  .tips-intro{font-size:14px;color:var(--text-dim);margin-bottom:12px;text-align:center;}
+  .tip-card{
+    display:flex;gap:12px;background:var(--card);border:1px solid var(--border-soft);
+    border-radius:var(--radius-md);padding:16px;margin-bottom:10px;
+  }
+  .tip-card .tip-icon{font-size:20px;flex-shrink:0;}
+  .tip-card .tip-body strong{display:block;font-size:13.5px;margin-bottom:3px;color:var(--accent-strong);}
+  .tip-card .tip-body p{font-size:13.5px;color:var(--text-dim);}
+
+  .result-actions{margin-top:24px;display:flex;flex-direction:column;gap:10px;}
+  .toast{
+    position:fixed;left:50%;bottom:26px;transform:translate(-50%,12px);
+    background:#33392f;color:#fdf8ec;font-size:13.5px;font-weight:600;
+    padding:10px 18px;border-radius:99px;opacity:0;pointer-events:none;
+    transition:opacity .2s ease, transform .2s ease;z-index:20;white-space:nowrap;
+  }
+  .toast.show{opacity:1;transform:translate(-50%,0);}
+
+  .optin-block{margin-top:30px;background:var(--accent-soft);border:1px solid var(--border-soft);border-radius:var(--radius-lg);padding:22px 20px;}
+  .optin-block h3{font-size:15px;font-weight:700;color:var(--accent-strong);}
+  .optin-block p{margin-top:6px;font-size:13px;color:var(--text-dim);}
+  .optin-form{margin-top:14px;display:flex;gap:8px;}
+  .optin-form input[type="email"]{
+    flex:1;min-width:0;background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius-sm);
+    padding:12px 14px;font-size:14px;color:var(--text);font-family:var(--font);
+  }
+  .optin-form input[type="email"]::placeholder{color:var(--text-faint);}
+  .optin-form button{flex-shrink:0;width:auto;padding:12px 18px;font-size:14px;}
+  .optin-note{margin-top:8px;font-size:11.5px;color:var(--text-faint);}
+  .optin-thanks{margin-top:14px;font-size:13.5px;color:var(--accent-strong);font-weight:600;}
+
+  .hub-link-wrap{margin-top:26px;text-align:center;}
+  .hub-link{
+    display:inline-block;font-size:13.5px;font-weight:700;color:var(--accent-strong);
+    padding:12px 22px;border-radius:99px;
+    background:var(--accent-soft);border:1.5px solid var(--border);
+    transition:transform .1s ease, background .15s ease;
+  }
+  .hub-link:active{transform:scale(0.98);}
+
+  footer.site-footer{margin-top:40px;text-align:center;color:var(--text-faint);font-size:12px;}
+  footer.site-footer a{color:var(--text-dim);text-decoration:underline;}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- ============ INTRO ============ -->
+  <section class="screen active" id="screen-intro">
+    <div class="eyebrow">우리 아이 행복도 진단</div>
+    <h1>우리 아이, 지금<br>행복할까?</h1>
+    <p class="intro-sub">10개 질문으로 우리 아이의 케어 상태를 진단하고, 약한 부분에 딱 맞는 팁을 받아보세요. 3분이면 충분해요.</p>
+
+    <p class="section-label">어떤 아이를 키우세요?</p>
+    <div class="species-grid" id="species-grid" role="radiogroup" aria-label="사육 종 선택">
+      <button type="button" class="species-option" data-value="gecko"><span class="sp-emoji">🦎</span><span class="sp-label">게코류</span></button>
+      <button type="button" class="species-option" data-value="snake"><span class="sp-emoji">🐍</span><span class="sp-label">뱀</span></button>
+      <button type="button" class="species-option" data-value="lizard"><span class="sp-emoji">🐉</span><span class="sp-label">도마뱀</span></button>
+      <button type="button" class="species-option" data-value="tarantula_arthropod"><span class="sp-emoji">🕷️</span><span class="sp-label">타란튤라·절지류</span></button>
+      <button type="button" class="species-option" data-value="amphibian"><span class="sp-emoji">🐸</span><span class="sp-label">양서류</span></button>
+      <button type="button" class="species-option" data-value="other"><span class="sp-emoji">✨</span><span class="sp-label">기타</span></button>
+    </div>
+
+    <div class="intro-cta">
+      <button type="button" class="btn btn-primary" id="btn-start" disabled>진단 시작하기</button>
+    </div>
+    <p class="intro-privacy">응답은 익명으로 통계에만 활용됩니다.</p>
+  </section>
+
+  <!-- ============ QUIZ ============ -->
+  <section class="screen" id="screen-quiz">
+    <div class="quiz-top">
+      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+      <span class="progress-count" id="progress-count">1 / 10</span>
+    </div>
+    <div class="q-card">
+      <p class="q-text" id="q-text"></p>
+      <div class="q-options" id="q-options"></div>
+    </div>
+    <div class="quiz-back">
+      <button type="button" class="btn btn-text" id="btn-back">← 이전 질문</button>
+    </div>
+  </section>
+
+  <!-- ============ LOADING ============ -->
+  <section class="screen" id="screen-loading">
+    <div class="loading">
+      <div class="loading-spinner"></div>
+      <p class="loading-text" id="loading-text">행복 지수 계산 중... 🦎</p>
+    </div>
+  </section>
+
+  <!-- ============ RESULT ============ -->
+  <section class="screen" id="screen-result">
+    <div class="result-head">
+      <div class="eyebrow">진단 결과</div>
+      <div class="result-score"><span id="result-score-num">0</span><span class="unit">점</span></div>
+      <div class="result-grade" id="result-grade"></div>
+      <p class="result-species" id="result-species"></p>
+      <p class="result-desc" id="result-desc"></p>
+    </div>
+
+    <div class="axis-block">
+      <h3>축별 케어 점수 (25점 만점)</h3>
+      <div class="axis-row">
+        <div class="axis-row-head"><span class="axis-name">환경 (온습도·청소)</span><span class="axis-val"><span id="axis-env-val">0</span>/25</span></div>
+        <div class="axis-track"><div class="axis-fill" id="axis-env-fill"></div></div>
+      </div>
+      <div class="axis-row">
+        <div class="axis-row-head"><span class="axis-name">급여</span><span class="axis-val"><span id="axis-feed-val">0</span>/25</span></div>
+        <div class="axis-track"><div class="axis-fill" id="axis-feed-fill"></div></div>
+      </div>
+      <div class="axis-row">
+        <div class="axis-row-head"><span class="axis-name">관찰</span><span class="axis-val"><span id="axis-observe-val">0</span>/25</span></div>
+        <div class="axis-track"><div class="axis-fill" id="axis-observe-fill"></div></div>
+      </div>
+      <div class="axis-row">
+        <div class="axis-row-head"><span class="axis-name">기록</span><span class="axis-val"><span id="axis-record-val">0</span>/25</span></div>
+        <div class="axis-track"><div class="axis-fill" id="axis-record-fill"></div></div>
+      </div>
+    </div>
+
+    <div class="tips-block">
+      <p class="tips-intro" id="tips-intro"></p>
+      <div id="tips-list"></div>
+    </div>
+
+    <div class="result-actions">
+      <button type="button" class="btn btn-primary" id="btn-share">결과 공유하기 (링크 복사)</button>
+      <button type="button" class="btn btn-ghost" id="btn-retry">다시 진단하기</button>
+    </div>
+
+    <div class="optin-block">
+      <h3>기록만 잘해도 행복 점수 오릅니다</h3>
+      <p>지금 만들고 있는 사육 기록 앱 소식을 가장 먼저 받아보세요. 선택 사항이에요.</p>
+      <form name="test-b-optin" id="optin-form" class="optin-form">
+        <input type="email" name="email" id="optin-email" placeholder="you@example.com" required>
+        <button type="submit" class="btn btn-primary">소식받기</button>
+      </form>
+      <p class="optin-note">스팸 없음. 언제든 수신거부 가능.</p>
+      <p class="optin-thanks" id="optin-thanks" style="display:none;">신청 완료! 소식이 준비되면 메일로 알려드릴게요.</p>
+    </div>
+
+    <div class="hub-link-wrap">
+      <a class="hub-link" href="./">🦎 다른 테스트도 해보기</a>
+    </div>
+
+    <footer class="site-footer">
+      <p>파충류 사육자들과 함께 만들어가는 작은 진단 테스트입니다.</p>
+    </footer>
+  </section>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var SUBMIT_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxzA7PSYbFaOcaP1UCI1OlA0tYNj7WiFU5l0b1yjbjG7R1aIqI261lqChI0tdFluu3J/exec';
+var PID_KEY = 'herptrack_pid';
+var SUBMITTED_KEY = 'submitted_test-b';
+
+function getPid(){
+  var pid = localStorage.getItem(PID_KEY);
+  if(!pid){
+    pid = (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : (Date.now().toString(36) + Math.random().toString(36).slice(2));
+    localStorage.setItem(PID_KEY, pid);
+  }
+  return pid;
+}
+
+/*
+ * QUESTION_SCHEMA — 문항 ↔ 데이터 필드 매핑
+ * ------------------------------------------------------------------
+ * pid       : 참여자 고유 식별자 (localStorage herptrack_pid, 테스트 a/b/c 공통 공유)
+ * species   : 인트로에서 선택한 사육 종
+ *             gecko | snake | lizard | tarantula_arthropod | amphibian | other
+ *
+ * q1  축=env      온습도 관리 방법            a=3 b=2 c=1 d=0 (점수 반영)
+ * q2  축=feed     급여 루틴 규칙성            a=3 b=2 c=1 d=0 (점수 반영)
+ * q3  축=record   급여 기록 여부·방법         a=3 b=2 c=1 d=0 (점수 반영)
+ * q4  축=observe  탈피 관찰·기록              a=3 b=2 c=1 d=0 (점수 반영)
+ * q5  축=observe  체중 측정 빈도              a=3 b=2 c=1 d=0 (점수 반영)
+ * q6  축=(없음)   사육 연차                   a=6개월미만 b=6개월~2년 c=2~5년 d=5년이상 (데이터 전용, 점수 미반영)
+ * q7  축=(없음)   개체 수·다종 여부           a=1마리1종 b=2~4마리1종 c=다종(2종+) d=5마리+다종 (데이터 전용, 점수 미반영)
+ * q8  축=record   기록 공백·손실 경험         a=3 b=2 c=1 d=0 (점수 반영)
+ * q9  축=env      환경 청소 루틴              a=3 b=2 c=1 d=0 (점수 반영)
+ * q10 축=observe  관찰 시간                   a=3 b=2 c=1 d=0 (점수 반영)
+ *
+ * score_total / score_env / score_feed / score_observe / score_record
+ *             : AXIS_MAX=25 만점 축별 점수 + 합산 총점(100점 만점). 산식은 아래 SCORING 상수 참고.
+ * ------------------------------------------------------------------
+ */
+(function(){
+  'use strict';
+
+  // ---------- SCORING 상수 (명시적 산식) ----------
+  var AXIS_MAX = 25;              // 축별 만점
+  var POINT_MAX_PER_Q = 3;        // 채점 문항 1개당 최대 점수 (옵션 a=3 ~ d=0)
+  var AXIS_QUESTIONS = {          // 축 ↔ 채점 문항 매핑
+    env:     ['q1', 'q9'],
+    feed:    ['q2'],
+    record:  ['q3', 'q8'],
+    observe: ['q4', 'q5', 'q10']
+  };
+
+  var GRADE_TIERS = [
+    { min: 0,  max: 39,  name: '새싹 케어',        emoji: '🌱', desc: '아직 서툰 부분이 있어도 괜찮아요. 아이와 함께 루틴을 하나씩 만들어가는 시작 단계예요. 작은 습관 하나만 더해도 확 달라질 거예요.' },
+    { min: 40, max: 54,  name: '한 걸음 집사',      emoji: '🐾', desc: '기본기는 갖춰가는 중이에요. 몇 가지 루틴만 더 다듬으면 훨씬 안정적인 환경을 만들 수 있어요.' },
+    { min: 55, max: 69,  name: '성실 집사',        emoji: '🌿', desc: '전반적으로 성실하게 챙기고 계세요. 관찰과 기록 습관을 조금 더 촘촘히 하면 완성도가 확 올라갈 거예요.' },
+    { min: 70, max: 84,  name: '베테랑 집사',      emoji: '🏅', desc: '온습도부터 급여, 관찰까지 안정적으로 챙기고 계시네요. 지금 페이스를 유지하면서 세부 기록만 조금 더 다듬어보세요.' },
+    { min: 85, max: 100, name: '파충류 호텔 5성급', emoji: '⭐', desc: '환경, 급여, 관찰, 기록까지 빈틈없이 챙기고 계세요. 아이 입장에선 최고의 호텔에 사는 셈이에요!' }
+  ];
+
+  var AXIS_LABELS = { env: '환경', feed: '급여', record: '기록', observe: '관찰' };
+  var AXIS_TIPS = {
+    env: { icon: '🌡️', title: '환경 — 숫자로 확인하기', body: '온습도는 감보다 숫자가 편해요. 저렴한 디지털 온습도계 하나만 놓아도 갑작스런 변화를 바로 알아챌 수 있어요. 사육장 따뜻한 쪽·서늘한 쪽에 하나씩 두면 더 정확해요.' },
+    feed: { icon: '🍽️', title: '급여 — 요일 하나만 정하기', body: '급여 요일을 하나 정해두면 아이도, 나도 편해져요. 매주 같은 요일로 알림만 맞춰둬도 루틴이 훨씬 잘 잡혀요.' },
+    observe: { icon: '👀', title: '관찰 — 하루 5분이면 충분', body: '급여나 청소할 때 아이 행동을 한 번 더 눈으로 보는 습관을 들여보세요. 평소와 다른 낌새를 가장 먼저 알아채는 건 결국 매일 보는 사육자예요.' },
+    record: { icon: '📝', title: '기록 — 날짜만이라도 남기기', body: '거창한 기록이 아니어도 괜찮아요. 급여 날짜만이라도 캘린더 앱에 남겨보세요. "마지막으로 먹은 게 언제였지?" 싶은 순간 큰 도움이 됩니다.' }
+  };
+
+  var SPECIES_LABELS = {
+    gecko: '게코류', snake: '뱀', lizard: '도마뱀',
+    tarantula_arthropod: '타란튤라·절지류', amphibian: '양서류', other: '기타 파충류'
+  };
+
+  var QUESTIONS = [
+    { id: 'q1', axis: 'env', text: '우리 아이 사육장 온습도, 어떻게 확인하세요?', options: [
+      { code: 'a', label: '디지털 온습도계 + 자동 컨트롤러(타이머·서모스탯)를 쓰고 있어요', points: 3 },
+      { code: 'b', label: '디지털 온습도계로 수시로 확인해요', points: 2 },
+      { code: 'c', label: '아날로그 온습도계나 감으로 확인해요', points: 1 },
+      { code: 'd', label: '솔직히 잘 신경 못 써요', points: 0 }
+    ]},
+    { id: 'q2', axis: 'feed', text: '급여는 보통 어떻게 이뤄지나요?', options: [
+      { code: 'a', label: '요일·시간을 정해두고 거의 그대로 지켜요', points: 3 },
+      { code: 'b', label: '대략적인 주기는 있지만 그때그때 달라요', points: 2 },
+      { code: 'c', label: '아이 상태 보고 즉흥적으로 줘요', points: 1 },
+      { code: 'd', label: '딱히 정해둔 게 없어요', points: 0 }
+    ]},
+    { id: 'q3', axis: 'record', text: '급여 기록은 어떻게 남기시나요?', options: [
+      { code: 'a', label: '앱이나 스프레드시트에 매번 기록해요', points: 3 },
+      { code: 'b', label: '종이 다이어리나 캘린더에 적어둬요', points: 2 },
+      { code: 'c', label: '가끔 생각날 때만 메모해요', points: 1 },
+      { code: 'd', label: '따로 기록 안 하고 기억에 의존해요', points: 0 }
+    ]},
+    { id: 'q4', axis: 'observe', text: '탈피는 어떻게 챙기고 계세요?', options: [
+      { code: 'a', label: '탈피 시작부터 완료까지 관찰하고 날짜·상태를 기록해요', points: 3 },
+      { code: 'b', label: '탈피한 걸 알아채고 날짜 정도는 기억해요', points: 2 },
+      { code: 'c', label: '탈피 흔적을 나중에 발견하는 편이에요', points: 1 },
+      { code: 'd', label: '잘 모르고 지나갈 때가 많아요', points: 0 }
+    ]},
+    { id: 'q5', axis: 'observe', text: '체중은 얼마나 자주 재세요?', options: [
+      { code: 'a', label: '정기적으로(주 1회 이상) 측정하고 기록해요', points: 3 },
+      { code: 'b', label: '한 달에 1~2회 정도 측정해요', points: 2 },
+      { code: 'c', label: '컨디션이 걱정될 때만 재요', points: 1 },
+      { code: 'd', label: '거의 재본 적 없어요', points: 0 }
+    ]},
+    { id: 'q6', axis: null, text: '이 아이(혹은 파충류 사육 전체)와 함께한 지 얼마나 되셨나요?', options: [
+      { code: 'a', label: '6개월 미만' },
+      { code: 'b', label: '6개월 ~ 2년' },
+      { code: 'c', label: '2 ~ 5년' },
+      { code: 'd', label: '5년 이상' }
+    ]},
+    { id: 'q7', axis: null, text: '지금 몇 마리, 몇 종을 키우고 계세요?', options: [
+      { code: 'a', label: '1마리, 1종' },
+      { code: 'b', label: '2~4마리, 1종' },
+      { code: 'c', label: '여러 마리, 2종 이상 (다종)' },
+      { code: 'd', label: '5마리 이상, 다종' }
+    ]},
+    { id: 'q8', axis: 'record', text: '기록이 끊기거나 사라진 경험, 있으신가요?', options: [
+      { code: 'a', label: '없어요, 꾸준히 이어오고 있어요', points: 3 },
+      { code: 'b', label: '가끔 며칠씩 공백이 생겨요', points: 2 },
+      { code: 'c', label: '앱이나 기기를 바꾸면서 예전 기록을 잃어버린 적 있어요', points: 1 },
+      { code: 'd', label: '기록을 시작했다가 흐지부지된 적이 여러 번 있어요', points: 0 }
+    ]},
+    { id: 'q9', axis: 'env', text: '사육장 청소·환경 관리는 어떤 주기로 하세요?', options: [
+      { code: 'a', label: '정해진 주기(주간·부분 청소 등)를 지키는 편이에요', points: 3 },
+      { code: 'b', label: '대충 눈에 띄면 치워요', points: 2 },
+      { code: 'c', label: '냄새나거나 더러워 보일 때 해요', points: 1 },
+      { code: 'd', label: '잘 못 챙겨요', points: 0 }
+    ]},
+    { id: 'q10', axis: 'observe', text: '하루에 아이를 얼마나 관찰하거나 들여다보세요?', options: [
+      { code: 'a', label: '매일 일정 시간 이상 행동을 관찰해요', points: 3 },
+      { code: 'b', label: '급여·청소할 때 자연스럽게 살펴봐요', points: 2 },
+      { code: 'c', label: '가끔 생각날 때 들여다봐요', points: 1 },
+      { code: 'd', label: '바빠서 거의 못 봐요', points: 0 }
+    ]}
+  ];
+
+  var LOADING_MESSAGES = ['행복 지수 계산 중... 🦎', '축별 점수 정리하는 중...', '맞춤 팁 고르는 중...'];
+
+  // ---------- STATE ----------
+  var STATE = { species: null, answers: {}, index: 0, submitted: false, scores: null };
+
+  // ---------- DOM refs ----------
+  var $ = function(id){ return document.getElementById(id); };
+  var screens = {
+    intro: $('screen-intro'), quiz: $('screen-quiz'), loading: $('screen-loading'), result: $('screen-result')
+  };
+
+  function showScreen(name){
+    Object.keys(screens).forEach(function(k){ screens[k].classList.toggle('active', k === name); });
+  }
+
+  // ---------- INTRO ----------
+  var speciesGrid = $('species-grid');
+  var btnStart = $('btn-start');
+  speciesGrid.addEventListener('click', function(e){
+    var btn = e.target.closest('.species-option');
+    if(!btn) return;
+    Array.prototype.forEach.call(speciesGrid.children, function(el){ el.classList.remove('selected'); });
+    btn.classList.add('selected');
+    STATE.species = btn.getAttribute('data-value');
+    btnStart.disabled = false;
+  });
+  btnStart.addEventListener('click', function(){
+    if(!STATE.species) return;
+    STATE.index = 0;
+    STATE.answers = {};
+    showScreen('quiz');
+    renderQuestion();
+  });
+
+  // ---------- QUIZ ----------
+  var qText = $('q-text'), qOptions = $('q-options'), progressFill = $('progress-fill'), progressCount = $('progress-count');
+  var btnBack = $('btn-back');
+
+  function renderQuestion(){
+    var q = QUESTIONS[STATE.index];
+    qText.textContent = q.text;
+    qOptions.innerHTML = '';
+    q.options.forEach(function(opt){
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'q-option';
+      b.textContent = opt.label;
+      if(STATE.answers[q.id] === opt.code) b.classList.add('picked');
+      b.addEventListener('click', function(){ selectOption(q, opt); });
+      qOptions.appendChild(b);
+    });
+    progressFill.style.width = (STATE.index / QUESTIONS.length * 100) + '%';
+    progressCount.textContent = (STATE.index + 1) + ' / ' + QUESTIONS.length;
+    btnBack.style.visibility = STATE.index === 0 ? 'hidden' : 'visible';
+  }
+
+  function selectOption(q, opt){
+    STATE.answers[q.id] = opt.code;
+    Array.prototype.forEach.call(qOptions.children, function(el){ el.classList.remove('picked'); });
+    var idx = q.options.indexOf(opt);
+    qOptions.children[idx].classList.add('picked');
+    setTimeout(function(){
+      if(STATE.index < QUESTIONS.length - 1){
+        STATE.index += 1;
+        renderQuestion();
+      } else {
+        finishQuiz();
+      }
+    }, 260);
+  }
+
+  btnBack.addEventListener('click', function(){
+    if(STATE.index === 0) return;
+    STATE.index -= 1;
+    renderQuestion();
+  });
+
+  // ---------- SCORING ----------
+  function computeScores(){
+    var scores = {};
+    Object.keys(AXIS_QUESTIONS).forEach(function(axis){
+      var qids = AXIS_QUESTIONS[axis];
+      var maxRaw = qids.length * POINT_MAX_PER_Q;
+      var raw = qids.reduce(function(sum, qid){
+        var q = QUESTIONS.filter(function(x){ return x.id === qid; })[0];
+        var code = STATE.answers[qid];
+        var opt = q.options.filter(function(o){ return o.code === code; })[0];
+        return sum + (opt && typeof opt.points === 'number' ? opt.points : 0);
+      }, 0);
+      scores[axis] = Math.round(raw / maxRaw * AXIS_MAX);
+    });
+    scores.total = scores.env + scores.feed + scores.record + scores.observe;
+    return scores;
+  }
+
+  function gradeFor(total){
+    for(var i = 0; i < GRADE_TIERS.length; i++){
+      if(total >= GRADE_TIERS[i].min && total <= GRADE_TIERS[i].max) return GRADE_TIERS[i];
+    }
+    return GRADE_TIERS[0];
+  }
+
+  function weakestAxes(scores){
+    return Object.keys(AXIS_QUESTIONS).slice().sort(function(a, b){ return scores[a] - scores[b]; });
+  }
+
+  function tipsIntroText(total){
+    if(total >= 85) return '이미 잘 챙기고 계세요! 여기서 한 스푼 더하면 좋을 팁이에요.';
+    if(total >= 55) return '지금도 잘하고 계세요. 이 부분만 조금 더 채워보면 좋을 것 같아요.';
+    return '괜찮아요, 지금부터 하나씩 채워가면 됩니다. 이렇게 시작해보세요.';
+  }
+
+  // ---------- LOADING → RESULT ----------
+  function finishQuiz(){
+    STATE.scores = computeScores();
+    showScreen('loading');
+    var loadingText = $('loading-text');
+    var i = 0;
+    var interval = setInterval(function(){
+      i = (i + 1) % LOADING_MESSAGES.length;
+      loadingText.textContent = LOADING_MESSAGES[i];
+    }, 480);
+    submitResponse(STATE.scores);
+    setTimeout(function(){
+      clearInterval(interval);
+      renderResult(STATE.scores);
+      showScreen('result');
+    }, 1500);
+  }
+
+  function renderResult(scores){
+    var grade = gradeFor(scores.total);
+    $('result-score-num').textContent = scores.total;
+    $('result-grade').textContent = grade.emoji + ' ' + grade.name;
+    $('result-species').textContent = (SPECIES_LABELS[STATE.species] || '파충류') + ' 사육자 진단 결과';
+    $('result-desc').textContent = grade.desc;
+
+    ['env', 'feed', 'observe', 'record'].forEach(function(axis){
+      $('axis-' + axis + '-val').textContent = scores[axis];
+      $('axis-' + axis + '-fill').style.width = (scores[axis] / AXIS_MAX * 100) + '%';
+    });
+
+    $('tips-intro').textContent = tipsIntroText(scores.total);
+    var weak = weakestAxes(scores).slice(0, 3);
+    var tipsList = $('tips-list');
+    tipsList.innerHTML = '';
+    weak.forEach(function(axis){
+      var tip = AXIS_TIPS[axis];
+      var card = document.createElement('div');
+      card.className = 'tip-card';
+      card.innerHTML = '<span class="tip-icon">' + tip.icon + '</span><div class="tip-body"><strong>' + tip.title + '</strong><p>' + tip.body + '</p></div>';
+      tipsList.appendChild(card);
+    });
+  }
+
+  // ---------- SHARE ----------
+  var toast = $('toast');
+  function showToast(msg){
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(function(){ toast.classList.remove('show'); }, 1600);
+  }
+  $('btn-share').addEventListener('click', function(){
+    var scores = STATE.scores || computeScores();
+    var grade = gradeFor(scores.total);
+    var text = '우리 아이 행복 점수는 ' + scores.total + '점, "' + grade.name + '" 등급이에요! 당신의 아이는 몇 점일까요? ' + location.href;
+    var done = function(){ showToast('복사했어요! 친구에게 공유해보세요 🦎'); };
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(done).catch(function(){ fallbackCopy(text, done); });
+    } else {
+      fallbackCopy(text, done);
+    }
+  });
+  function fallbackCopy(text, done){
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); } catch(e){}
+    document.body.removeChild(ta);
+    done();
+  }
+
+  // ---------- RETRY ----------
+  $('btn-retry').addEventListener('click', function(){
+    STATE.species = null;
+    STATE.answers = {};
+    STATE.index = 0;
+    STATE.submitted = false;
+    STATE.scores = null;
+    Array.prototype.forEach.call(speciesGrid.children, function(el){ el.classList.remove('selected'); });
+    btnStart.disabled = true;
+    $('optin-thanks').style.display = 'none';
+    $('optin-form').style.display = 'flex';
+    $('optin-form').reset();
+    showScreen('intro');
+  });
+
+  // ---------- DATA SUBMISSION (anonymous, on completion) ----------
+  function submitResponse(scores){
+    if(STATE.submitted) return;
+    STATE.submitted = true;
+    var payload = {
+      form: 'test-b-responses',
+      pid: getPid(),
+      species: STATE.species || '',
+      q1: STATE.answers.q1 || '', q2: STATE.answers.q2 || '', q3: STATE.answers.q3 || '',
+      q4: STATE.answers.q4 || '', q5: STATE.answers.q5 || '', q6: STATE.answers.q6 || '',
+      q7: STATE.answers.q7 || '', q8: STATE.answers.q8 || '', q9: STATE.answers.q9 || '',
+      q10: STATE.answers.q10 || '',
+      score_total: scores.total, score_env: scores.env, score_feed: scores.feed,
+      score_observe: scores.observe, score_record: scores.record
+    };
+    if(localStorage.getItem(SUBMITTED_KEY)) return;
+    fetch(SUBMIT_ENDPOINT, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    }).catch(function(){ /* 익명 통계용 — 실패해도 사용자 흐름에 영향 없음 */ });
+    localStorage.setItem(SUBMITTED_KEY, '1');
+  }
+
+  // ---------- OPTIN FORM ----------
+  var optinForm = $('optin-form');
+  optinForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    var payload = {
+      form: 'test-b-optin',
+      pid: getPid(),
+      email: document.getElementById('optin-email').value
+    };
+    fetch(SUBMIT_ENDPOINT, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    }).then(showOptinThanks).catch(showOptinThanks);
+  });
+  function showOptinThanks(){
+    optinForm.style.display = 'none';
+    $('optin-thanks').style.display = 'block';
+  }
+
+})();
+</script>
+</body>
+</html>
