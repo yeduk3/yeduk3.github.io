@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Neli Tech Blog</title>
+    <meta
+      name="description"
+      content="Reusable Markdown post template for Neli Tech Blog."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="/static/css/header.css" />
+    <link rel="stylesheet" href="/static/css/footer.css" />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div class="site-shell">
+      <header id="header"></header>
+      <main class="page post-page">
+        <section class="post-hero">
+          <div class="post-hero-copy">
+            <div class="post-kicker">
+              <span class="post-tag">Markdown Post</span>
+              <span class="post-date" id="post-path-label">/posts/...</span>
+            </div>
+            <h1 id="post-title">Technical article</h1>
+            <p class="post-subtitle" id="post-subtitle">
+              Write your article as a Markdown file, then open it through this
+              reusable page.
+            </p>
+          </div>
+          <aside class="post-hero-note">
+            <p class="eyebrow">Workflow</p>
+            <p>
+              Store posts in <code>/posts</code>, then render them here with a
+              query like <code>?src=/posts/your-file.md</code>.
+            </p>
+          </aside>
+        </section>
+
+        <section class="article-shell post-content-shell">
+          <article class="post-content" id="markdown-post"></article>
+        </section>
+
+        <section class="callout">
+          <h3>Writing workflow</h3>
+          <p>
+            Create a new file inside <code>/posts</code>, then open
+            <code>/main/post.html?src=/posts/your-file.md</code>.
+          </p>
+        </section>
+      </main>
+      <footer id="footer"></footer>
+    </div>
+
+    <script src="/static/staticHTMLIncluder.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/marked/15.0.12/marked.min.js"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const src = params.get("src");
+      const postBody = document.getElementById("markdown-post");
+      const title = document.getElementById("post-title");
+      const subtitle = document.getElementById("post-subtitle");
+      const pathLabel = document.getElementById("post-path-label");
+
+      const isValidSrc =
+        typeof src === "string" &&
+        src.startsWith("/posts/") &&
+        src.endsWith(".md");
+
+      function titleFromFileName(path) {
+        if (!path) return "Technical article";
+        const fileName = path.split("/").pop().replace(/\.md$/, "");
+        return fileName
+          .split("-")
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(" ");
+      }
+
+      function applyHighlighting() {
+        if (!window.hljs) return;
+        postBody.querySelectorAll("pre code").forEach((block) => {
+          window.hljs.highlightElement(block);
+        });
+      }
+
+      async function renderPost() {
+        if (!isValidSrc) {
+          title.textContent = "Post not found";
+          subtitle.textContent =
+            "Use a valid Markdown file from the /posts directory.";
+          pathLabel.textContent = "Use ?src=/posts/your-post.md";
+          postBody.innerHTML =
+            "<p>Example: <code>/main/post.html?src=/posts/designing-ui-that-explains-itself.md</code></p>";
+          return;
+        }
+
+        pathLabel.textContent = src;
+
+        try {
+          const response = await fetch(src);
+          if (!response.ok) throw new Error("Failed to load markdown");
+
+          const markdown = await response.text();
+          postBody.innerHTML = window.marked.parse(markdown, {
+            gfm: true,
+            breaks: false,
+          });
+
+          const firstHeading = postBody.querySelector("h1");
+          const readableTitle = firstHeading
+            ? firstHeading.textContent.trim()
+            : titleFromFileName(src);
+
+          title.textContent = readableTitle;
+          document.title = readableTitle + " | Neli Tech Blog";
+
+          if (firstHeading) {
+            firstHeading.remove();
+          }
+
+          const introParagraph = postBody.querySelector("p");
+          subtitle.textContent = introParagraph
+            ? introParagraph.textContent.trim()
+            : "Write your article as a Markdown file, then open it through this reusable page.";
+
+          if (introParagraph) {
+            introParagraph.remove();
+          }
+
+          applyHighlighting();
+        } catch (error) {
+          title.textContent = "Post not found";
+          subtitle.textContent =
+            "This Markdown file could not be loaded from the current path.";
+          postBody.innerHTML =
+            "<p>Please check that the file exists in <code>/posts</code> and the URL is correct.</p>";
+        }
+      }
+
+      renderPost();
+    </script>
+  </body>
+</html>

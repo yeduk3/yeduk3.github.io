@@ -2,95 +2,183 @@
 <html lang="ko">
   <head>
     <meta charset="utf-8" />
-
-    <title>Neli's Blog</title>
-
-    <!-- mdblock -->
-    <!-- https://md-block.verou.me/#api -->
-    <script type="module" src="https://md-block.verou.me/md-block.js"></script>
-
-    <!-- markdown style -->
-    <!-- https://cdnjs.com/libraries/github-markdown-css -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.6.1/github-markdown-light.css"
-      integrity="sha512-tVO0ZLV54CEoiM+i1hvfZGcopGR3rxyyC3L2/P/6NRTVXlrp4OKyTFunluVG1BRNasDLnm6ZRPDKBGM0CkS99Q=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Neli Tech Blog</title>
+    <meta
+      name="description"
+      content="Frontend, product engineering, and technical notes collected in a clean and rounded blog."
     />
-
-    <!-- static -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="/static/css/header.css" />
-    <!-- <link rel="stylesheet" href="/static/css/navi.css" /> -->
     <link rel="stylesheet" href="/static/css/footer.css" />
     <link rel="stylesheet" href="/style.css" />
-
-    <!-- main -->
-    <link rel="stylesheet" href="/main/main.css" />
   </head>
   <body>
-    <header id="header"></header>
-    <!-- <nav id="navigator"></nav> -->
-    <!-- <main id="content"></main> -->
-    <main>
-      <div class="whatsnew">
-        <div class="wntitle">What's new</div>
-        <div class="whatsnew-panel">
-          <div class="whatsnew-panel-list blurbox">
-            <div class="item">
-              <img src="/static/assets/Body.png" />
-              <div class="item-text">
-                <div class="item-text-title">Title</div>
-                <div class="item-text-content">
-                  Content Content Content Content Content Content Content
-                  Content Content Contents
+    <div class="site-shell">
+      <header id="header"></header>
+      <main class="page">
+        <section class="hero section-card">
+          <div class="hero-copy">
+            <p class="eyebrow">Technical Blog Template</p>
+            <h1>Rounded notes for building calm, reliable software.</h1>
+            <p class="hero-text">
+              A clean blog home for frontend engineering, debugging diaries,
+              architecture notes, and small lessons gathered while shipping.
+            </p>
+            <div class="hero-actions">
+              <a
+                class="button button-primary"
+                href="/main/post.html?src=/posts/designing-ui-that-explains-itself.md"
+                >Read template post</a
+              >
+              <a class="button button-secondary" href="#latest-posts"
+                >Browse latest posts</a
+              >
+            </div>
+          </div>
+          <aside class="hero-panel">
+            <div class="hero-panel-label">Now writing</div>
+            <div class="hero-panel-title">
+              Designing dependable UI states with fewer edge-case bugs
+            </div>
+            <p class="hero-panel-text">
+              A practical walkthrough of loading, empty, error, and success
+              states using reusable interface patterns.
+            </p>
+            <div class="hero-meta">
+              <span>UI Architecture</span>
+              <span>7 min read</span>
+            </div>
+          </aside>
+        </section>
+
+        <section class="topics">
+          <div class="section-heading">
+            <p class="eyebrow">Focus Areas</p>
+            <h2>Topics this blog can grow into</h2>
+          </div>
+          <div class="topic-list">
+            <div class="topic-chip">Frontend Systems</div>
+            <div class="topic-chip">Performance</div>
+            <div class="topic-chip">Debugging Notes</div>
+            <div class="topic-chip">Web Fundamentals</div>
+            <div class="topic-chip">DX Tooling</div>
+            <div class="topic-chip">Architecture</div>
+          </div>
+        </section>
+
+        <section class="content-grid" id="latest-posts">
+          <div class="main-column">
+            <div class="section-heading">
+              <p class="eyebrow">Latest Posts</p>
+              <h2>Template articles with a technical tone</h2>
+            </div>
+            <div class="post-list">
+              <article class="post-card post-card-featured">
+                <div class="post-card-top">
+                  <span class="post-tag">Featured</span>
+                  <span class="post-date">April 2026</span>
                 </div>
-              </div>
-            </div>
-            <div class="item">
-              <img src="/static/assets/Body.png" />
-              <div class="item-text">
-                <div class="item-text-title">Title</div>
-                <div class="item-text-content">Content</div>
-              </div>
-            </div>
-            <div class="item">
-              <img src="/static/assets/Body.png" />
-              <div class="item-text">
-                <div class="item-text-title">Title</div>
-                <div class="item-text-content">Content</div>
-              </div>
+                <h3>
+                  <a
+                    href="/main/post.html?src=/posts/designing-ui-that-explains-itself.md"
+                  >
+                    Designing UI that explains itself
+                  </a>
+                </h3>
+                <p>
+                  A starter long-form post template covering problem framing,
+                  implementation notes, tradeoffs, and practical takeaways.
+                </p>
+                <div class="post-meta">
+                  <span>Design Systems</span>
+                  <span>8 min read</span>
+                </div>
+              </article>
+
+              <article class="post-card">
+                <div class="post-card-top">
+                  <span class="post-tag">Engineering</span>
+                  <span class="post-date">Template</span>
+                </div>
+                <h3>
+                  <a
+                    href="/main/post.html?src=/posts/debugging-journal-format.md"
+                  >
+                    A debugging journal format that stays useful later
+                  </a>
+                </h3>
+                <p>
+                  Capture symptoms, hypotheses, evidence, and fixes in a way
+                  that makes future incidents easier to solve.
+                </p>
+                <div class="post-meta">
+                  <span>Debugging</span>
+                  <span>6 min read</span>
+                </div>
+              </article>
+
+              <article class="post-card">
+                <div class="post-card-top">
+                  <span class="post-tag">Frontend</span>
+                  <span class="post-date">Template</span>
+                </div>
+                <h3>
+                  <a href="/main/post.html?src=/posts/empty-state-notes.md">
+                    Practical notes on shipping polished empty states
+                  </a>
+                </h3>
+                <p>
+                  A concise post structure for turning a small UI detail into a
+                  thoughtful technical article.
+                </p>
+                <div class="post-meta">
+                  <span>Product UI</span>
+                  <span>5 min read</span>
+                </div>
+              </article>
             </div>
           </div>
-          <div class="preview blurbox">
-            <img src="static/assets/Body.png" />
 
-            <div class="item-text">
-              <div class="item-text-title">Title</div>
-              <div class="item-text-content">
-                Content Content Content Content Content Content Content Content
-                Content Content Content Content Content Content Content Content
-                Content Content Content Content Content Content Content Content
-                Content Content Content Content Content Content Content Content
-                Content Content Content Content Content Content Content Content
-                Content Content Content Content Content Content Content Content
-                Content Content Content Content Content Content Content Content
-                Content Content Content Content Content Content Content Content
-                Content Content Content Content Content Content Content Content
-                Content Contents
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="articles">
-        <div class="atitle">Articles</div>
-        <a href="/main/digitalmedia_catalog.html">요람</a>
-      </div>
-    </main>
-    <footer id="footer"></footer>
+          <aside class="sidebar-column">
+            <section class="sidebar-card">
+              <p class="eyebrow">About This Space</p>
+              <h3>From portfolio fragments to a technical writing home</h3>
+              <p>
+                This version of the site is organized like a personal tech blog:
+                clear entry points, focused articles, and reusable structure for
+                future posts.
+              </p>
+            </section>
 
-    <script type="text/javascript" src="/static/staticHTMLIncluder.js"></script>
-    <!-- <script type="text/javascript" src="/main/js/content.js"></script> -->
+            <section class="sidebar-card">
+              <p class="eyebrow">Writing Pattern</p>
+              <ul class="mini-list">
+                <li>State the problem in one sentence.</li>
+                <li>Show the implementation decision.</li>
+                <li>Explain tradeoffs and lessons learned.</li>
+              </ul>
+            </section>
+
+            <section class="sidebar-card accent-card">
+              <p class="eyebrow">Starter Series</p>
+              <h3>Three strong directions for early posts</h3>
+              <p>
+                Component architecture, bug retrospectives, and small web
+                performance wins are a great foundation for this blog.
+              </p>
+            </section>
+          </aside>
+        </section>
+      </main>
+      <footer id="footer"></footer>
+    </div>
+
+    <script src="/static/staticHTMLIncluder.js"></script>
   </body>
 </html>
