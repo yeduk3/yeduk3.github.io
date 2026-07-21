@@ -87,9 +87,9 @@
 
   .intro-cta{margin-top:26px;}
   .intro-privacy{margin-top:14px;text-align:center;font-size:13px;line-height:1.5;color:var(--gray50);}
+  .intro-hub-link-wrap{margin-top:14px;text-align:center;}
 
   /* ---------- quiz ---------- */
-  #screen-quiz{padding-bottom:108px;}
   .quiz-topbar{display:flex;align-items:center;gap:12px;margin-bottom:30px;}
   .quiz-back-chevron{
     flex:0 0 auto;width:34px;height:34px;display:flex;align-items:center;justify-content:center;
@@ -112,18 +112,6 @@
   .q-option:active{transform:scale(0.99);}
   .q-option:hover{background:var(--gray10);}
   .q-option.picked{border:2px solid var(--primary);background:var(--white);color:var(--gray90);}
-
-  .quiz-cta{
-    position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:center;
-    padding:16px 18px calc(16px + env(safe-area-inset-bottom));
-    pointer-events:none;
-  }
-  .quiz-cta::before{
-    content:'';position:absolute;inset:0;
-    background:linear-gradient(to top, var(--gray5) 55%, rgba(249,250,251,0));
-  }
-  .quiz-cta-inner{position:relative;width:100%;max-width:480px;pointer-events:auto;}
-  #btn-quiz-next:disabled{background:var(--gray20);color:var(--gray50);opacity:1;}
 
   /* ---------- loading ---------- */
   .loading{text-align:center;padding:80px 10px 40px;}
@@ -229,6 +217,10 @@
       <button type="button" class="btn btn-primary" id="btn-start" disabled>진단 시작하기</button>
     </div>
     <p class="intro-privacy">응답은 익명으로 통계에만 활용됩니다.</p>
+
+    <div class="intro-hub-link-wrap">
+      <a class="hub-link" href="./">전체 테스트 목록</a>
+    </div>
   </section>
 
   <!-- ============ QUIZ ============ -->
@@ -240,11 +232,6 @@
     <p class="q-eyebrow" id="q-eyebrow">Q1</p>
     <p class="q-text" id="q-text"></p>
     <div class="q-options" id="q-options"></div>
-    <div class="quiz-cta">
-      <div class="quiz-cta-inner">
-        <button type="button" class="btn btn-primary" id="btn-quiz-next" disabled>다음</button>
-      </div>
-    </div>
   </section>
 
   <!-- ============ LOADING ============ -->
@@ -490,8 +477,17 @@ function getPid(){
 
   // ---------- QUIZ ----------
   var qText = $('q-text'), qOptions = $('q-options'), segmentsEl = $('segments'), qEyebrow = $('q-eyebrow');
-  var btnBack = $('btn-back'), btnQuizNext = $('btn-quiz-next');
+  var btnBack = $('btn-back');
   var pendingPick = null;
+  var PICK_ADVANCE_DELAY = 200; // 선택 하이라이트 노출 후 자동 전환까지 대기(ms), 150~250ms 범위
+  var pickTimer = null;
+
+  function clearPickTimer(){
+    if(pickTimer){
+      clearTimeout(pickTimer);
+      pickTimer = null;
+    }
+  }
 
   function renderSegments(){
     segmentsEl.innerHTML = '';
@@ -503,6 +499,7 @@ function getPid(){
   }
 
   function renderQuestion(){
+    clearPickTimer();
     var q = QUESTIONS[STATE.index];
     renderSegments();
     qEyebrow.textContent = 'Q' + (STATE.index + 1);
@@ -518,18 +515,17 @@ function getPid(){
       b.addEventListener('click', function(){ pickOption(opt.code, b); });
       qOptions.appendChild(b);
     });
-    updateNextButton();
   }
 
   function pickOption(code, btnEl){
+    if(pickTimer) return; // 전환 대기 중 재탭 무시 — 이중가산/이중전환 방지
     pendingPick = code;
     Array.prototype.forEach.call(qOptions.children, function(el){ el.classList.remove('picked'); });
     btnEl.classList.add('picked');
-    updateNextButton();
-  }
-
-  function updateNextButton(){
-    btnQuizNext.disabled = !pendingPick;
+    pickTimer = setTimeout(function(){
+      pickTimer = null;
+      goNext();
+    }, PICK_ADVANCE_DELAY);
   }
 
   function goNext(){
@@ -545,6 +541,7 @@ function getPid(){
   }
 
   function goBack(){
+    clearPickTimer();
     if(STATE.index === 0){
       showScreen('intro');
       return;
@@ -554,7 +551,6 @@ function getPid(){
   }
 
   btnBack.addEventListener('click', goBack);
-  btnQuizNext.addEventListener('click', goNext);
 
   // ---------- SCORING ----------
   function computeScores(){
@@ -666,6 +662,7 @@ function getPid(){
 
   // ---------- RETRY ----------
   $('btn-retry').addEventListener('click', function(){
+    clearPickTimer();
     STATE.species = null;
     STATE.answers = {};
     STATE.index = 0;

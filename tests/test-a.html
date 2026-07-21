@@ -115,6 +115,7 @@
   .anon-note{
     margin-top:16px;font-size:13px;line-height:1.5;color:var(--gray50);
   }
+  .intro-hub-link-wrap{margin-top:14px;text-align:center;}
   .intro-preview{
     margin-top:26px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;
   }
@@ -124,7 +125,7 @@
   }
 
   /* ---------- quiz screen ---------- */
-  #screen-quiz{padding-top:10px;padding-bottom:108px;}
+  #screen-quiz{padding-top:10px;}
   .quiz-topbar{display:flex;align-items:center;gap:12px;margin-bottom:30px;}
   .quiz-back{
     flex:0 0 auto;width:34px;height:34px;display:flex;align-items:center;justify-content:center;
@@ -150,25 +151,6 @@
   .choice-btn:active{transform:scale(0.98);}
   .choice-btn:hover{background:var(--gray10);}
   .choice-btn.picked{border:2px solid var(--primary);background:var(--white);}
-
-  .quiz-cta{
-    position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:center;
-    padding:16px 18px calc(16px + env(safe-area-inset-bottom));
-    pointer-events:none;
-  }
-  .quiz-cta::before{
-    content:'';position:absolute;inset:0;
-    background:linear-gradient(to top, var(--gray5) 55%, rgba(249,250,251,0));
-  }
-  .quiz-cta-inner{position:relative;width:100%;max-width:480px;pointer-events:auto;}
-  .next-btn{
-    width:100%;padding:17px;border-radius:var(--radius-btn);
-    font-size:16px;line-height:1.4;font-weight:600;
-    background:var(--primary);color:var(--gray90);
-    transition:transform .12s ease, background .15s ease, color .15s ease;
-  }
-  .next-btn:active{transform:scale(0.97);}
-  .next-btn:disabled{background:var(--gray20);color:var(--gray50);}
 
   /* ---------- loading screen ---------- */
   #screen-loading{
@@ -308,6 +290,10 @@
     </div>
     <button class="start-btn" id="btn-start" type="button">테스트 시작하기 🦎</button>
     <p class="anon-note">응답은 익명으로 통계에만 활용됩니다.</p>
+
+    <div class="intro-hub-link-wrap">
+      <a class="hub-link" href="./">전체 테스트 목록</a>
+    </div>
   </section>
 
   <!-- ============ QUIZ ============ -->
@@ -319,11 +305,6 @@
     <p class="q-eyebrow" id="q-eyebrow">Q1</p>
     <h2 class="question-text" id="question-text">문항을 불러오는 중...</h2>
     <div class="choices" id="choices"></div>
-    <div class="quiz-cta">
-      <div class="quiz-cta-inner">
-        <button class="next-btn" id="btn-next" type="button" disabled>다음</button>
-      </div>
-    </div>
   </section>
 
   <!-- ============ LOADING ============ -->
@@ -611,7 +592,6 @@ const el = {
   questionText: document.getElementById('question-text'),
   choices: document.getElementById('choices'),
   btnQuizBack: document.getElementById('btn-quiz-back'),
-  btnNext: document.getElementById('btn-next'),
   resultCard: document.getElementById('result-card'),
   resultEmoji: document.getElementById('result-emoji'),
   resultName: document.getElementById('result-name'),
@@ -638,7 +618,18 @@ function renderSegments(){
   });
 }
 
+const PICK_ADVANCE_DELAY = 200; // 선택 하이라이트 노출 후 자동 전환까지 대기(ms), 150~250ms 범위
+let pickTimer = null;
+
+function clearPickTimer(){
+  if(pickTimer){
+    clearTimeout(pickTimer);
+    pickTimer = null;
+  }
+}
+
 function renderQuestion(){
+  clearPickTimer();
   const q = QUESTIONS[state.index];
   renderSegments();
   el.qEyebrow.textContent = 'Q' + (state.index + 1);
@@ -655,19 +646,17 @@ function renderQuestion(){
     btn.addEventListener('click', () => pickChoice(choice, btn));
     el.choices.appendChild(btn);
   });
-
-  updateNextButton();
 }
 
 function pickChoice(choice, btnEl){
+  if(pickTimer) return; // 전환 대기 중 재탭 무시 — 이중가산/이중전환 방지
   currentPick = choice;
   Array.from(el.choices.children).forEach(b => b.classList.remove('picked'));
   btnEl.classList.add('picked');
-  updateNextButton();
-}
-
-function updateNextButton(){
-  el.btnNext.disabled = !currentPick;
+  pickTimer = setTimeout(() => {
+    pickTimer = null;
+    goNext();
+  }, PICK_ADVANCE_DELAY);
 }
 
 function goNext(){
@@ -683,6 +672,7 @@ function goNext(){
 }
 
 function goBack(){
+  clearPickTimer();
   if(state.index === 0){
     showScreen('intro');
     return;
@@ -761,6 +751,7 @@ function renderResult(code){
 }
 
 function resetQuiz(){
+  clearPickTimer();
   state.index = 0;
   state.answers = {};
   state.resultType = null;
@@ -779,7 +770,6 @@ document.getElementById('btn-start').addEventListener('click', () => {
 });
 
 el.btnQuizBack.addEventListener('click', goBack);
-el.btnNext.addEventListener('click', goNext);
 
 document.getElementById('btn-restart').addEventListener('click', resetQuiz);
 

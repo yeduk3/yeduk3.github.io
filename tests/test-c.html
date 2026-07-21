@@ -119,9 +119,10 @@
     text-align:center; margin-top:28px; padding-top:16px; border-top:1px solid var(--gray20);
   }
   .intro-note small{ display:block; margin-top:4px; }
+  .intro-hub-link-wrap{ margin-top:14px; text-align:center; }
 
   /* ---------- quiz ---------- */
-  #screen-quiz{ gap:28px; padding-bottom:100px; }
+  #screen-quiz{ gap:28px; }
   .progress-wrap{ display:flex; align-items:center; gap:12px; }
   .quiz-back-chevron{
     flex:0 0 auto; width:34px; height:34px; display:flex; align-items:center; justify-content:center;
@@ -151,18 +152,6 @@
   .option.selected{
     border:2px solid var(--primary); background:var(--white);
   }
-
-  .quiz-cta{
-    position:fixed; left:0; right:0; bottom:0; display:flex; justify-content:center;
-    padding:16px 20px calc(16px + env(safe-area-inset-bottom));
-    pointer-events:none;
-  }
-  .quiz-cta::before{
-    content:''; position:absolute; inset:0;
-    background:linear-gradient(to top, var(--gray5) 55%, rgba(249,250,251,0));
-  }
-  .quiz-cta-inner{ position:relative; width:100%; max-width:480px; pointer-events:auto; }
-  #btn-quiz-next:disabled{ background:var(--gray20); color:var(--gray50); opacity:1; pointer-events:none; }
 
   /* ---------- loading ---------- */
   #screen-loading{ align-items:center; justify-content:center; text-align:center; gap:18px; }
@@ -290,6 +279,10 @@
       <small>응답은 익명으로 통계에만 활용됩니다.</small>
       <small>이름·개인정보를 묻지 않습니다. 결과는 즉시 표시됩니다.</small>
     </div>
+
+    <div class="intro-hub-link-wrap">
+      <a class="hub-link" href="./">전체 테스트 목록</a>
+    </div>
   </section>
 
   <!-- ============ QUIZ ============ -->
@@ -301,12 +294,6 @@
 
     <div class="q-card" id="q-card">
       <!-- JS가 문항을 렌더 -->
-    </div>
-
-    <div class="quiz-cta">
-      <div class="quiz-cta-inner">
-        <button class="btn btn-primary" id="btn-quiz-next" type="button" disabled>다음</button>
-      </div>
     </div>
   </section>
 
@@ -535,7 +522,6 @@ function getPid(){
     qCard: document.getElementById('q-card'),
     btnStart: document.getElementById('btn-start'),
     btnBack: document.getElementById('btn-back'),
-    btnQuizNext: document.getElementById('btn-quiz-next'),
     btnRetry: document.getElementById('btn-retry'),
     btnShare: document.getElementById('btn-share'),
     badgeBig: document.getElementById('badge-big'),
@@ -573,6 +559,15 @@ function getPid(){
   }
 
   var pendingPick = null;
+  var PICK_ADVANCE_DELAY = 200; // 선택 하이라이트 노출 후 자동 전환까지 대기(ms), 150~250ms 범위
+  var pickTimer = null;
+
+  function clearPickTimer(){
+    if(pickTimer){
+      clearTimeout(pickTimer);
+      pickTimer = null;
+    }
+  }
 
   function renderSegments(){
     el.segments.innerHTML = '';
@@ -584,6 +579,7 @@ function getPid(){
   }
 
   function renderQuestion(){
+    clearPickTimer();
     var q = QUESTIONS[state.index];
     pendingPick = state.answers[q.id] || null;
 
@@ -606,20 +602,18 @@ function getPid(){
     el.qCard.querySelectorAll('.option').forEach(function(btn){
       btn.addEventListener('click', function(){ onPick(btn.dataset.code); });
     });
-
-    updateNextButton();
   }
 
   function onPick(code){
+    if(pickTimer) return; // 전환 대기 중 재탭 무시 — 이중가산/이중전환 방지
     pendingPick = code;
     el.qCard.querySelectorAll('.option').forEach(function(btn){
       btn.classList.toggle('selected', btn.dataset.code === code);
     });
-    updateNextButton();
-  }
-
-  function updateNextButton(){
-    el.btnQuizNext.disabled = !pendingPick;
+    pickTimer = setTimeout(function(){
+      pickTimer = null;
+      goNext();
+    }, PICK_ADVANCE_DELAY);
   }
 
   function goNext(){
@@ -635,6 +629,7 @@ function getPid(){
   }
 
   el.btnBack.addEventListener('click', function(){
+    clearPickTimer();
     if(state.index > 0){
       state.index -= 1;
       renderQuestion();
@@ -642,8 +637,6 @@ function getPid(){
       showScreen('intro');
     }
   });
-
-  el.btnQuizNext.addEventListener('click', goNext);
 
   function scoreOf(qId, code){
     var q = QUESTIONS.filter(function(x){ return x.id === qId; })[0];
@@ -752,6 +745,7 @@ function getPid(){
   }
 
   el.btnRetry.addEventListener('click', function(){
+    clearPickTimer();
     state = { index:0, answers:{} };
     el.optinStatus.textContent = '';
     el.formOptin.reset();
