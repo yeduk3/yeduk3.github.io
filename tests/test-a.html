@@ -405,7 +405,8 @@ const QUESTION_SCHEMA = {
   q9:  { field: 'spending_priority',  desc: 'WTP 간접 신호 (지출 우선순위)' },
   q10: { field: 'vlog_reaction',      desc: '타 집사 콘텐츠 반응' },
   q11: { field: 'vacation_planning',  desc: '돌봄 공백(휴가) 대응 방식' },
-  q12: { field: 'dream_retirement',   desc: '이상적 사육 미래상 (가치관 종합)' }
+  q12: { field: 'dream_retirement',   desc: '이상적 사육 미래상 (가치관 종합)' },
+  q13: { field: 'wtp_amount',         desc: 'WTP 간접 신호 (기록 도구 지출 의향) — 유형 축 가중치 0, 8유형 판정 비반영' }
 };
 
 /* ---------------------------------------------------------------------
@@ -530,6 +531,16 @@ const QUESTIONS = [
       { label: '온갖 파충류가 모인 나만의 작은 동물원', code: 'dream_zoo', axis: { m: 2 } },
       { label: '쌓인 데이터로 책이나 논문 한 권 내기', code: 'dream_publish', axis: { d: 2 } },
       { label: '그날그날 내키는 대로 새 친구를 들이는 삶', code: 'dream_freeform', axis: { i: 2 } }
+    ]
+  },
+  {
+    id: 'q13', field: 'wtp_amount',
+    text: '기록 도구에 낼 수 있는 최대 금액은?',
+    choices: [
+      { label: '무료로 쓸 수 있는 것만', code: 'free', axis: {} },
+      { label: '일회성 결제라면 ₩10,000선까지', code: 'w10000', axis: {} },
+      { label: '일회성 결제라면 ₩30,000선까지', code: 'w30000', axis: {} },
+      { label: '구독형 결제도 괜찮다', code: 'subscription', axis: {} }
     ]
   }
 ];

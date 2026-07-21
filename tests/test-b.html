@@ -222,6 +222,7 @@
       <button type="button" class="species-option" data-value="tarantula_arthropod"><span class="sp-emoji">🕷️</span><span class="sp-label">타란튤라·절지류</span></button>
       <button type="button" class="species-option" data-value="amphibian"><span class="sp-emoji">🐸</span><span class="sp-label">양서류</span></button>
       <button type="button" class="species-option" data-value="other"><span class="sp-emoji">✨</span><span class="sp-label">기타</span></button>
+      <button type="button" class="species-option" data-value="prospective"><span class="sp-emoji">🌱</span><span class="sp-label">아직 안 키워요 (예비 집사)</span></button>
     </div>
 
     <div class="intro-cta">
@@ -337,11 +338,11 @@ function getPid(){
  * ------------------------------------------------------------------
  * pid       : 참여자 고유 식별자 (localStorage herptrack_pid, 테스트 a/b/c 공통 공유)
  * species   : 인트로에서 선택한 사육 종
- *             gecko | snake | lizard | tarantula_arthropod | amphibian | other
+ *             gecko | snake | lizard | tarantula_arthropod | amphibian | other | prospective(예비 집사, 점수 무관 인구통계 필드)
  *
  * q1  축=env      온습도 관리 방법            a=3 b=2 c=1 d=0 (점수 반영)
  * q2  축=feed     급여 루틴 규칙성            a=3 b=2 c=1 d=0 (점수 반영)
- * q3  축=record   급여 기록 여부·방법         a=3 b=2 c=1 d=0 (점수 반영)
+ * q3  축=record   급여 기록 여부·방법         app=3 sheet=3 b=2 c=1 d=0 (점수 반영, app/sheet는 기존 a "앱/시트 기록"을 분리한 동점 코드)
  * q4  축=observe  탈피 관찰·기록              a=3 b=2 c=1 d=0 (점수 반영)
  * q5  축=observe  체중 측정 빈도              a=3 b=2 c=1 d=0 (점수 반영)
  * q6  축=(없음)   사육 연차                   a=6개월미만 b=6개월~2년 c=2~5년 d=5년이상 (데이터 전용, 점수 미반영)
@@ -385,7 +386,8 @@ function getPid(){
 
   var SPECIES_LABELS = {
     gecko: '게코류', snake: '뱀', lizard: '도마뱀',
-    tarantula_arthropod: '타란튤라·절지류', amphibian: '양서류', other: '기타 파충류'
+    tarantula_arthropod: '타란튤라·절지류', amphibian: '양서류', other: '기타 파충류',
+    prospective: '예비 집사(아직 미입양)'
   };
 
   var QUESTIONS = [
@@ -402,7 +404,8 @@ function getPid(){
       { code: 'd', label: '딱히 정해둔 게 없어요', points: 0 }
     ]},
     { id: 'q3', axis: 'record', text: '급여 기록은 어떻게 남기시나요?', options: [
-      { code: 'a', label: '앱이나 스프레드시트에 매번 기록해요', points: 3 },
+      { code: 'app', label: '전용 기록 앱에 매번 입력해요', points: 3 },
+      { code: 'sheet', label: '스프레드시트·메모장에 매번 적어둬요', points: 3 },
       { code: 'b', label: '종이 다이어리나 캘린더에 적어둬요', points: 2 },
       { code: 'c', label: '가끔 생각날 때만 메모해요', points: 1 },
       { code: 'd', label: '따로 기록 안 하고 기억에 의존해요', points: 0 }
