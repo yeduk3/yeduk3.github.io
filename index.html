@@ -1,184 +1,194 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Neli Tech Blog</title>
-    <meta
-      name="description"
-      content="Frontend, product engineering, and technical notes collected in a clean and rounded blog."
-    />
+
+    <!-- 커스텀 도메인 전환 시 canonical / og:url / JSON-LD url만 교체하고 저장소 루트에 CNAME 추가. -->
+    <title>yeduk3 — 컴퓨터 그래픽스 · 물리 기반 시뮬레이션</title>
+    <meta name="description" content="GPU 시뮬레이션 엔진 ysim, BVH/LBVH 충돌 검출 연구, macOS 네이티브 앱 Glim. C++17 · Metal." />
+    <meta name="author" content="yeduk3" />
+    <link rel="canonical" href="https://yeduk3.github.io/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="yeduk3" />
+    <meta property="og:locale" content="ko_KR" />
+    <meta property="og:title" content="yeduk3 — 컴퓨터 그래픽스 · 물리 기반 시뮬레이션" />
+    <meta property="og:description" content="GPU 시뮬레이션 엔진 ysim, BVH/LBVH 충돌 검출 연구, macOS 네이티브 앱 Glim. C++17 · Metal." />
+    <meta property="og:url" content="https://yeduk3.github.io/" />
+    <!-- TODO: /static/og.png 생성 필요 (1200×630). 파일이 없어 지금 공유하면 카드가 깨진다. -->
+    <meta property="og:image" content="https://yeduk3.github.io/static/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="yeduk3 — GPU 시뮬레이션과 충돌 검출" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="yeduk3 — 컴퓨터 그래픽스 · 물리 기반 시뮬레이션" />
+    <meta name="twitter:description" content="GPU 시뮬레이션 엔진 ysim, BVH/LBVH 충돌 검출 연구, macOS 네이티브 앱 Glim. C++17 · Metal." />
+    <meta name="twitter:image" content="https://yeduk3.github.io/static/og.png" />
+
+    <!-- datePublished/dateModified 미기재: 실제 발행일이 정해지기 전까지 가짜 날짜를 구조화 데이터에 넣지 않는다. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Person",
+            "@id": "https://yeduk3.github.io/#person",
+            "name": "yeduk3",
+            "url": "https://yeduk3.github.io/",
+            "email": "mailto:yeduk33@gmail.com",
+            "knowsAbout": ["컴퓨터 그래픽스", "물리 기반 시뮬레이션", "충돌 검출", "BVH", "LBVH", "GPU 프로그래밍", "Metal", "C++17", "Swift"],
+            "sameAs": ["https://github.com/yeduk3", "https://solved.ac/profile/yeduk3", "https://www.acmicpc.net/user/yeduk3"]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://yeduk3.github.io/#site",
+            "url": "https://yeduk3.github.io/",
+            "name": "yeduk3",
+            "inLanguage": "ko",
+            "author": {
+              "@id": "https://yeduk3.github.io/#person"
+            }
+          }
+        ]
+      }
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="/static/css/header.css" />
-    <link rel="stylesheet" href="/static/css/footer.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/css/symplex.css" />
     <link rel="stylesheet" href="/style.css" />
   </head>
   <body>
-    <div class="site-shell">
-      <header id="header"></header>
-      <main class="page">
-        <section class="hero section-card">
-          <div class="hero-copy">
-            <p class="eyebrow">Technical Blog Template</p>
-            <h1>Rounded notes for building calm, reliable software.</h1>
-            <p class="hero-text">
-              A clean blog home for frontend engineering, debugging diaries,
-              architecture notes, and small lessons gathered while shipping.
-            </p>
-            <div class="hero-actions">
-              <a
-                class="button button-primary"
-                href="/main/post.html?src=/posts/designing-ui-that-explains-itself.md"
-                >Read template post</a
-              >
-              <a class="button button-secondary" href="#latest-posts"
-                >Browse latest posts</a
-              >
+        <!-- build:nav -->
+<nav class="sx-nav">
+  <a class="sx-nav__brand" href="/">yeduk3</a>
+  <div class="sx-nav__links">
+    <a class="sx-nav__link" href="/work/">작업</a>
+    <a class="sx-nav__link" href="/notes/">글</a>
+    <a class="sx-nav__link" href="/about/">소개</a>
+  </div>
+  <div class="sx-nav__spacer"></div>
+  <!-- 시스템 규칙: 뷰포트당 primary는 하나. 각 페이지의 primary는 본문에 있으므로 nav는 secondary. -->
+  <a class="sx-btn sx-btn--secondary sx-btn--sm" href="mailto:yeduk33@gmail.com">메일 보내기</a>
+</nav>
+<!-- /build:nav -->
+
+    <header class="sec hero">
+      <div class="sx-container">
+        <p class="sx-eyebrow hero__eyebrow">Computer graphics, Physical simulation</p>
+        <h1 class="sx-display-2">Toward fast but efficient, controllable physical simulation.</h1>
+        <p class="sx-lead">
+          I'm interested in GPU-based simulation and optimization.<br />
+          Recently, I started to playing with geometry nodes in Blender.
+        </p>
+        <div class="hero__actions">
+          <a class="sx-btn sx-btn--primary" href="/notes/">Articles</a>
+          <a class="sx-btn sx-btn--primary" href="/work/">Artworks</a>
+          <a class="sx-btn sx-btn--secondary" href="/about/">About me</a>
+        </div>
+      </div>
+    </header>
+
+    <section class="band sec--tight" aria-label="요약">
+      <div class="sx-container">
+        <dl class="glance">
+          <div>
+            <dt class="sx-eyebrow">Now</dt>
+            <dd>Learning numerical optimization algorithms.</dd>
+          </div>
+          <div>
+            <dt class="sx-eyebrow">Core</dt>
+            <dd>C++, Metal, Collision Detection(BVH, Spatial Hashing)</dd>
+          </div>
+          <div>
+            <dt class="sx-eyebrow">Shipped</dt>
+            <!-- <dd><a href="/work/glim/">Glim</a> — macOS 네이티브 앱. Quick Look 확장과 공증 배포.</dd> -->
+            <dd>working...</dd>
+          </div>
+          <div>
+            <dt class="sx-eyebrow">Latest note</dt>
+            <!-- <dd><a href="/notes/gpu-bvh-staged-port/">GPU라고 다 빠르지 않다</a></dd> -->
+            <dd>working...</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="sec" id="writing">
+      <div class="sx-container">
+        <div class="head head--row">
+          <div>
+            <p class="sx-eyebrow">Recent Articles</p>
+            <h2 class="sx-h1">최근 글</h2>
+          </div>
+          <a class="sx-btn sx-btn--secondary sx-btn--sm" href="/notes/">글 전체 보기</a>
+        </div>
+            <div class="notes">
+<!-- build:notes limit=3 -->
+      <div class="sx-card sx-card--sunken empty">
+        <p class="sx-eyebrow">Working on it</p>
+        <p class="empty__msg">아직 공개한 글이 없습니다.</p>
+        <p class="sx-caption">쓰는 중입니다. posts/ 에 frontmatter를 갖춘 .md를 넣으면 여기에 나타납니다.</p>
+      </div>
+<!-- /build:notes -->
+    </div>      </div>
+    </section>
+
+    <section class="sec" id="work">
+      <div class="sx-container">
+        <div class="sx-block sx-block--mist">
+          <div class="head head--row">
+            <div>
+              <p class="sx-eyebrow">Selected work</p>
+              <h2 class="sx-h1">최근 작업</h2>
+            </div>
+            <a class="sx-btn sx-btn--secondary sx-btn--sm" href="/work/">작업 전체 보기</a>
+          </div>
+                <div class="work-list">
+<!-- build:work limit=3 -->
+      <div class="sx-card sx-card--sunken empty">
+        <p class="sx-eyebrow">Working on it</p>
+        <p class="empty__msg">정리 중인 작업이 있습니다.</p>
+        <p class="sx-caption">projects/ 에 frontmatter를 갖춘 .md를 넣으면 여기에 나타납니다.</p>
+      </div>
+<!-- /build:work -->
+              </div>
             </div>
           </div>
-          <aside class="hero-panel">
-            <div class="hero-panel-label">Now writing</div>
-            <div class="hero-panel-title">
-              Designing dependable UI states with fewer edge-case bugs
-            </div>
-            <p class="hero-panel-text">
-              A practical walkthrough of loading, empty, error, and success
-              states using reusable interface patterns.
-            </p>
-            <div class="hero-meta">
-              <span>UI Architecture</span>
-              <span>7 min read</span>
-            </div>
-          </aside>
         </section>
 
-        <section class="topics">
-          <div class="section-heading">
-            <p class="eyebrow">Focus Areas</p>
-            <h2>Topics this blog can grow into</h2>
+    <!-- 페이지 맨 아래의 인터랙티브 요소. 도식이 아니라 도구다 — 드래그하면 계층이 다시 서고,
+     아래 숫자는 그 트리에서 바로 센 값이다. 상시 애니메이션은 돌리지 않는다. -->
+    <section class="sec--tight" id="playground">
+      <div class="sx-container">
+        <figure class="sx-card fig fig--standalone">
+          <figcaption class="fig__head">
+            <p class="sx-eyebrow">Playground · BVH inspector</p>
+            <a class="sx-micro" href="/work/ysim/">프로젝트 보기</a>
+          </figcaption>
+          <div class="sx-media fig__well">
+            <canvas id="bvh" aria-label="BVH 인스펙터 — 프리미티브를 드래그하면 계층이 재구축된다"></canvas>
           </div>
-          <div class="topic-list">
-            <div class="topic-chip">Frontend Systems</div>
-            <div class="topic-chip">Performance</div>
-            <div class="topic-chip">Debugging Notes</div>
-            <div class="topic-chip">Web Fundamentals</div>
-            <div class="topic-chip">DX Tooling</div>
-            <div class="topic-chip">Architecture</div>
+          <div class="fig__bar">
+            <span class="fig__read">prims <b id="m-p">0</b> · leaves <b id="m-l">0</b> · overlap <b id="m-o">0</b> · &Sigma;area <b id="m-a">0.00</b>&times;</span>
+            <button class="sx-btn sx-btn--secondary sx-btn--sm" type="button" id="reseed">다시 배치</button>
+            <span class="sx-micro fig__hint">드래그하면 계층이 다시 섭니다. overlap과 &Sigma;area가 오르면 쿼리가 비싸집니다.</span>
           </div>
-        </section>
+        </figure>
+      </div>
+    </section>
 
-        <section class="content-grid" id="latest-posts">
-          <div class="main-column">
-            <div class="section-heading">
-              <p class="eyebrow">Latest Posts</p>
-              <h2>Template articles with a technical tone</h2>
-            </div>
-            <div class="post-list">
-              <article class="post-card post-card-featured">
-                <div class="post-card-top">
-                  <span class="post-tag">Featured</span>
-                  <span class="post-date">April 2026</span>
-                </div>
-                <h3>
-                  <a
-                    href="/main/post.html?src=/posts/designing-ui-that-explains-itself.md"
-                  >
-                    Designing UI that explains itself
-                  </a>
-                </h3>
-                <p>
-                  A starter long-form post template covering problem framing,
-                  implementation notes, tradeoffs, and practical takeaways.
-                </p>
-                <div class="post-meta">
-                  <span>Design Systems</span>
-                  <span>8 min read</span>
-                </div>
-              </article>
+    <script src="/static/js/bvh.js" defer></script>
 
-              <article class="post-card">
-                <div class="post-card-top">
-                  <span class="post-tag">Engineering</span>
-                  <span class="post-date">Template</span>
-                </div>
-                <h3>
-                  <a
-                    href="/main/post.html?src=/posts/debugging-journal-format.md"
-                  >
-                    A debugging journal format that stays useful later
-                  </a>
-                </h3>
-                <p>
-                  Capture symptoms, hypotheses, evidence, and fixes in a way
-                  that makes future incidents easier to solve.
-                </p>
-                <div class="post-meta">
-                  <span>Debugging</span>
-                  <span>6 min read</span>
-                </div>
-              </article>
-
-              <article class="post-card">
-                <div class="post-card-top">
-                  <span class="post-tag">Frontend</span>
-                  <span class="post-date">Template</span>
-                </div>
-                <h3>
-                  <a href="/main/post.html?src=/posts/empty-state-notes.md">
-                    Practical notes on shipping polished empty states
-                  </a>
-                </h3>
-                <p>
-                  A concise post structure for turning a small UI detail into a
-                  thoughtful technical article.
-                </p>
-                <div class="post-meta">
-                  <span>Product UI</span>
-                  <span>5 min read</span>
-                </div>
-              </article>
-            </div>
-          </div>
-
-          <aside class="sidebar-column">
-            <section class="sidebar-card">
-              <p class="eyebrow">About This Space</p>
-              <h3>From portfolio fragments to a technical writing home</h3>
-              <p>
-                This version of the site is organized like a personal tech blog:
-                clear entry points, focused articles, and reusable structure for
-                future posts.
-              </p>
-            </section>
-
-            <section class="sidebar-card">
-              <p class="eyebrow">Writing Pattern</p>
-              <ul class="mini-list">
-                <li>State the problem in one sentence.</li>
-                <li>Show the implementation decision.</li>
-                <li>Explain tradeoffs and lessons learned.</li>
-              </ul>
-            </section>
-
-            <section class="sidebar-card accent-card">
-              <p class="eyebrow">Starter Series</p>
-              <h3>Three strong directions for early posts</h3>
-              <p>
-                Component architecture, bug retrospectives, and small web
-                performance wins are a great foundation for this blog.
-              </p>
-            </section>
-          </aside>
-        </section>
-      </main>
-      <footer id="footer"></footer>
-    </div>
-
-    <script src="/static/staticHTMLIncluder.js"></script>
+    <!-- build:footer -->
+<footer class="band colophon">
+  <div class="sx-container">
+    <p>글은 마크다운으로 쓰고 git으로 버전 관리합니다. 원본은 저장소에 frontmatter 그대로 남습니다.
+      <a href="https://github.com/yeduk3" target="_blank" rel="noreferrer">source</a><br>
+      Symplex design system · Inter + JetBrains Mono · 정적 사이트.</p>
+  </div>
+</footer>
+<!-- /build:footer -->
   </body>
 </html>

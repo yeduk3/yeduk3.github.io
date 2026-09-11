@@ -2,3 +2,12 @@
 ._.DS_Store
 **/.DS_Store
 **/._.DS_Store
+
+# 디자인 시안 후보군 — 로컬 보관, 커밋하지 않음
+design/
+
+# 개인 보관용 — 커밋하지 않음
+archived-post/
+
+# 머신 로컬 권한 설정
+.claude/settings.local.json

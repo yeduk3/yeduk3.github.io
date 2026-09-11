@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<!-- 커스텀 도메인 전환 시 canonical / og:url / JSON-LD url만 교체하고 저장소 루트에 CNAME 추가. -->
+<title>작업 — yeduk3</title>
+<meta name="description" content="GPU 시뮬레이션 엔진 ysim, BVH/LBVH 충돌 검출 연구, macOS 네이티브 앱 Glim." />
+<meta name="author" content="yeduk3" />
+<link rel="canonical" href="https://yeduk3.github.io/work/" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="yeduk3" />
+<meta property="og:locale" content="ko_KR" />
+<meta property="og:title" content="작업 — yeduk3" />
+<meta property="og:description" content="GPU 시뮬레이션 엔진 ysim, BVH/LBVH 충돌 검출 연구, macOS 네이티브 앱 Glim." />
+<meta property="og:url" content="https://yeduk3.github.io/work/" />
+<!-- TODO: /static/og.png 생성 필요 (1200×630). 파일이 없어 지금 공유하면 카드가 깨진다. -->
+<meta property="og:image" content="https://yeduk3.github.io/static/og.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="yeduk3 — GPU 시뮬레이션과 충돌 검출" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="작업 — yeduk3" />
+<meta name="twitter:description" content="GPU 시뮬레이션 엔진 ysim, BVH/LBVH 충돌 검출 연구, macOS 네이티브 앱 Glim." />
+<meta name="twitter:image" content="https://yeduk3.github.io/static/og.png" />
+
+<!-- datePublished/dateModified 미기재: 실제 발행일이 정해지기 전까지 가짜 날짜를 구조화 데이터에 넣지 않는다. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": "https://yeduk3.github.io/#person",
+      "name": "yeduk3",
+      "url": "https://yeduk3.github.io/",
+      "email": "mailto:yeduk33@gmail.com",
+      "knowsAbout": [
+        "컴퓨터 그래픽스",
+        "물리 기반 시뮬레이션",
+        "충돌 검출",
+        "BVH",
+        "LBVH",
+        "GPU 프로그래밍",
+        "Metal",
+        "C++17",
+        "Swift"
+      ],
+      "sameAs": [
+        "https://github.com/yeduk3",
+        "https://solved.ac/profile/yeduk3",
+        "https://www.acmicpc.net/user/yeduk3"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://yeduk3.github.io/#site",
+      "url": "https://yeduk3.github.io/",
+      "name": "yeduk3",
+      "inLanguage": "ko",
+      "author": {
+        "@id": "https://yeduk3.github.io/#person"
+      }
+    }
+  ]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/static/css/symplex.css" />
+<link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+
+<!-- build:nav active=work -->
+<nav class="sx-nav">
+  <a class="sx-nav__brand" href="/">yeduk3</a>
+  <div class="sx-nav__links">
+    <a class="sx-nav__link sx-nav__link--active" href="/work/" aria-current="page">작업</a>
+    <a class="sx-nav__link" href="/notes/">글</a>
+    <a class="sx-nav__link" href="/about/">소개</a>
+  </div>
+  <div class="sx-nav__spacer"></div>
+  <!-- 시스템 규칙: 뷰포트당 primary는 하나. 각 페이지의 primary는 본문에 있으므로 nav는 secondary. -->
+  <a class="sx-btn sx-btn--secondary sx-btn--sm" href="mailto:yeduk33@gmail.com">메일 보내기</a>
+</nav>
+<!-- /build:nav -->
+
+<header class="sec">
+  <div class="sx-container">
+    <p class="sx-eyebrow hero__eyebrow">Selected work</p>
+    <h1 class="sx-h1">작업</h1>
+    <p class="sx-lead">전부가 아니라, 설명할 수 있는 것들.</p>
+  </div>
+</header>
+
+<section class="sec--tight">
+  <div class="sx-container">
+        <div class="work-list work-list--full">
+<!-- build:work -->
+      <div class="sx-card sx-card--sunken empty">
+        <p class="sx-eyebrow">Working on it</p>
+        <p class="empty__msg">정리 중인 작업이 있습니다.</p>
+        <p class="sx-caption">projects/ 에 frontmatter를 갖춘 .md를 넣으면 여기에 나타납니다.</p>
+      </div>
+<!-- /build:work -->
+    </div>
+  </div>
+</section>
+
+<!-- build:footer -->
+<footer class="band colophon">
+  <div class="sx-container">
+    <p>글은 마크다운으로 쓰고 git으로 버전 관리합니다. 원본은 저장소에 frontmatter 그대로 남습니다.
+      <a href="https://github.com/yeduk3" target="_blank" rel="noreferrer">source</a><br>
+      Symplex design system · Inter + JetBrains Mono · 정적 사이트.</p>
+  </div>
+</footer>
+<!-- /build:footer -->
+
+</body>
+</html>
