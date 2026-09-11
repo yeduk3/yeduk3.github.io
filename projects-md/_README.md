@@ -1,9 +1,9 @@
 # 작업물은 여기에 쓴다
 
-`projects/<슬러그>.md` 파일 하나가 작업물 하나다. 파일명이 URL 슬러그가 된다
-(`projects/ysim.md` → `/work/ysim/`).
+`projects-md/<슬러그>.md` 파일 하나가 작업물 하나다. 파일명이 URL 슬러그가 된다
+(`projects/ysim.md` → `/projects/ysim/`).
 
-작성 후 빌드하면 `/work/` 전체 목록과 메인의 "최근 작업" 3개가 같이 갱신된다.
+작성 후 빌드하면 `/projects/` 전체 목록과 메인의 "최근 작업" 3개가 같이 갱신된다.
 
 ```bash
 python3 tools/build.py
@@ -41,4 +41,4 @@ preview: /static/assets/ysim.png
 
 ## 아직 안 되는 것
 
-목록은 `/work/<슬러그>/`로 링크를 걸지만 **상세 페이지는 아직 생성되지 않는다** — 누르면 404다.
+목록은 `/projects/<슬러그>/`로 링크를 걸지만 **상세 페이지는 아직 생성되지 않는다** — 누르면 404다.

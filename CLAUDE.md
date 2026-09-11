@@ -14,17 +14,18 @@
 
 | 경로 | 파일 | 내용 |
 |---|---|---|
-| `/` | `index.html` | 히어로(자기소개) · 요약 스트립 · BVH 인스펙터 · 최근 글 3 · 최근 작업 3 |
+| `/` | `index.html` | 히어로(자기소개) · 요약 스트립 · 최근 글 3 · 최근 작업 3 · BVH 인스펙터 |
 | `/about/` | `about/index.html` | 이력 타임라인 · CV 다운로드 · SNS/GitHub 링크(반전 밴드) |
-| `/notes/` | `notes/index.html` | 글 목록 |
-| `/work/` | `work/index.html` | 작업물 목록 — 프리뷰 이미지 + 타이틀 블록 반복 |
+| `/articles/` | `articles/index.html` | 글 목록 |
+| `/projects/` | `projects/index.html` | 작업물 목록 — 프리뷰 이미지 + 타이틀 블록 반복 |
 
 - `static/css/symplex.css` — 디자인 시스템(토큰 + base + `.sx-*`). **직접 수정 금지**
 - `style.css` — 페이지 레이아웃
 - `static/js/bvh.js` — BVH 인스펙터. `#bvh` 하나만 잡으므로 페이지당 1개
-- `tools/build.py` — 정적 페이지 빌더
-- `posts/*.md` — 글. frontmatter가 있는 것만 목록에 뜬다. 작성법은 `posts/_README.md`
-- `projects/*.md` — 작업물. 동일. 작성법은 `projects/_README.md`
+- `tools/build.py` — 정적 페이지 빌더. 상세 페이지 렌더에 `markdown` 패키지 필요
+  (없으면 목록만 갱신하고 경고). 배포에는 영향 없음 — 결과 HTML만 올라간다
+- `articles-md/*.md` — **글 원고.** frontmatter가 있는 것만 목록에 뜬다. 작성법은 `articles-md/_README.md`
+- `projects-md/*.md` — **작업물 원고.** 동일. 작성법은 `projects-md/_README.md`
 - `archived-post/` — 개인 보관용. **`.gitignore` 처리되어 커밋되지 않고, 빌더도 읽지 않는다**
 - `main/post.html` — 옛 아티클 렌더링. 글 상세 페이지 구조 결정 대기
 - `tests/` — 과거 실험. 정리 대상
@@ -33,7 +34,7 @@
 ## 빌드
 
 ```bash
-python3 tools/build.py          # 마커 영역 재생성
+python3 tools/build.py          # 마커 영역 + 상세 페이지 생성
 python3 tools/build.py --check  # 파일을 쓰지 않고 최신인지만 검사
 ```
 
@@ -46,12 +47,16 @@ python3 tools/build.py --check  # 파일을 쓰지 않고 최신인지만 검사
 |---|---|---|
 | `build:nav active=<키>` | 4개 페이지 | 공통 nav. 활성 항목만 다름 |
 | `build:footer` | 4개 페이지 | 공통 footer. 4곳이 완전히 동일 |
-| `build:notes limit=3` | `/` | `posts/*.md` 최신 3 |
-| `build:notes` | `/notes/` | 전체 |
-| `build:work limit=3` | `/` | `projects/*.md` 상위 3 |
-| `build:work` | `/work/` | 전체 |
+| `build:articles limit=3` | `/` | `articles-md/*.md` 최신 3 |
+| `build:articles` | `/articles/` | 전체 |
+| `build:projects limit=3` | `/` | `projects-md/*.md` 상위 3 |
+| `build:projects` | `/projects/` | 전체 |
 
-nav·footer·목록을 고칠 때는 **HTML이 아니라 `tools/build.py`와 `posts/`·`projects/`를 고치고 빌드**한다.
+상세 페이지는 마커가 아니라 **빌더가 통째로 생성**한다 — `articles-md/x.md` → `notes/x/index.html`,
+`projects/x.md` → `work/x/index.html`. 생성 파일은 직접 고치지 말고 원본 `.md`를 고친다.
+원본이 사라지면 해당 디렉터리도 자동 삭제된다(생성 표시가 있는 것만).
+
+nav·footer·목록을 고칠 때는 **HTML이 아니라 `tools/build.py`와 `articles-md/`·`projects/`를 고치고 빌드**한다.
 
 ### frontmatter
 
@@ -62,9 +67,17 @@ date: 2026.09          # 글 정렬 기준
 tag: Simulation        # 글 배지
 syndication: dev.to    # 선택. 쉼표로 여러 개
 slug: custom-slug      # 선택. 기본값은 파일명
-draft: true            # 선택. 목록에서 제외
+draft: true            # 선택. 목록·상세 페이지 모두 생성 안 함
+math: true             # 선택. KaTeX를 이 글에서만 로드
+scripts: /static/js/x.js   # 선택. 쉼표로 여러 개
+styles: /static/css/x.css  # 선택
 ---
 ```
+
+본문은 표·코드블록·각주·목차를 지원하고(`markdown` 내장 확장), **HTML을 그대로 통과시킨다** —
+`<video>`, `<canvas>`, `<figure>` 등을 md 중간에 직접 쓰면 된다.
+수식은 `$...$` / `$$...$$`로 쓰고 빌더가 코드 구간을 피해 추출한 뒤 KaTeX 구분자로 바꾼다.
+템플릿은 `articles-md/template.md`, `projects-md/template.md` (둘 다 `draft: true`).
 
 `_`로 시작하는 파일(`_README.md`)은 빌더가 콘텐츠로 읽지 않는다.
 

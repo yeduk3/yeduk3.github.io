@@ -60,12 +60,12 @@
     <link rel="stylesheet" href="/style.css" />
   </head>
   <body>
-        <!-- build:nav -->
+    <!-- build:nav -->
 <nav class="sx-nav">
   <a class="sx-nav__brand" href="/">yeduk3</a>
   <div class="sx-nav__links">
-    <a class="sx-nav__link" href="/work/">작업</a>
-    <a class="sx-nav__link" href="/notes/">글</a>
+    <a class="sx-nav__link" href="/projects/">작업</a>
+    <a class="sx-nav__link" href="/articles/">글</a>
     <a class="sx-nav__link" href="/about/">소개</a>
   </div>
   <div class="sx-nav__spacer"></div>
@@ -83,8 +83,8 @@
           Recently, I started to playing with geometry nodes in Blender.
         </p>
         <div class="hero__actions">
-          <a class="sx-btn sx-btn--primary" href="/notes/">Articles</a>
-          <a class="sx-btn sx-btn--primary" href="/work/">Artworks</a>
+          <a class="sx-btn sx-btn--primary" href="/articles/">Articles</a>
+          <a class="sx-btn sx-btn--primary" href="/projects/">Projects</a>
           <a class="sx-btn sx-btn--secondary" href="/about/">About me</a>
         </div>
       </div>
@@ -103,12 +103,12 @@
           </div>
           <div>
             <dt class="sx-eyebrow">Shipped</dt>
-            <!-- <dd><a href="/work/glim/">Glim</a> — macOS 네이티브 앱. Quick Look 확장과 공증 배포.</dd> -->
+            <!-- <dd><a href="/projects/glim/">Glim</a> — macOS 네이티브 앱. Quick Look 확장과 공증 배포.</dd> -->
             <dd>working...</dd>
           </div>
           <div>
             <dt class="sx-eyebrow">Latest note</dt>
-            <!-- <dd><a href="/notes/gpu-bvh-staged-port/">GPU라고 다 빠르지 않다</a></dd> -->
+            <!-- <dd><a href="/articles/gpu-bvh-staged-port/">GPU라고 다 빠르지 않다</a></dd> -->
             <dd>working...</dd>
           </div>
         </dl>
@@ -122,17 +122,18 @@
             <p class="sx-eyebrow">Recent Articles</p>
             <h2 class="sx-h1">최근 글</h2>
           </div>
-          <a class="sx-btn sx-btn--secondary sx-btn--sm" href="/notes/">글 전체 보기</a>
+          <a class="sx-btn sx-btn--secondary sx-btn--sm" href="/articles/">글 전체 보기</a>
         </div>
-            <div class="notes">
-<!-- build:notes limit=3 -->
+        <div class="notes">
+          <!-- build:articles limit=3 -->
       <div class="sx-card sx-card--sunken empty">
         <p class="sx-eyebrow">Working on it</p>
         <p class="empty__msg">아직 공개한 글이 없습니다.</p>
-        <p class="sx-caption">쓰는 중입니다. posts/ 에 frontmatter를 갖춘 .md를 넣으면 여기에 나타납니다.</p>
+        <p class="sx-caption">쓰는 중입니다. articles-md/ 에 frontmatter를 갖춘 .md를 넣으면 여기에 나타납니다.</p>
       </div>
-<!-- /build:notes -->
-    </div>      </div>
+<!-- /build:articles -->
+        </div>
+      </div>
     </section>
 
     <section class="sec" id="work">
@@ -143,20 +144,20 @@
               <p class="sx-eyebrow">Selected work</p>
               <h2 class="sx-h1">최근 작업</h2>
             </div>
-            <a class="sx-btn sx-btn--secondary sx-btn--sm" href="/work/">작업 전체 보기</a>
+            <a class="sx-btn sx-btn--secondary sx-btn--sm" href="/projects/">작업 전체 보기</a>
           </div>
-                <div class="work-list">
-<!-- build:work limit=3 -->
+          <div class="work-list">
+            <!-- build:projects limit=3 -->
       <div class="sx-card sx-card--sunken empty">
         <p class="sx-eyebrow">Working on it</p>
         <p class="empty__msg">정리 중인 작업이 있습니다.</p>
-        <p class="sx-caption">projects/ 에 frontmatter를 갖춘 .md를 넣으면 여기에 나타납니다.</p>
+        <p class="sx-caption">projects-md/ 에 frontmatter를 갖춘 .md를 넣으면 여기에 나타납니다.</p>
       </div>
-<!-- /build:work -->
-              </div>
-            </div>
+<!-- /build:projects -->
           </div>
-        </section>
+        </div>
+      </div>
+    </section>
 
     <!-- 페이지 맨 아래의 인터랙티브 요소. 도식이 아니라 도구다 — 드래그하면 계층이 다시 서고,
      아래 숫자는 그 트리에서 바로 센 값이다. 상시 애니메이션은 돌리지 않는다. -->
@@ -165,7 +166,7 @@
         <figure class="sx-card fig fig--standalone">
           <figcaption class="fig__head">
             <p class="sx-eyebrow">Playground · BVH inspector</p>
-            <a class="sx-micro" href="/work/ysim/">프로젝트 보기</a>
+            <a class="sx-micro" href="/projects/ysim/">프로젝트 보기</a>
           </figcaption>
           <div class="sx-media fig__well">
             <canvas id="bvh" aria-label="BVH 인스펙터 — 프리미티브를 드래그하면 계층이 재구축된다"></canvas>

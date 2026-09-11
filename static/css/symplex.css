@@ -121,6 +121,7 @@ a:hover { color: var(--accent-600); text-decoration: underline; text-underline-o
   letter-spacing: var(--tr-eyebrow); text-transform: uppercase; font-weight: var(--weight-medium); color: var(--text-muted); }
 .sx-micro { font-size: var(--fs-micro); line-height: var(--lh-micro); letter-spacing: var(--tr-micro); color: var(--text-faint); }
 .sx-container { width:100%; max-width: var(--container); margin:0 auto; padding-inline: var(--space-5); }
+.sx-container-text { width:100%; max-width: var(--container-text); margin:0 auto; padding-inline: var(--space-5); }
 .sx-on-inverse { color: var(--text-on-inverse); }
 .sx-on-inverse a { color: var(--link-on-inverse); }
 
@@ -173,6 +174,7 @@ a:hover { color: var(--accent-600); text-decoration: underline; text-underline-o
 }
 .sx-badge--outline { background:transparent; border-color: var(--hairline-strong); color: var(--text-secondary); }
 .sx-badge--accent { background: rgba(0,102,214,0.1); color: var(--accent-600); }
+.sx-badge--danger { background: rgba(200,52,43,0.1); color: var(--semantic-danger); }
 .sx-badge--inverse { background: rgba(255,255,255,0.14); color: var(--text-on-inverse); }
 
 .sx-nav {

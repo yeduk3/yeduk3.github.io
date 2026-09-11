@@ -11,3 +11,5 @@ archived-post/
 
 # 머신 로컬 권한 설정
 .claude/settings.local.json
+
+__pycache__/

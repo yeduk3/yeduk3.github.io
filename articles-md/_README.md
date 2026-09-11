@@ -1,9 +1,9 @@
 # 글은 여기에 쓴다
 
-`posts/<슬러그>.md` 파일 하나가 글 하나다. 파일명이 URL 슬러그가 된다
-(`posts/gpu-bvh-staged-port.md` → `/notes/gpu-bvh-staged-port/`).
+`articles-md/<슬러그>.md` 파일 하나가 글 하나다. 파일명이 URL 슬러그가 된다
+(`articles-md/gpu-bvh-staged-port.md` → `/articles/gpu-bvh-staged-port/`).
 
-작성 후 빌드하면 `/notes/` 전체 목록과 메인의 "최근 글" 3개가 같이 갱신된다.
+작성 후 빌드하면 `/articles/` 전체 목록과 메인의 "최근 글" 3개가 같이 갱신된다.
 
 ```bash
 python3 tools/build.py
@@ -38,5 +38,5 @@ tag: Simulation
 
 ## 아직 안 되는 것
 
-목록은 `/notes/<슬러그>/`로 링크를 걸지만 **글 상세 페이지는 아직 생성되지 않는다** — 누르면 404다.
+목록은 `/articles/<슬러그>/`로 링크를 걸지만 **글 상세 페이지는 아직 생성되지 않는다** — 누르면 404다.
 마크다운을 HTML로 렌더하는 단계가 미구현.

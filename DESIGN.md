@@ -57,7 +57,7 @@ Apple(17px 본문 · pill CTA · press scale) + Notion(웜 페이퍼 · 헤어�
 - **한국어**: `word-break: keep-all`. 48px 디스플레이 타입은 한글에서 줄바꿈 위치를 손으로 확인한다.
 - **정보 구조**: 첫 화면에서 정체성 + 킬러 프로젝트가 잡혀야 한다(15초 룰). Selected work는 3개 고정.
   깊은 내용은 하위 페이지로 내린다.
-- **링크는 루트 상대경로**(`/work/...`). 커스텀 도메인으로 옮겨도 안 깨진다.
+- **링크는 루트 상대경로**(`/projects/...`). 커스텀 도메인으로 옮겨도 안 깨진다.
 - **SEO/AEO**: 새 페이지마다 canonical + OG + JSON-LD(`Person` / `BlogPosting`). 실제 발행일 전까지 `datePublished` 금지.
 - **글은 마크다운 + frontmatter로 저장소에 남긴다.** 데이터 소유권이 GitHub Pages를 유지하는 이유다.
 - **BVH 인스펙터는 장식이 아니라 도구다.** readout(`overlap`, `Σarea`)은 실제 계산값이어야 한다.
@@ -67,15 +67,17 @@ Apple(17px 본문 · pill CTA · press scale) + Notion(웜 페이퍼 · 헤어�
 
 - `/static/og.png` (1200×630) 없음. 지금 링크를 공유하면 카드가 깨진다.
 - `/cv.pdf` 없음 — `/about/`의 CV 버튼은 현재 404다. 파일을 넣으면 바로 동작한다.
-- 상세 페이지 미구현: `/work/ysim/`, `/work/collision-detection/`, `/work/glim/`, `/notes/<slug>/` 4건.
-  목록에서 링크는 이미 걸려 있다.
+- (해결) 상세 페이지는 이제 빌더가 생성한다. 남은 것: `/projects/ysim/`, `/projects/collision-detection/`, `/projects/glim/`, `/articles/<slug>/` 4건.
+  실제 `.md` 원고가 아직 없다는 뜻이지 렌더가 안 되는 건 아니다.
+- 글 본문 스타일은 `.prose`에 있다. KaTeX는 `math: true`인 글에서만 CDN으로 로드하며,
+  이 사이트에서 유일한 외부 런타임 의존성이다.
 - 작업물 프리뷰 이미지 없음. 가짜 스크린샷을 넣지 말고 `preview —` 빈 슬롯을 유지한다.
-  `projects/*.md`에 `preview: /static/assets/x.png`를 넣으면 빌더가 `<img>`로 바꾼다.
-- 글·작업 목록은 `posts/*.md` / `projects/*.md` frontmatter에서 생성된다.
+  `projects-md/*.md`에 `preview: /static/assets/x.png`를 넣으면 빌더가 `<img>`로 바꾼다.
+- 글·작업 목록은 `articles-md/*.md` / `projects-md/*.md` frontmatter에서 생성된다.
   현재 양쪽 모두 0건이라 빈 상태 카드가 나온다. 이전 원본은 `archived-post/`에 있고 빌더는 읽지 않는다.
   읽기 시간은 글자 수 ÷ 700으로 **추정**한 값이다 — 실측이 아니며, 정확한 값이 필요하면 frontmatter로 덮어쓴다.
 - 크로스포스팅 링크는 현재 텍스트다. 실제 URL을 걸려면 앵커 중첩 때문에 행 구조를 리팩터해야 한다.
-- BVH 인스펙터는 현재 메인에 있다. `/work/ysim/`이 생기면 그쪽으로 옮기는 편이 자연스럽다.
+- BVH 인스펙터는 현재 메인에 있다. `/projects/ysim/`이 생기면 그쪽으로 옮기는 편이 자연스럽다.
 - 900px 이하에서 nav 링크가 숨겨지고 대체 내비게이션이 없다. 브랜드 로고로만 홈에 간다.
   드로어를 시도했다가 되돌렸으므로, 다시 손대려면 다른 방식이 필요하다.
 - 디자인 시안 후보군은 `design/`에 있으며 `.gitignore` 처리되어 있다.

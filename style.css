@@ -82,6 +82,7 @@
 }
 .note:hover { text-decoration:none; color: var(--text-primary); background: var(--n-25); }
 .note__date { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-muted); }
+.note__title .sx-badge { margin-right: var(--space-2); vertical-align: middle; }
 .note__title { font-size: var(--fs-h3); line-height: var(--lh-h3); letter-spacing: var(--tr-h3); font-weight: var(--weight-medium); }
 .note__meta { display:flex; gap: var(--space-2); align-items:center; }
 .note:hover .note__title { color: var(--accent-600); }
@@ -106,6 +107,48 @@
 .colophon { padding-block: var(--space-7); }
 .colophon p { color: var(--text-faint); font-size: var(--fs-caption); }
 .colophon a { color: var(--text-secondary); }
+
+/* ---- 글 본문 -------------------------------------------------------------
+   생성된 상세 페이지의 마크다운 출력. 시스템 토큰만 쓴다. */
+.post-head .post-back { display:inline-block; margin-bottom: var(--space-5); }
+.post-head .sx-eyebrow { margin-bottom: var(--space-3); }
+.post-head .post-meta { margin-top: var(--space-3); font-family: var(--font-mono); color: var(--text-muted); }
+.post-head { border-bottom:1px solid var(--hairline); }
+
+.prose { font-size: var(--fs-body); line-height: var(--lh-body); letter-spacing: var(--tr-body); }
+.prose > * + * { margin-top: var(--space-5); }
+.prose h2 { font-size: var(--fs-h2); line-height: var(--lh-h2); letter-spacing: var(--tr-h2);
+  font-weight: var(--weight-semibold); margin-top: var(--space-8); }
+.prose h3 { font-size: var(--fs-h3); line-height: var(--lh-h3); letter-spacing: var(--tr-h3);
+  font-weight: var(--weight-semibold); margin-top: var(--space-7); }
+.prose h4 { font-size: var(--fs-title); line-height: var(--lh-title); letter-spacing: var(--tr-title);
+  font-weight: var(--weight-semibold); margin-top: var(--space-6); }
+.prose ul, .prose ol { padding-left: var(--space-5); }
+.prose li + li { margin-top: var(--space-2); }
+.prose blockquote { border-left:2px solid var(--hairline-strong); padding-left: var(--space-4);
+  color: var(--text-secondary); }
+.prose hr { border:none; border-top:1px solid var(--hairline); }
+.prose code { font-family: var(--font-mono); font-size: var(--fs-body-sm);
+  background: var(--surface-sunken); border-radius: var(--radius-xs); padding: 2px 5px; }
+.prose pre { background: var(--surface-inverse); color: var(--text-on-inverse);
+  border-radius: var(--radius-md); padding: var(--space-4); overflow-x:auto; }
+.prose pre code { background:none; padding:0; color:inherit; font-size: var(--fs-caption); }
+
+/* 표 — 넓으면 가로로만 스크롤한다. 페이지가 밀리지 않게. */
+.prose table { width:100%; border-collapse:collapse; font-size: var(--fs-body-sm); display:block; overflow-x:auto; }
+.prose th, .prose td { text-align:left; padding: 10px 12px; border-bottom:1px solid var(--hairline); }
+.prose th { font-weight: var(--weight-semibold); border-bottom-color: var(--hairline-strong); white-space:nowrap; }
+
+.prose img, .prose video, .prose canvas, .prose iframe {
+  width:100%; border-radius: var(--radius-md); background: var(--surface-sunken);
+}
+.prose figure { margin:0; }
+.prose figcaption { margin-top: var(--space-2); color: var(--text-muted); font-size: var(--fs-caption); }
+.prose .footnote { font-size: var(--fs-body-sm); color: var(--text-secondary);
+  border-top:1px solid var(--hairline); padding-top: var(--space-4); }
+
+/* 수식 블록도 넘치면 가로 스크롤 */
+.prose .katex-display { overflow-x:auto; overflow-y:hidden; padding-block: var(--space-1); }
 
 @media (max-width: 900px) {
   :root { --fs-display-2: 36px; --space-section: 64px; --pad-block: var(--space-5); }
