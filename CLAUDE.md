@@ -38,6 +38,19 @@ python3 tools/build.py          # 마커 영역 + 상세 페이지 생성
 python3 tools/build.py --check  # 파일을 쓰지 않고 최신인지만 검사
 ```
 
+### git 훅 — 초안이 새어나가지 않게
+
+```bash
+git config core.hooksPath tools/hooks   # 클론마다 한 번
+```
+
+- **pre-commit** — 초안을 뺀 상태로 다시 빌드하고 결과물을 스테이지에 올린다.
+  커밋은 항상 "공개되는 모습"이 된다. `--drafts`로 미리보던 중에 커밋해도 알아서 정리된다.
+- **pre-push** — 커밋에 초안 페이지가 남아 있거나 생성물이 원고와 어긋나면 푸시를 막는다.
+
+푸시 시점에는 커밋이 이미 굳어 있어서 거기서 빌드해봐야 소용이 없다. 그래서 정리는 pre-commit이 하고
+pre-push는 확인만 한다. 일부러 우회하려면 `--no-verify`.
+
 **배포는 여전히 정적이다.** 빌더는 로컬에서 HTML을 생성할 뿐이고 GitHub Pages는 생성된 파일을 그대로 서빙한다.
 런타임 JS로 목록을 그리지 않는 이유는 AI 크롤러 상당수가 JS를 실행하지 않아 SEO/AEO가 깨지기 때문이다.
 
