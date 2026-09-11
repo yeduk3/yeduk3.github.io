@@ -51,6 +51,20 @@ git config core.hooksPath tools/hooks   # 클론마다 한 번
 푸시 시점에는 커밋이 이미 굳어 있어서 거기서 빌드해봐야 소용이 없다. 그래서 정리는 pre-commit이 하고
 pre-push는 확인만 한다. 일부러 우회하려면 `--no-verify`.
 
+### 푸시 후 초안 미리보기 되살리기
+
+git에는 post-push 훅이 없다 — 클라이언트 훅은 `pre-push`가 끝이고 `post-receive`는 GitHub 쪽이다.
+그래서 push를 감싼 스크립트를 쓴다.
+
+```bash
+./tools/push.sh            # = git push + 초안 포함 재빌드
+git pushp                  # 같은 것 (alias, 클론마다 한 번 설정)
+git config alias.pushp '!sh tools/push.sh'
+```
+
+푸시가 실패하면 재빌드하지 않는다. 재빌드 후에는 생성된 HTML이 초안 상태라 작업 트리가 dirty해지는데,
+다음 커밋 때 pre-commit이 알아서 되돌리므로 그대로 둬도 된다.
+
 **배포는 여전히 정적이다.** 빌더는 로컬에서 HTML을 생성할 뿐이고 GitHub Pages는 생성된 파일을 그대로 서빙한다.
 런타임 JS로 목록을 그리지 않는 이유는 AI 크롤러 상당수가 JS를 실행하지 않아 SEO/AEO가 깨지기 때문이다.
 
