@@ -1,0 +1,20 @@
+#!/bin/sh
+# 초안을 뺀 상태로 다시 빌드하고 결과물을 스테이지에 올린다.
+# 커밋이 항상 "초안 없는 사이트"가 되도록 보장하는 쪽이 pre-push보다 확실하다 —
+# 푸시 시점엔 커밋이 이미 굳어 있어서 거기서 빌드해봐야 소용이 없다.
+#
+# 일부러 초안째 커밋하려면: git commit --no-verify
+set -e
+
+if ! python3 tools/build.py >/tmp/site-build.log 2>&1; then
+    echo "pre-commit: 빌드 실패. 아래 로그를 보고 고칠 것."
+    cat /tmp/site-build.log
+    exit 1
+fi
+
+# 빌더가 쓰는 것만 다시 스테이지한다 (원고·설정은 건드리지 않는다)
+git add -A -- index.html about/index.html articles projects 2>/dev/null || true
+
+if grep -q '초안' /tmp/site-build.log; then
+    echo "pre-commit: 초안을 제외하고 다시 빌드했다."
+fi

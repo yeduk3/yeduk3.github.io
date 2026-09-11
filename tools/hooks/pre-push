@@ -1,0 +1,16 @@
+#!/bin/sh
+# 마지막 방어선. 푸시되는 커밋에 초안이나 낡은 빌드가 들어 있으면 막는다.
+# 통과 못 하면 고친 뒤 다시 커밋할 것. 우회는 git push --no-verify.
+set -e
+
+fail() { echo "pre-push: $1"; echo "  고치기:  python3 tools/build.py && git add -A && git commit --amend --no-edit"; exit 1; }
+
+# 1) 커밋된 HTML에 초안 흔적이 있나
+if git grep -q -e 'sx-badge--danger">draft' -e 'content="noindex, nofollow"' HEAD -- '*.html' 2>/dev/null; then
+    echo "pre-push: 커밋에 초안 페이지가 들어 있다."
+    git grep -l -e 'sx-badge--danger">draft' -e 'content="noindex, nofollow"' HEAD -- '*.html' | sed 's/^/  /'
+    fail "초안은 푸시하지 않는다."
+fi
+
+# 2) 생성물이 원고와 어긋나 있나
+python3 tools/build.py --check >/dev/null 2>&1 || fail "생성된 HTML이 원고와 어긋난다."
