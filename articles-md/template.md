@@ -47,18 +47,26 @@ std::nth_element(first, first + n / 2, last, ByAxis{axis});
 
 ## 이미지
 
-이미지는 `static/assets/<슬러그>/` 아래 모은다.
+어셋은 글 폴더(`articles-md/<슬러그>/`)에 md와 나란히 둔다. 빌더가 `/articles/<슬러그>/`로 복사하므로
+상대 경로로 쓴다.
 
-![캡션으로 쓸 대체 텍스트](/static/assets/template/example.png)
+![캡션으로 쓸 대체 텍스트](example.png)
 
 ## 비디오 · 인터랙티브
 
 마크다운은 HTML을 그대로 통과시킨다. 필요한 곳에 직접 쓴다.
+GIF 대신 mp4. 짧은 무음 클립은 `autoplay muted loop playsinline`이 GIF처럼 동작한다.
 
 <figure>
-  <video src="/static/assets/template/demo.mp4" controls muted loop playsinline></video>
-  <figcaption>비디오는 저장소에 직접 넣지 말 것 — LFS 없이 금방 비대해진다.</figcaption>
+  <video src="demo.mp4" controls muted loop playsinline></video>
+  <figcaption>GitHub Pages는 LFS를 서빙하지 않는다. 인코딩해서 작게 만든 mp4만 커밋한다.</figcaption>
 </figure>
+
+```bash
+ffmpeg -i in.mov -an -vf "scale=1920:-2" -c:v libx264 -crf 23 -preset slow -pix_fmt yuv420p -movflags +faststart out.mp4
+```
+
+둘을 나란히 비교할 때는 `<figure class="compare">`에 `<video>` 둘.
 
 <figure>
   <canvas id="demo" height="300"></canvas>

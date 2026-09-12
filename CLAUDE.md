@@ -24,8 +24,10 @@
 - `static/js/bvh.js` — BVH 인스펙터. `#bvh` 하나만 잡으므로 페이지당 1개
 - `tools/build.py` — 정적 페이지 빌더. 상세 페이지 렌더에 `markdown` 패키지 필요
   (없으면 목록만 갱신하고 경고). 배포에는 영향 없음 — 결과 HTML만 올라간다
-- `articles-md/*.md` — **글 원고.** frontmatter가 있는 것만 목록에 뜬다. 작성법은 `articles-md/_README.md`
-- `projects-md/*.md` — **작업물 원고.** 동일. 작성법은 `projects-md/_README.md`
+- `articles-md/<slug>/<slug>.md` — **글 원고.** 폴더 하나가 글 하나. 이미지·mp4 같은 어셋은 같은 폴더에 두고
+  md에서 상대 경로로 참조한다 (빌더가 `/articles/<slug>/`로 복사). frontmatter가 있는 것만 목록에 뜬다.
+  작성법은 `articles-md/_README.md`
+- `projects-md/<slug>/<slug>.md` — **작업물 원고.** 동일. 작성법은 `projects-md/_README.md`
 - `archived-post/` — 개인 보관용. **`.gitignore` 처리되어 커밋되지 않고, 빌더도 읽지 않는다**
 - `main/post.html` — 옛 아티클 렌더링. 글 상세 페이지 구조 결정 대기
 - `tests/` — 과거 실험. 정리 대상
@@ -79,8 +81,9 @@ git config alias.pushp '!sh tools/push.sh'
 | `build:projects limit=3` | `/` | `projects-md/*.md` 상위 3 |
 | `build:projects` | `/projects/` | 전체 |
 
-상세 페이지는 마커가 아니라 **빌더가 통째로 생성**한다 — `articles-md/x.md` → `notes/x/index.html`,
-`projects/x.md` → `work/x/index.html`. 생성 파일은 직접 고치지 말고 원본 `.md`를 고친다.
+상세 페이지는 마커가 아니라 **빌더가 통째로 생성**한다 — `articles-md/x/x.md` → `articles/x/index.html`,
+`projects-md/x/x.md` → `projects/x/index.html`. 글 폴더의 어셋(`.mp4 .png .svg` 등, `build.py`의 `ASSET_EXT`)도
+같이 복사된다. `.mov` 원본 녹화는 복사되지 않고 git에서도 제외된다. 생성 파일은 직접 고치지 말고 원본 `.md`를 고친다.
 원본이 사라지면 해당 디렉터리도 자동 삭제된다(생성 표시가 있는 것만).
 
 nav·footer·목록을 고칠 때는 **HTML이 아니라 `tools/build.py`와 `articles-md/`·`projects/`를 고치고 빌드**한다.

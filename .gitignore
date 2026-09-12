@@ -13,3 +13,7 @@ archived-post/
 .claude/settings.local.json
 
 __pycache__/
+
+# 원본 녹화. 인코딩한 mp4만 커밋한다 (빌더도 .mov는 복사하지 않는다)
+articles-md/**/*.mov
+projects-md/**/*.mov

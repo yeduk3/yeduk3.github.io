@@ -24,6 +24,7 @@ HTML의 `<!-- build:NAME ... -->` … `<!-- /build:NAME -->` 사이만 덮어쓴
 푸시 전에는 반드시 인자 없이 다시 빌드한다.
 """
 
+import filecmp
 import html
 import json
 import math
@@ -106,7 +107,9 @@ def load(dirname, kind, drafts=False):
     d = ROOT / dirname
     if not d.exists():
         return items, skipped
-    for p in sorted(d.glob("*.md")):
+    # 글 하나 = 폴더 하나: <dir>/<slug>/<slug>.md + 같은 폴더의 어셋. 파일 하나짜리 flat .md도 읽는다.
+    sources = list(d.glob("*.md")) + [x / (x.name + ".md") for x in d.iterdir() if x.is_dir()]
+    for p in sorted(x for x in sources if x.exists()):
         if p.name.startswith("_"):      # _README.md 같은 안내 파일은 콘텐츠가 아니다
             continue
         meta, body = parse_front(p.read_text(encoding="utf-8"))
@@ -122,6 +125,7 @@ def load(dirname, kind, drafts=False):
         meta["minutes"] = reading_minutes(body)
         meta["_kind"] = kind
         meta["_body"] = body
+        meta["_assets"] = p.parent if p.parent != d else None
         items.append(meta)
     if kind == "note":
         items.sort(key=lambda m: m.get("date", ""), reverse=True)
@@ -420,6 +424,31 @@ def detail(m):
 
 GEN_MARK = "<!-- 이 파일은 tools/build.py가 생성한다."
 
+# 원고 폴더에서 생성 디렉터리로 복사하는 어셋. 원본 녹화(.mov)나 작업 파일은 서빙하지 않는다.
+ASSET_EXT = {".mp4", ".webm", ".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp", ".pdf", ".json", ".js", ".css"}
+
+
+def sync_assets(src, out_dir, check):
+    """원고 폴더의 어셋을 생성 디렉터리로 복사하고, 원본이 사라진 파일은 지운다. 바뀐 파일명을 돌려준다."""
+    changed, keep = [], {"index.html"}
+    for f in sorted(src.iterdir()) if src else []:
+        if f.suffix.lower() not in ASSET_EXT or f.name.startswith((".", "_")):
+            continue
+        keep.add(f.name)
+        dst = out_dir / f.name
+        if not (dst.exists() and filecmp.cmp(f, dst, shallow=False)):
+            changed.append(f.name)
+            if not check:
+                out_dir.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(f, dst)
+    if out_dir.exists():
+        for f in out_dir.iterdir():
+            if f.is_file() and f.name not in keep:
+                changed.append(f.name)
+                if not check:
+                    f.unlink()
+    return changed
+
 
 def write_details(items, check):
     """상세 페이지를 쓰고, 원본이 사라진 생성 디렉터리는 지운다."""
@@ -437,6 +466,7 @@ def write_details(items, check):
             if not check:
                 out.parent.mkdir(parents=True, exist_ok=True)
                 out.write_text(doc, encoding="utf-8")
+        written += [path + f for f in sync_assets(m["_assets"], out.parent, check)]
     # 고아 정리: 생성 표시가 있는 디렉터리만 지운다 (손으로 쓴 페이지는 건드리지 않는다)
     for base in ("articles", "projects"):
         d = ROOT / base
