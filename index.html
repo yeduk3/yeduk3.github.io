@@ -1,66 +1,66 @@
 <!doctype html>
 <html lang="ko">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- 커스텀 도메인 전환 시 canonical / og:url / JSON-LD url만 교체하고 저장소 루트에 CNAME 추가. -->
-    <title>yeduk3 — 컴퓨터 그래픽스 · 물리 기반 시뮬레이션</title>
-    <meta name="description" content="GPU 시뮬레이션 엔진 ysim, BVH/LBVH 충돌 검출 연구, macOS 네이티브 앱 Glim. C++17 · Metal." />
-    <meta name="author" content="yeduk3" />
-    <link rel="canonical" href="https://yeduk3.github.io/" />
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="yeduk3" />
-    <meta property="og:locale" content="ko_KR" />
-    <meta property="og:title" content="yeduk3 — 컴퓨터 그래픽스 · 물리 기반 시뮬레이션" />
-    <meta property="og:description" content="GPU 시뮬레이션 엔진 ysim, BVH/LBVH 충돌 검출 연구, macOS 네이티브 앱 Glim. C++17 · Metal." />
-    <meta property="og:url" content="https://yeduk3.github.io/" />
-    <!-- TODO: /static/og.png 생성 필요 (1200×630). 파일이 없어 지금 공유하면 카드가 깨진다. -->
-    <meta property="og:image" content="https://yeduk3.github.io/static/og.png" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="yeduk3 — GPU 시뮬레이션과 충돌 검출" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="yeduk3 — 컴퓨터 그래픽스 · 물리 기반 시뮬레이션" />
-    <meta name="twitter:description" content="GPU 시뮬레이션 엔진 ysim, BVH/LBVH 충돌 검출 연구, macOS 네이티브 앱 Glim. C++17 · Metal." />
-    <meta name="twitter:image" content="https://yeduk3.github.io/static/og.png" />
+        <!-- 커스텀 도메인 전환 시 canonical / og:url / JSON-LD url만 교체하고 저장소 루트에 CNAME 추가. -->
+        <title>yeduk3 — 컴퓨터 그래픽스 · 물리 기반 시뮬레이션</title>
+        <meta name="description" content="GPU 시뮬레이션 엔진 ysim, BVH/LBVH 충돌 검출 연구, macOS 네이티브 앱 Glim. C++17 · Metal." />
+        <meta name="author" content="yeduk3" />
+        <link rel="canonical" href="https://yeduk3.github.io/" />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="yeduk3" />
+        <meta property="og:locale" content="ko_KR" />
+        <meta property="og:title" content="yeduk3 — 컴퓨터 그래픽스 · 물리 기반 시뮬레이션" />
+        <meta property="og:description" content="GPU 시뮬레이션 엔진 ysim, BVH/LBVH 충돌 검출 연구, macOS 네이티브 앱 Glim. C++17 · Metal." />
+        <meta property="og:url" content="https://yeduk3.github.io/" />
+        <!-- TODO: /static/og.png 생성 필요 (1200×630). 파일이 없어 지금 공유하면 카드가 깨진다. -->
+        <meta property="og:image" content="https://yeduk3.github.io/static/og.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content="yeduk3 — GPU 시뮬레이션과 충돌 검출" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="yeduk3 — 컴퓨터 그래픽스 · 물리 기반 시뮬레이션" />
+        <meta name="twitter:description" content="GPU 시뮬레이션 엔진 ysim, BVH/LBVH 충돌 검출 연구, macOS 네이티브 앱 Glim. C++17 · Metal." />
+        <meta name="twitter:image" content="https://yeduk3.github.io/static/og.png" />
 
-    <!-- datePublished/dateModified 미기재: 실제 발행일이 정해지기 전까지 가짜 날짜를 구조화 데이터에 넣지 않는다. -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@graph": [
-          {
-            "@type": "Person",
-            "@id": "https://yeduk3.github.io/#person",
-            "name": "yeduk3",
-            "url": "https://yeduk3.github.io/",
-            "email": "mailto:yeduk33@gmail.com",
-            "knowsAbout": ["컴퓨터 그래픽스", "물리 기반 시뮬레이션", "충돌 검출", "BVH", "LBVH", "GPU 프로그래밍", "Metal", "C++17", "Swift"],
-            "sameAs": ["https://github.com/yeduk3", "https://solved.ac/profile/yeduk3", "https://www.acmicpc.net/user/yeduk3"]
-          },
-          {
-            "@type": "WebSite",
-            "@id": "https://yeduk3.github.io/#site",
-            "url": "https://yeduk3.github.io/",
-            "name": "yeduk3",
-            "inLanguage": "ko",
-            "author": {
-              "@id": "https://yeduk3.github.io/#person"
+        <!-- datePublished/dateModified 미기재: 실제 발행일이 정해지기 전까지 가짜 날짜를 구조화 데이터에 넣지 않는다. -->
+        <script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@graph": [
+                    {
+                        "@type": "Person",
+                        "@id": "https://yeduk3.github.io/#person",
+                        "name": "yeduk3",
+                        "url": "https://yeduk3.github.io/",
+                        "email": "mailto:yeduk33@gmail.com",
+                        "knowsAbout": ["컴퓨터 그래픽스", "물리 기반 시뮬레이션", "충돌 검출", "BVH", "LBVH", "GPU 프로그래밍", "Metal", "C++17", "Swift"],
+                        "sameAs": ["https://github.com/yeduk3", "https://solved.ac/profile/yeduk3", "https://www.acmicpc.net/user/yeduk3"]
+                    },
+                    {
+                        "@type": "WebSite",
+                        "@id": "https://yeduk3.github.io/#site",
+                        "url": "https://yeduk3.github.io/",
+                        "name": "yeduk3",
+                        "inLanguage": "ko",
+                        "author": {
+                            "@id": "https://yeduk3.github.io/#person"
+                        }
+                    }
+                ]
             }
-          }
-        ]
-      }
-    </script>
+        </script>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="/static/css/symplex.css" />
-    <link rel="stylesheet" href="/style.css" />
-  </head>
-  <body>
-    <!-- build:nav -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="/static/css/symplex.css" />
+        <link rel="stylesheet" href="/style.css" />
+    </head>
+    <body>
+        <!-- build:nav -->
 <nav class="sx-nav">
   <a class="sx-nav__brand" href="/">yeduk3</a>
   <div class="sx-nav__links">
@@ -74,117 +74,117 @@
 </nav>
 <!-- /build:nav -->
 
-    <header class="sec hero">
-      <div class="sx-container">
-        <p class="sx-eyebrow hero__eyebrow">Computer graphics, Physical simulation</p>
-        <h1 class="sx-display-2">Toward fast but efficient, controllable physical simulation.</h1>
-        <p class="sx-lead">
-          I'm interested in GPU-based simulation and optimization.<br />
-          Recently, I started to playing with geometry nodes in Blender.
-        </p>
-        <div class="hero__actions">
-          <a class="sx-btn sx-btn--primary" href="/articles/">Articles</a>
-          <a class="sx-btn sx-btn--primary" href="/projects/">Projects</a>
-          <a class="sx-btn sx-btn--secondary" href="/about/">About me</a>
-        </div>
-      </div>
-    </header>
+        <header class="sec hero">
+            <div class="sx-container">
+                <p class="sx-eyebrow hero__eyebrow">Computer graphics, Physical simulation</p>
+                <h1 class="sx-display-2">Toward fast, efficient and controllable physical simulation.</h1>
+                <p class="sx-lead">
+                    I'm interested in GPU-based simulation and optimization.<br />
+                    Recently, I started to playing with geometry nodes in Blender.
+                </p>
+                <div class="hero__actions">
+                    <a class="sx-btn sx-btn--primary" href="/articles/">Articles</a>
+                    <a class="sx-btn sx-btn--primary" href="/projects/">Projects</a>
+                    <a class="sx-btn sx-btn--secondary" href="/about/">About me</a>
+                </div>
+            </div>
+        </header>
 
-    <section class="band sec--tight" aria-label="요약">
-      <div class="sx-container">
-        <dl class="glance">
-          <div>
-            <dt class="sx-eyebrow">Now</dt>
-            <dd>Learning numerical optimization algorithms.</dd>
-          </div>
-          <div>
-            <dt class="sx-eyebrow">Core</dt>
-            <dd>C++, Metal, Collision Detection(BVH, Spatial Hashing)</dd>
-          </div>
-          <div>
-            <dt class="sx-eyebrow">Shipped</dt>
-            <!-- <dd><a href="/projects/glim/">Glim</a> — macOS 네이티브 앱. Quick Look 확장과 공증 배포.</dd> -->
-            <dd>working...</dd>
-          </div>
-          <div>
-            <dt class="sx-eyebrow">Latest note</dt>
-            <!-- build:latest -->
+        <section class="band sec--tight" aria-label="요약">
+            <div class="sx-container">
+                <dl class="glance">
+                    <div>
+                        <dt class="sx-eyebrow">Now</dt>
+                        <dd>Learning numerical optimization algorithms.</dd>
+                    </div>
+                    <div>
+                        <dt class="sx-eyebrow">Core</dt>
+                        <dd>C++, Metal, Collision Detection(BVH, Spatial Hashing)</dd>
+                    </div>
+                    <div>
+                        <dt class="sx-eyebrow">Shipped</dt>
+                        <!-- <dd><a href="/projects/glim/">Glim</a> — macOS 네이티브 앱. Quick Look 확장과 공증 배포.</dd> -->
+                        <dd>working...</dd>
+                    </div>
+                    <div>
+                        <dt class="sx-eyebrow">Latest note</dt>
+                        <!-- build:latest -->
             <dd><a href="/articles/0001-position-based-dynamics/">힘이 아닌 위치에 기반한 역학 - PBD, PD, XPBD</a></dd>
 <!-- /build:latest -->
-          </div>
-        </dl>
-      </div>
-    </section>
+                    </div>
+                </dl>
+            </div>
+        </section>
 
-    <section class="sec" id="writing">
-      <div class="sx-container">
-        <div class="head head--row">
-          <div>
-            <p class="sx-eyebrow">Recent Articles</p>
-            <h2 class="sx-h1">최근 글</h2>
-          </div>
-          <a class="sx-btn sx-btn--secondary sx-btn--sm" href="/articles/">글 전체 보기</a>
-        </div>
-        <div class="notes">
-          <!-- build:articles limit=3 -->
+        <section class="sec" id="writing">
+            <div class="sx-container">
+                <div class="head head--row">
+                    <div>
+                        <p class="sx-eyebrow">Recent Articles</p>
+                        <h2 class="sx-h1">최근 글</h2>
+                    </div>
+                    <a class="sx-btn sx-btn--secondary sx-btn--sm" href="/articles/">글 전체 보기</a>
+                </div>
+                <div class="notes">
+                    <!-- build:articles limit=3 -->
       <a class="note" href="/articles/0001-position-based-dynamics/">
         <span class="note__date">2026.09.13</span>
         <span class="note__title">힘이 아닌 위치에 기반한 역학 - PBD, PD, XPBD</span>
         <span class="note__meta"><span class="sx-badge">Simulation</span><span class="sx-micro">14 min</span></span>
       </a>
 <!-- /build:articles -->
-        </div>
-      </div>
-    </section>
-
-    <section class="sec" id="work">
-      <div class="sx-container">
-        <div class="sx-block sx-block--mist">
-          <div class="head head--row">
-            <div>
-              <p class="sx-eyebrow">Selected work</p>
-              <h2 class="sx-h1">최근 작업</h2>
+                </div>
             </div>
-            <a class="sx-btn sx-btn--secondary sx-btn--sm" href="/projects/">작업 전체 보기</a>
-          </div>
-          <div class="work-list">
-            <!-- build:projects limit=3 -->
+        </section>
+
+        <section class="sec" id="work">
+            <div class="sx-container">
+                <div class="sx-block sx-block--mist">
+                    <div class="head head--row">
+                        <div>
+                            <p class="sx-eyebrow">Selected work</p>
+                            <h2 class="sx-h1">최근 작업</h2>
+                        </div>
+                        <a class="sx-btn sx-btn--secondary sx-btn--sm" href="/projects/">작업 전체 보기</a>
+                    </div>
+                    <div class="work-list">
+                        <!-- build:projects limit=3 -->
       <div class="sx-card sx-card--sunken empty">
         <p class="sx-eyebrow">Working on it</p>
         <p class="empty__msg">정리 중인 작업이 있습니다.</p>
         <p class="sx-caption">projects-md/ 에 frontmatter를 갖춘 .md를 넣으면 여기에 나타납니다.</p>
       </div>
 <!-- /build:projects -->
-          </div>
-        </div>
-      </div>
-    </section>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <!-- 페이지 맨 아래의 인터랙티브 요소. 도식이 아니라 도구다 — 드래그하면 계층이 다시 서고,
+        <!-- 페이지 맨 아래의 인터랙티브 요소. 도식이 아니라 도구다 — 드래그하면 계층이 다시 서고,
      아래 숫자는 그 트리에서 바로 센 값이다. 상시 애니메이션은 돌리지 않는다. -->
-    <section class="sec--tight" id="playground">
-      <div class="sx-container">
-        <figure class="sx-card fig fig--standalone">
-          <figcaption class="fig__head">
-            <p class="sx-eyebrow">Playground · BVH inspector</p>
-            <!-- ysim 상세가 생기면 /projects/ysim/ 으로 되돌린다. 지금은 404라 목록으로 보낸다. -->
-        <a class="sx-micro" href="/projects/">프로젝트 보기</a>
-          </figcaption>
-          <div class="sx-media fig__well">
-            <canvas id="bvh" aria-label="BVH 인스펙터 — 프리미티브를 드래그하면 계층이 재구축된다"></canvas>
-          </div>
-          <div class="fig__bar">
-            <span class="fig__read">prims <b id="m-p">0</b> · leaves <b id="m-l">0</b> · overlap <b id="m-o">0</b> · &Sigma;area <b id="m-a">0.00</b>&times;</span>
-            <button class="sx-btn sx-btn--secondary sx-btn--sm" type="button" id="reseed">다시 배치</button>
-            <span class="sx-micro fig__hint">드래그하면 계층이 다시 섭니다. overlap과 &Sigma;area가 오르면 쿼리가 비싸집니다.</span>
-          </div>
-        </figure>
-      </div>
-    </section>
+        <section class="sec--tight" id="playground">
+            <div class="sx-container">
+                <figure class="sx-card fig fig--standalone">
+                    <figcaption class="fig__head">
+                        <p class="sx-eyebrow">Playground · BVH inspector</p>
+                        <!-- ysim 상세가 생기면 /projects/ysim/ 으로 되돌린다. 지금은 404라 목록으로 보낸다. -->
+                        <a class="sx-micro" href="/projects/">프로젝트 보기</a>
+                    </figcaption>
+                    <div class="sx-media fig__well">
+                        <canvas id="bvh" aria-label="BVH 인스펙터 — 프리미티브를 드래그하면 계층이 재구축된다"></canvas>
+                    </div>
+                    <div class="fig__bar">
+                        <span class="fig__read">prims <b id="m-p">0</b> · leaves <b id="m-l">0</b> · overlap <b id="m-o">0</b> · &Sigma;area <b id="m-a">0.00</b>&times;</span>
+                        <button class="sx-btn sx-btn--secondary sx-btn--sm" type="button" id="reseed">다시 배치</button>
+                        <span class="sx-micro fig__hint">드래그하면 계층이 다시 섭니다. overlap과 &Sigma;area가 오르면 쿼리가 비싸집니다.</span>
+                    </div>
+                </figure>
+            </div>
+        </section>
 
-    <script src="/static/js/bvh.js" defer></script>
+        <script src="/static/js/bvh.js" defer></script>
 
-    <!-- build:footer -->
+        <!-- build:footer -->
 <footer class="band colophon">
   <div class="sx-container">
     <p>Hosted by Github Pages.
@@ -193,5 +193,5 @@
   </div>
 </footer>
 <!-- /build:footer -->
-  </body>
+    </body>
 </html>
