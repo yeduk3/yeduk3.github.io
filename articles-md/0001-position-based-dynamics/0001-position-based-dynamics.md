@@ -1,8 +1,8 @@
 ---
 title: 힘이 아닌 위치에 기반한 역학 - PBD, PD, XPBD
-date: 2026.09
+date: 2026.09.13
 tag: Simulation
-draft: true
+draft: false
 math: true
 # syndication: dev.to, Hashnode
 # slug: custom-url-slug
@@ -17,7 +17,6 @@ math: true
 > - Position Based Dynamics, Müller et al., VRIPHYS, 2006
 > - XPBD: Position-Based Simulation of Compliant Constrained Dynamics, Macklin et al., MIG, 2016
 > - Projective Dynamics: Fusing Constraint Projections for Fast Simulation, Bouaziz et al., ACM ToG 2014
-> - Primal Extended Position Based Dynamics for Hyperelasticity, Chen et al., MIG 2023
 
 ## 기존 force-based dynamics나 impulse-based dynamics의 문제점
 
@@ -97,104 +96,152 @@ Gauss-Seidel은 constraint를 하나씩 순차로 풀기 때문에 이미 바뀐
 
 ## XPBD
 
-XPBD는 PBD의 projection을 버리지 않는다. 대신 그것이 무엇의 특수해인지 밝히고, 빠져 있던 항 하나를 되돌려 놓는다.
-
-Constraint를 퍼텐셜로 쓰자. Compliance $\alpha$(stiffness의 역수, 단위 m/N)에 대해
+XPBD는 PBD의 projection이 물리적으로 어떤 의미를 가지는 지를 보여준다.
+Constraint를 potential로 쓰면, compliance $\alpha$(stiffness의 역수)에 대해
 
 $$
-
 U(\mathbf x)=\frac12 \mathbf C(\mathbf x)^T\boldsymbol\alpha^{-1}\mathbf C(\mathbf x),\qquad
 \mathbf f=-\nabla U^T=-\nabla\mathbf C^T\boldsymbol\alpha^{-1}\mathbf C.
-
-
 $$
 
 여기에 backward Euler를 적용하고 Lagrange multiplier $\boldsymbol\lambda=-\tilde{\boldsymbol\alpha}^{-1}\mathbf C$, $\tilde{\boldsymbol\alpha}=\boldsymbol\alpha/\Delta t^2$을 도입하면 한 스텝의 조건은 두 식으로 정리된다.
 
 $$
-
 \begin{aligned}
-\mathbf M(\mathbf x^{n+1}-\tilde{\mathbf x})-\nabla\mathbf C(\mathbf x^{n+1})^T\boldsymbol\lambda^{n+1}&=\mathbf 0 \\
-\mathbf C(\mathbf x^{n+1})+\tilde{\boldsymbol\alpha}\boldsymbol\lambda^{n+1}&=\mathbf 0
+\mathbf g(\mathbf x^{n+1},\boldsymbol{\lambda}^{n+1}) &=\mathbf M(\mathbf x^{n+1}-\tilde{\mathbf x})-\nabla\mathbf C(\mathbf x^{n+1})^T\boldsymbol\lambda^{n+1}&=\mathbf 0  \\
+\mathbf h(\mathbf x^{n+1},\boldsymbol{\lambda}^{n+1}) &= \mathbf C(\mathbf x^{n+1})+\tilde{\boldsymbol\alpha}\boldsymbol\lambda^{n+1}&=\mathbf 0
 \end{aligned}
-
-
 $$
 
-첫 줄은 운동량, 둘째 줄은 constraint에 compliance가 붙은 것이다. 이 비선형계를 Gauss-Seidel처럼 constraint $j$ 하나만 보고 Newton 한 스텝을 밟되, $\nabla C_j$를 고정하고 현재 오차를 대입하면
+여기서 $\tilde{\mathbf x}=2\mathbf x^n-\mathbf x^{n-1}=\mathbf x^n+\Delta t\mathbf v^n$로 예측된 위치를 나타낸다.
+첫 줄은 운동량, 둘째 줄은 constraint에 compliance가 붙은 것이다.
+이 식에 $\Delta \mathbf x$와 $\Delta \boldsymbol\lambda$로 $\mathbf x^{n+1}$과 $\boldsymbol\lambda^{n+1}$를 구성하면서 linearize하면, 아래의 equation을 얻는다.
 
 $$
+\begin{bmatrix}
+\mathbf K & -\nabla\mathbf C^T \\
+\nabla\mathbf C & \tilde{\boldsymbol\alpha}
+\end{bmatrix}
+\begin{bmatrix}
+\Delta\mathbf x\\ \Delta\boldsymbol{\lambda}
+\end{bmatrix}
+=
+-\begin{bmatrix}
+\mathbf g(\mathbf x^{n},\boldsymbol{\lambda}^{n}) \\
+\mathbf h(\mathbf x^{n},\boldsymbol{\lambda}^{n})
+\end{bmatrix}
+$$
 
+$$
+\mathbf x^{n+1}\gets \mathbf x^n+\Delta\mathbf x, \quad
+\boldsymbol \lambda^{n+1}\gets \boldsymbol \lambda^n+\Delta\boldsymbol \lambda
+$$
+
+여기서 이 식을 풀기 위한 중요한 두 가지 가정이 들어간다.
+첫 째, $\mathbf K\approx\mathbf M$이다. 위 식의 행렬 $\mathbf K=\nabla_{\mathbf x^n}\mathbf g$는 운동량 항의 위치 미분과 constraint의 Hessian을 더한 항으로 구성된다.
+그러나 이 공격적인 근사로 인해 운동량의 변화가 위치에 대한 상수(=질량)로, constraints는 위치에 대해 선형적인 무언가로 가정된다.
+둘 쨰, $\mathbf g(\mathbf x^n,\boldsymbol\lambda^n)=\mathbf 0$이다. 이는 최초의 Newton step이 $\mathbf x_0=\tilde{\mathbf x},\boldsymbol{\lambda}_0=\mathbf 0$으로 초기화하는 것으로 정당화될 수 있다.
+그러면 초기 $\mathbf g$는 $\mathbf 0$이고, 이 momentum 항이 변화가 적다면 아주 작은 값을 가질 것이라 영향이 적다고 저자들은 주장한다.
+
+이 비선형계를 Gauss-Seidel처럼 constraint $j$ 하나만 보고 Newton 한 스텝을 밟되, $\nabla C_j$를 고정하고 현재 오차를 대입하면
+
+$$
 \Delta\lambda_j=\frac{-C_j-\tilde\alpha_j\lambda_j}{\nabla C_j\mathbf W\nabla C_j^T+\tilde\alpha_j},\qquad
 \Delta\mathbf x=\mathbf W\nabla C_j^T\Delta\lambda_j,\qquad
 \lambda_j\gets\lambda_j+\Delta\lambda_j.
-
-
 $$
 
-$\tilde\alpha_j\to 0$이면 분자는 $-C_j$, 분모는 $\nabla C_j\mathbf W\nabla C_j^T$가 되어 정확히 PBD의 projection이 나온다. PBD는 XPBD의 무한 강성 특수해였다. 이게 이 논문의 우아한 지점이다.
+$\tilde\alpha_j\to 0$이면 분자는 $-C_j$, 분모는 $\nabla C_j\mathbf W\nabla C_j^T$가 되어 정확히 PBD의 projection이 나온다.
+PBD는 XPBD에서 potential의 계수가 무한히 큰 경우의 특수해였다.
+Potential의 계수가 무한히 크다는 것은, potential이 줄어들기 위해서는 $C\to0$가 될 수밖에 없는 것을 의미한다.
+그래서 constraint가 0이 되도록 projection할 수 있는 것이었고 이 정도를 조절하기 위한 정체불명의 파라미터 $k$를 두게 된 것이었다.
 
-작은 예로 감을 잡아보자. 질량 1인 입자 둘, rest length 1인 distance constraint 하나, 현재 거리 1.2라 하면 $C=0.2$, $\nabla C\mathbf W\nabla C^T=w_1+w_2=2$다.
+Stretch constraint의 예로 감을 잡아보자. 두 파티클의 질량이 1이고 초기 거리가 1, 현재 거리 1.2라 하면 $C=0.2$, $\nabla C\mathbf W\nabla C^T=w_1+w_2=2$다.
 
-- $\tilde\alpha=0$: $\Delta\lambda=-0.1$, 두 입자가 각각 0.1씩 다가가 한 방에 $C=0$. PBD와 같다.
-- $\tilde\alpha=0.1$, 첫 iteration($\lambda=0$): $\Delta\lambda=-0.2/2.1\approx-0.0952$, 남는 $C\approx0.0095$. Iteration을 더 돌려도 $\lambda$가 누적되므로 $C=-\tilde\alpha\lambda$를 만족하는 평형 신장 이상으로 뻣뻣해지지 않는다.
+- $\tilde\alpha=0$: $\Delta\lambda=-0.1$, 두 입자가 각각 0.1씩 다가가 $C=0$. PBD와 동일하다.
+- $\tilde\alpha=0.1$, 첫 iteration($\lambda=0$): $\Delta\lambda=-0.2/2.1\approx-0.0952$, 남는 $C\approx0.0095$. Iteration을 더 돌려도 $\lambda$가 누적되므로 $C=-\tilde\alpha\lambda$를 만족하는 상태로 constraint violation이 유지된다.
 
-이것이 iteration 독립성의 메커니즘이다. PBD는 매 iteration 오차의 일부를 지우기만 하니 무한히 돌리면 무한 강성으로 간다. XPBD는 constraint마다 총 multiplier $\lambda$를 기억하고 있어서 그 constraint가 "지금까지 얼마나 힘을 냈는지"를 알고, compliance가 정한 평형에서 멈춘다. 비용은 constraint당 스칼라 하나다.
+(영상 첨부 예정)
 
-접촉은 부등식 $C\ge0$이라 $\lambda\ge0$으로 clamp하면 된다. 마찰과 damping은 같은 틀에 항을 하나씩 더해 넣는다. 논문 Algorithm 1의 damping 포함 버전은 $\gamma=\tilde\alpha\tilde\beta/\Delta t$를 분자와 분모에 끼우는 형태다.
+이것이 iteration 독립성의 메커니즘이다. PBD는 매 iteration 오차의 일부를 지우기만 하니 무한히 돌리면 무한 강성으로 간다. (PBD에서 첨부한 영상처럼.)
+XPBD는 constraint마다 총 multiplier $\lambda$를 누적하면서 그 constraint가 "지금까지 얼마나 constraint를 해소했는지"를 알고, compliance가 정한 평형에서 멈춘다.
+PBD에서 constraint당 스칼라 하나씩만 더 추가하여 문제를 해결한 것이다.
 
-남는 한계도 명확하다. 저자들이 인정하듯 stiffness만 iteration에서 독립이지 수렴(오차의 분포)은 여전히 iteration 수에 종속이다. 큰 질량비나 고강성에서 Gauss-Seidel 수렴은 느리다. 이 수렴 문제를 Gauss-Seidel과 Jacobi의 spectral radius로 따져본 것은 별도의 글로 뺐다. 그리고 후속작 Small Steps(Macklin et al. 2019)는 "iteration을 늘리기보다 substep을 잘게 쪼개고 iteration은 1번"이 낫다고 뒤집는다. Predict 단계의 위치 오차가 $\Delta t^2$에 비례하니 substep을 반으로 쪼개면 오차가 1/4로 주는 반면 iteration은 잔차를 선형으로만 줄이기 때문이다.
+그러나 저자들은 stiffness만 iteration에서 독립이지 수렴성은 여전히 iteration 수에 종속이라고 말한다.
+Gauss-Seidel이나 Jacobi같은 iterative methods의 수렴성을 분석해보는 글은 별도로 뺐다.
+그리고 이후 연구인 Small Steps in Physical Simulation(Macklin et al. 2019)에서는 "iteration을 늘리기보다 substep을 잘게 쪼개고 iteration은 1번"이 낫다고 뒤집는다.
+Predict 단계의 위치 오차가 $\Delta t^2$에 비례하니 substep을 반으로 쪼개면 오차가 1/4로 주는 반면 iteration은 잔차를 선형으로만 줄이기 때문이다.
 
 ## Projective Dynamics
 
-PD는 다른 방향에서 출발한다. Implicit Euler를 최적화 문제로 쓰면
+PD는 XPBD보다 2년 앞선 논문인데, PBD를 다른 식으로 해석한다.
+Implicit Euler를 최적화 문제로 쓰면
 
 $$
 
-\min*{\mathbf q}\ \frac{1}{2h^2}\left\|\mathbf M^{1/2}(\mathbf q-\mathbf s)\right\|^2+\sum_i W_i(\mathbf q),\qquad
-\mathbf s=\mathbf x+h\mathbf v+h^2\mathbf M^{-1}\mathbf f*{\text{ext}}
+\min_{\mathbf q}\ \frac{1}{2h^2}\left\|\mathbf M^{1/2}(\mathbf q-\mathbf s)\right\|^2+\sum_i W_i(\mathbf q),\qquad
+\mathbf s=\mathbf x+h\mathbf v+h^2\mathbf M^{-1}\mathbf f_{\text{ext}}
 
 
 $$
 
-가 되고, 이걸 Newton으로 풀면 Hessian이 iteration마다 바뀌어 비싸다. 논문의 관찰은 탄성 퍼텐셜이 담은 두 가지, 즉 어떤 상태가 안정인가(constraint manifold)와 현재 상태가 거기서 얼마나 떨어졌는가(distance)를 분리할 수 있다는 것이다. 비선형성은 manifold가 이미 담고 있으니 거리 쪽은 quadratic으로 둬도 된다.
+가 된다.
+이걸 Newton으로 풀면 Hessian이 iteration마다 바뀌어 비싸다.
+논문의 관찰은 탄성 퍼텐셜이 담은 두 가지, 즉 어떤 상태가 안정인가(constraint manifold)와 현재 상태가 거기서 얼마나 떨어졌는가(distance)를 분리할 수 있다는 것이다.
+비선형성은 manifold가 이미 담고 있으니 거리 쪽은 단순하게 만들고자 quadratic으로 둬도 된다.
 
 $$
-
-W*i(\mathbf q)=\min*{\mathbf p_i\in\mathcal M_i}\frac{w_i}{2}\left\|\mathbf A_i\mathbf q-\mathbf B_i\mathbf p_i\right\|^2
-
-
+W_i(\mathbf q)=\min_{\mathbf p_i\in\mathcal M_i}\frac{w_i}{2}\left\|\mathbf A_i\mathbf q-\mathbf B_i\mathbf p_i\right\|^2
 $$
 
 그러면 두 step을 번갈아 푸는 것으로 충분하다.
 
 - **Local step**: constraint마다 manifold 위의 목표점 $\mathbf p_i$를 구한다. Constraint끼리 독립이라 완전히 병렬이다.
-- **Global step**: $\mathbf p_i$들을 고정하고 전체 위치를 선형계 한 번으로 정한다. $(\mathbf M/h^2+\sum_i w_i\mathbf A_i^T\mathbf A_i)\mathbf q=\mathbf M\mathbf s/h^2+\sum_i w_i\mathbf A_i^T\mathbf B_i\mathbf p_i$. 좌변 행렬은 constraint가 바뀌지 않는 한 상수이므로 sparse Cholesky를 한 번 분해해 두고 back-substitution만 반복한다.
+- **Global step**: $\mathbf p_i$들을 고정하고 전체 위치를 선형계 한 번으로 정한다. $(\mathbf M/h^2+\sum_i w_i\mathbf A_i^T\mathbf A_i)\mathbf q=\mathbf M\mathbf s/h^2+\sum_i w_i\mathbf A_i^T\mathbf B_i\mathbf p_i$. 좌변 행렬은 constraint가 바뀌지 않는 한 상수이므로 sparse Cholesky로 한 번 분해해 두고 back-substitution만 반복한다.
 
-목적함수는 제곱 norm의 합이라 항상 0 이상이고, 두 step 모두 값을 약하게 감소시킨다. Constraint set이 비볼록이어도 그렇다. 단조 감소에 하한이 있으니 목적함수 값은 수렴한다. 전역 최소로의 수렴은 아니다. 실사용은 5~10 iteration이다.
+Objective function은 제곱 norm의 합이라 항상 0 이상이고, 두 step 모두 값을 (약하게) 감소시킨다.
+Constraint set이 non-convex이어도 그렇다.
+단조 감소에 하한이 있으니 목적함수 값은 수렴한다.
+전역 최소로의 수렴은 아니다.
+실사용은 5~10 iteration이다.
 
-PBD와의 관계는 여기서 드러난다. $\mathbf A_i=\mathbf B_i=\mathbf M^{1/2}$로 두면 local step의 목적함수가 PBD의 식으로 읽히고, 이를 Gauss-Seidel로 풀면 PBD와 같다. 즉 PBD의 constraint projection은 energy에 대한 Gauss-Seidel type minimization이었다. PD는 대신 Jacobi style을 택한다. 순서 의존과 진동을 피하고 local step의 병렬성을 얻는 대신, 각 constraint를 정확히 만족하는 점이 아니라 여러 constraint의 절충점으로 간다.
+PBD와의 관계는 여기서 드러난다.
+$\mathbf A_i=\mathbf B_i=\mathbf M^{1/2}$로 두면 local step의 목적함수를 Gauss-Seidel로 풀면 PBD와 같다.
+즉 PBD의 constraint projection은 potential energy에 대한 Gauss-Seidel type minimization만 진행하고 global step을 생략하여 물리적 정확성을 잃은 것이다.
+PD는 global step에 더해 local step에서 Jacobi style을 택한다.
+순서 의존과 진동을 피하고 local step의 병렬성을 얻는 대신, 각 constraint를 정확히 만족하는 점이 아니라 여러 constraint의 절충점으로 수렴시키기 위함이다.
 
-$\mathbf A_i$를 절대 위치가 아니라 위치 차이를 만드는 differential coordinate matrix로 두는 이유도 두 가지다. 하나는 수렴이다. 절대 위치를 쓰면 변화가 iteration당 1-ring씩만 퍼져서 mesh가 조밀할수록 더 많이 돌아야 한다. 다른 하나는 보존이다. $\mathbf A_i\mathbf 1=\mathbf 0$이면 global step 양변에 $\mathbf 1^T$를 곱했을 때 constraint 항이 통째로 사라져 $\sum_i m_i\mathbf q_i=\sum_i m_i\mathbf s_i$만 남는다. Local step이 낸 $\mathbf p_i$가 무엇이든 총 선운동량은 관성 예측이 실어 온 값 그대로다. 각운동량은 그렇지 않다. 회전 불변성은 비선형 대칭이라 같은 논법이 통하지 않고, 결국 implicit Euler라는 적분기 자체가 각운동량 보존형이 아니다. 탄성 퍼텐셜의 rigid motion invariance는 탄성력이 만드는 토크를 지워 줄 뿐이다.
+$\mathbf A_i$를 절대 위치가 아니라 상대 위치로 만드는 differential coordinate matrix로 두는 이유도 두 가지다.
+첫 째는 수렴성이 더 좋기 때문이다.
+절대 위치를 쓰면 변화가 iteration당 1-ring씩만 퍼져서 mesh가 조밀할수록 더 많이 돌아야 한다.
+둘 째는 linear momentum의 보존이 유도되기 때문이다.
+$\mathbf A_i\mathbf 1=\mathbf 0$이면 global step 양변에 $\mathbf 1^T$를 곱했을 때 constraint 항이 통째로 사라져 $\sum_i m_i\mathbf q_i=\sum_i m_i\mathbf s_i$만 남는다.
+즉, local step이 낸 $\mathbf p_i$가 무엇이든 총 linear momentum은 관성 예측만 있을 때의 linear momentum과 같다.
+그러나 각운동량은 그렇지 않다.
+회전 불변성은 비선형 대칭이라 같은 논법이 통하지 않고, 결국 implicit Euler라는 적분기 자체가 각운동량 보존형이 아니라고 한다.
+탄성 퍼텐셜의 rigid motion invariance는 탄성력이 만드는 토크를 지워 줄 뿐이다.
 
-논문이 명시한 한계는 셋이다. Implicit Euler에서 오는 numerical damping, mesh resolution에 의존하는 iteration 수, 그리고 hard constraint를 다룰 수 없다는 것. 모든 constraint가 soft이므로 충돌도 hard하게 보장되지 않고 weight에 따라 관통한다. Constraint가 동적으로 바뀌는 경우(tearing 등)에는 factorization을 다시 만들지 않고 rank update/downdate로 갱신한다.
+논문이 명시한 한계는 셋이다.
+Implicit Euler에서 오는 numerical damping, mesh resolution에 의존하는 iteration 수, 그리고 hard constraint를 다룰 수 없다는 것.
+모든 constraint가 soft이므로 충돌도 hard하게 보장되지 않고 weight에 따라 관통한다.
+Constraint가 동적으로 바뀌는 경우(tearing 등)에는 factorization을 다시 만들지 않고 rank update/downdate로 갱신한다.
 
-## 세 방법이 서 있는 자리
+## PBD, XPBD, PD의 비교
 
-|                 | force-based (implicit)              | PBD                                    | XPBD                                       | PD                                        |
-| --------------- | ----------------------------------- | -------------------------------------- | ------------------------------------------ | ----------------------------------------- |
-| 강성의 의미     | 물리 단위                           | $k\in[0,1]$, iteration·$\Delta t$ 종속 | compliance $\alpha$ [m/N], $\Delta t$ 독립 | 탄성 에너지 weight                        |
-| 제어성          | 초기값 튜닝 고역                    | 가장 직관적                            | PBD와 비슷                                 | weight 튜닝 필요                          |
-| 안정성          | 적분기는 무조건 안정, 선형계는 별도 | 무조건 안정                            | 무조건 안정                                | 목적함수 단조 감소                        |
-| 계산 구조       | 전역 선형계(CG)                     | 순차 Gauss-Seidel                      | 동일 + $\lambda$ 하나                      | local 병렬, global 직렬 back-substitution |
-| hard constraint | filter로 가능                       | 자연스러움                             | $\alpha=0$                                 | 불가(soft만)                              |
-| 순서 의존       | 없음                                | 있음                                   | 있음                                       | 없음(Jacobi)                              |
+|                      | PBD                            | XPBD                        | PD                                                |
+| -------------------- | ------------------------------ | --------------------------- | ------------------------------------------------- |
+| integrator           | approximated implicit Euler    | approximated implicit Euler | implicit Euler                                    |
+| stiffness            | $k\in[0,1]$                    | compliance $\alpha$         | 탄성 에너지 weight                                |
+| 적분기와 물성 의존성 | iterations와 $\Delta t$에 의존 | $\Delta t$에 의존           | 정해진 물리적 weight에 따름                       |
+| 제어성               | 직관적                         | PBD와 비슷                  | weight 튜닝 필요                                  |
+| 안정성               | 무조건 안정                    | 무조건 안정                 | 목적함수 단조 감소                                |
+| 계산 구조            | Gauss-Seidel (or Jacobi)       | PBD와 동일 + $\lambda$ 하나 | local 병렬(Jacobi), global 직렬 back-substitution |
+| hard constraint      | $k=1$                          | $\alpha=0$                  | 불가(soft만 가능)                                 |
+| 순서 의존            | Gauss-Seidel이면 있음          | PBD와 동일                  | 없음(Jacobi)                                      |
 
-정리하면 이렇다. PBD는 constraint를 위치 projection으로 푼다는 한 가지 아이디어로 안정성과 제어성을 동시에 얻었지만, 그 대가로 강성이 solver 설정에 종속됐다. XPBD는 빠진 compliance 항을 되돌려 강성에 물리 단위를 돌려주되 계산 구조는 PBD 그대로 유지했다. PD는 반대편에서 내려와 implicit Euler를 local/global로 쪼개 병렬성과 상수 행렬을 얻었고, 그 과정에서 PBD가 사실 Gauss-Seidel type energy minimization이었음을 보였다.
+정리하면 이렇다.
+PBD는 constraint를 위치 projection으로 푼다는 한 가지 아이디어로 안정성과 제어성을 동시에 얻었지만, 그 대가로 강성이 solver 설정에 의존적인 값이 되면서 물성을 조절하기가 역으로 어려워졌다.
+XPBD는 compliance로 강성에 물리 단위를 돌려주되 계산 구조는 PBD 그대로 유지했다.
+PD는 반대편에서 내려와 implicit Euler를 local/global로 쪼개 병렬성과 상수 행렬을 얻었고, 그 과정에서 PBD가 global step을 생략해 물리적 성질을 잃었음을 보였다.
 
-세 방법 모두 "constraint projection"이라는 같은 동작을 하고 있고, 갈리는 것은 그 동작을 어떤 목적함수의 어떤 solver로 해석하느냐다. 다음 글에서는 이 해석을 밀어붙여서 PBD/XPBD의 한 iteration이 사실 어떤 선형계의 Gauss-Seidel sweep인지, 그리고 그것을 GPU용 Jacobi로 바꾸면 언제 수렴하고 언제 발산하는지 spectral radius로 따져본다.
-
-> 확인 필요: 참고 문헌에 넣어 둔 Primal XPBD(Chen et al. 2023)는 아직 정독 전이라 본문에서 다루지 않았다. Hyperelasticity로의 확장을 다룰 때 별도 절을 붙일 것.
-
-$$
-$$
+세 방법 모두 "constraint projection"이라는 같은 동작을 하고 있고, 갈리는 것은 그 동작을 어떤 목적함수의 어떤 solver로 해석하느냐다.
