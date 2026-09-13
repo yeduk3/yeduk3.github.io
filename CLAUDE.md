@@ -76,6 +76,7 @@ git config alias.pushp '!sh tools/push.sh'
 |---|---|---|
 | `build:nav active=<키>` | 4개 페이지 | 공통 nav. 활성 항목만 다름 |
 | `build:footer` | 4개 페이지 | 공통 footer. 4곳이 완전히 동일 |
+| `build:latest` | `/` | 요약 스트립 "Latest note" — 최신 글 1개 링크 |
 | `build:articles limit=3` | `/` | `articles-md/*.md` 최신 3 |
 | `build:articles` | `/articles/` | 전체 |
 | `build:projects limit=3` | `/` | `projects-md/*.md` 상위 3 |

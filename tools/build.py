@@ -156,9 +156,9 @@ def nav(active):
 def footer():
     return """<footer class="band colophon">
   <div class="sx-container">
-    <p>글은 마크다운으로 쓰고 git으로 버전 관리합니다. 원본은 저장소에 frontmatter 그대로 남습니다.
+    <p>Hosted by Github Pages.
       <a href="https://github.com/yeduk3" target="_blank" rel="noreferrer">source</a><br>
-      Symplex design system · Inter + JetBrains Mono · 정적 사이트.</p>
+      If there are any problems, please contact to me.</p>
   </div>
 </footer>"""
 
@@ -221,6 +221,15 @@ def render_notes(items, limit):
         return empty_state("아직 공개한 글이 없습니다.",
                            "쓰는 중입니다. articles-md/ 에 frontmatter를 갖춘 .md를 넣으면 여기에 나타납니다.")
     return "\n".join(note_row(m) for m in items)
+
+
+def render_latest(items):
+    """요약 스트립의 "Latest note" 한 줄. 최신 글 하나에 링크를 건다. 없으면 빈 상태 문구."""
+    if not items:
+        return "            <dd>working...</dd>"
+    m, e = items[0], html.escape
+    mark = DRAFT_BADGE if m.get("_draft") else ""
+    return f'            <dd>{mark}<a href="/articles/{e(m["slug"])}/">{e(m["title"])}</a></dd>'
 
 
 def render_work(items, limit):
@@ -516,6 +525,8 @@ def build(check=False, drafts=False):
                 body = footer()
             elif name == "articles":
                 body = render_notes(notes, limit)
+            elif name == "latest":
+                body = render_latest(notes)
             elif name == "projects":
                 body = render_work(works, limit)
             else:

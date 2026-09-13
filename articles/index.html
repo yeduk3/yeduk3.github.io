@@ -1,81 +1,66 @@
 <!doctype html>
 <html lang="ko">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<!-- 커스텀 도메인 전환 시 canonical / og:url / JSON-LD url만 교체하고 저장소 루트에 CNAME 추가. -->
-<title>글 — yeduk3</title>
-<meta name="description" content="GPU 시뮬레이션, 충돌 검출, 그래픽스 수학에 대한 기록." />
-<meta name="author" content="yeduk3" />
-<link rel="canonical" href="https://yeduk3.github.io/articles/" />
-<meta property="og:type" content="website" />
-<meta property="og:site_name" content="yeduk3" />
-<meta property="og:locale" content="ko_KR" />
-<meta property="og:title" content="글 — yeduk3" />
-<meta property="og:description" content="GPU 시뮬레이션, 충돌 검출, 그래픽스 수학에 대한 기록." />
-<meta property="og:url" content="https://yeduk3.github.io/articles/" />
-<!-- TODO: /static/og.png 생성 필요 (1200×630). 파일이 없어 지금 공유하면 카드가 깨진다. -->
-<meta property="og:image" content="https://yeduk3.github.io/static/og.png" />
-<meta property="og:image:width" content="1200" />
-<meta property="og:image:height" content="630" />
-<meta property="og:image:alt" content="yeduk3 — GPU 시뮬레이션과 충돌 검출" />
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="글 — yeduk3" />
-<meta name="twitter:description" content="GPU 시뮬레이션, 충돌 검출, 그래픽스 수학에 대한 기록." />
-<meta name="twitter:image" content="https://yeduk3.github.io/static/og.png" />
+        <!-- 커스텀 도메인 전환 시 canonical / og:url / JSON-LD url만 교체하고 저장소 루트에 CNAME 추가. -->
+        <title>글 — yeduk3</title>
+        <meta name="description" content="GPU 시뮬레이션, 충돌 검출, 그래픽스 수학에 대한 기록." />
+        <meta name="author" content="yeduk3" />
+        <link rel="canonical" href="https://yeduk3.github.io/articles/" />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="yeduk3" />
+        <meta property="og:locale" content="ko_KR" />
+        <meta property="og:title" content="글 — yeduk3" />
+        <meta property="og:description" content="GPU 시뮬레이션, 충돌 검출, 그래픽스 수학에 대한 기록." />
+        <meta property="og:url" content="https://yeduk3.github.io/articles/" />
+        <!-- TODO: /static/og.png 생성 필요 (1200×630). 파일이 없어 지금 공유하면 카드가 깨진다. -->
+        <meta property="og:image" content="https://yeduk3.github.io/static/og.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content="yeduk3 — GPU 시뮬레이션과 충돌 검출" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="글 — yeduk3" />
+        <meta name="twitter:description" content="GPU 시뮬레이션, 충돌 검출, 그래픽스 수학에 대한 기록." />
+        <meta name="twitter:image" content="https://yeduk3.github.io/static/og.png" />
 
-<!-- datePublished/dateModified 미기재: 실제 발행일이 정해지기 전까지 가짜 날짜를 구조화 데이터에 넣지 않는다. -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "Person",
-      "@id": "https://yeduk3.github.io/#person",
-      "name": "yeduk3",
-      "url": "https://yeduk3.github.io/",
-      "email": "mailto:yeduk33@gmail.com",
-      "knowsAbout": [
-        "컴퓨터 그래픽스",
-        "물리 기반 시뮬레이션",
-        "충돌 검출",
-        "BVH",
-        "LBVH",
-        "GPU 프로그래밍",
-        "Metal",
-        "C++17",
-        "Swift"
-      ],
-      "sameAs": [
-        "https://github.com/yeduk3",
-        "https://solved.ac/profile/yeduk3",
-        "https://www.acmicpc.net/user/yeduk3"
-      ]
-    },
-    {
-      "@type": "WebSite",
-      "@id": "https://yeduk3.github.io/#site",
-      "url": "https://yeduk3.github.io/",
-      "name": "yeduk3",
-      "inLanguage": "ko",
-      "author": {
-        "@id": "https://yeduk3.github.io/#person"
-      }
-    }
-  ]
-}
-</script>
+        <!-- datePublished/dateModified 미기재: 실제 발행일이 정해지기 전까지 가짜 날짜를 구조화 데이터에 넣지 않는다. -->
+        <script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@graph": [
+                    {
+                        "@type": "Person",
+                        "@id": "https://yeduk3.github.io/#person",
+                        "name": "yeduk3",
+                        "url": "https://yeduk3.github.io/",
+                        "email": "mailto:yeduk33@gmail.com",
+                        "knowsAbout": ["컴퓨터 그래픽스", "물리 기반 시뮬레이션", "충돌 검출", "BVH", "LBVH", "GPU 프로그래밍", "Metal", "C++17", "Swift"],
+                        "sameAs": ["https://github.com/yeduk3", "https://solved.ac/profile/yeduk3", "https://www.acmicpc.net/user/yeduk3"]
+                    },
+                    {
+                        "@type": "WebSite",
+                        "@id": "https://yeduk3.github.io/#site",
+                        "url": "https://yeduk3.github.io/",
+                        "name": "yeduk3",
+                        "inLanguage": "ko",
+                        "author": {
+                            "@id": "https://yeduk3.github.io/#person"
+                        }
+                    }
+                ]
+            }
+        </script>
 
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="/static/css/symplex.css" />
-<link rel="stylesheet" href="/style.css" />
-</head>
-<body>
-
-<!-- build:nav active=articles -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="/static/css/symplex.css" />
+        <link rel="stylesheet" href="/style.css" />
+    </head>
+    <body>
+        <!-- build:nav active=articles -->
 <nav class="sx-nav">
   <a class="sx-nav__brand" href="/">yeduk3</a>
   <div class="sx-nav__links">
@@ -89,36 +74,36 @@
 </nav>
 <!-- /build:nav -->
 
-<header class="sec">
-  <div class="sx-container">
-    <p class="sx-eyebrow hero__eyebrow">Writing</p>
-    <h1 class="sx-h1">글</h1>
-    <p class="sx-lead">틀린 기록도 남깁니다. 글은 마크다운으로 쓰고 저장소에 버전으로 남습니다.</p>
-  </div>
-</header>
+        <header class="sec">
+            <div class="sx-container">
+                <p class="sx-eyebrow hero__eyebrow">Writing</p>
+                <h1 class="sx-h1">글</h1>
+                <p class="sx-lead">개인 공부 관련 생각 기록.</p>
+            </div>
+        </header>
 
-<section class="sec--tight">
-  <div class="sx-container">
-        <div class="notes">
-<!-- build:articles -->
+        <section class="sec--tight">
+            <div class="sx-container">
+                <div class="notes">
+                    <!-- build:articles -->
       <a class="note" href="/articles/0001-position-based-dynamics/">
         <span class="note__date">2026.09.13</span>
         <span class="note__title">힘이 아닌 위치에 기반한 역학 - PBD, PD, XPBD</span>
         <span class="note__meta"><span class="sx-badge">Simulation</span><span class="sx-micro">14 min</span></span>
       </a>
 <!-- /build:articles -->
-    </div>  </div>
-</section>
+                </div>
+            </div>
+        </section>
 
-<!-- build:footer -->
+        <!-- build:footer -->
 <footer class="band colophon">
   <div class="sx-container">
-    <p>글은 마크다운으로 쓰고 git으로 버전 관리합니다. 원본은 저장소에 frontmatter 그대로 남습니다.
+    <p>Hosted by Github Pages.
       <a href="https://github.com/yeduk3" target="_blank" rel="noreferrer">source</a><br>
-      Symplex design system · Inter + JetBrains Mono · 정적 사이트.</p>
+      If there are any problems, please contact to me.</p>
   </div>
 </footer>
 <!-- /build:footer -->
-
-</body>
+    </body>
 </html>
