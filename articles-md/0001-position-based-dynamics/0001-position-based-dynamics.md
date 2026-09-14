@@ -80,14 +80,19 @@ PBD는 $\Delta \mathbf p$에 $k\in[0,1]$을 곱해 제약조건의 stiffness를 
 논문은 $k' = 1-(1-k)^{1/n}$으로 iteration 수를 보정하지만, 이건 iteration 수에 대해서만 재질 변화가 해소되고 $\Delta t$에 대해서는 아니다.
 재질이 solver의 설정값에 의존적이라는 뜻이다.
 
-실제로 직접 개발한 시뮬레이션 엔진 ysim에서 PBD를 구현했는데, iteration 수가 8인 옷감 씬에서 substep을 5에서 60으로 올리자 프레임당 오차가 $(1-k)^{40}$에서 $(1-k)^{480}$으로 확 줄어들면서 옷감이 휘어지는 철판처럼 변했다.
-이러한 문제는 다음 절의 XPBD에서 해결된다.
+또한 위의 보정은 single constraint라는 단순한 상황만을 두고 유도한 과정이기 때문에 여러 개의 constraints가 겹친 옷감과 같은 상황에서는 여전히 dependency가 존재하게 된다.
+Gauss-Seidel iteration으로 인해 이전 solve가 뒤의 solve에 영향을 주기 때문이다.
+아래는 직접 개발중인 시뮬레이션 엔진에서 PBD를 테스트해본 예시이다.
+$\Delta t=1/60$, $k=0.9$일 때 iteration 수에 따라 아래의 결과를 얻는다.
 
 <figure class="compare">
-  <video src="0001-01-substeps5.mp4" autoplay muted loop playsinline></video>
-  <video src="0001-02-substeps60.mp4" autoplay muted loop playsinline></video>
-  <figcaption>같은 씬, iteration 8. 왼쪽 substep 5, 오른쪽 substep 60.</figcaption>
+  <video src="0001-01-iteration-1.mp4" autoplay muted loop playsinline></video>
+  <video src="0001-02-iteration-5.mp4" autoplay muted loop playsinline></video>
+  <video src="0001-03-iteration-20.mp4" autoplay muted loop playsinline></video>
+  <figcaption>같은 씬. 왼쪽부터 iteration 1, 5, 20.</figcaption>
 </figure>
+
+즉, PBD에서는 시뮬레이션되는 재질을 결정하려면 solver의 설정과 함께 조절해야 한다.
 
 또 하나는 순서 의존이다.
 Gauss-Seidel은 constraint를 하나씩 순차로 풀기 때문에 이미 바뀐 위치가 즉시 반영되어 변화가 한 sweep 안에서 멀리 전파된다.
@@ -161,7 +166,11 @@ Stretch constraint의 예로 감을 잡아보자. 두 파티클의 질량이 1�
 - $\tilde\alpha=0$: $\Delta\lambda=-0.1$, 두 입자가 각각 0.1씩 다가가 $C=0$. PBD와 동일하다.
 - $\tilde\alpha=0.1$, 첫 iteration($\lambda=0$): $\Delta\lambda=-0.2/2.1\approx-0.0952$, 남는 $C\approx0.0095$. Iteration을 더 돌려도 $\lambda$가 누적되므로 $C=-\tilde\alpha\lambda$를 만족하는 상태로 constraint violation이 유지된다.
 
-(영상 첨부 예정)
+<figure class="compare">
+  <video src="0001-04-pbd-k=1.mp4" autoplay muted loop playsinline></video>
+  <video src="0001-05-xpbd-a=0.mp4" autoplay muted loop playsinline></video>
+  <figcaption>같은 씬. 왼쪽 PBD k=1, 오른쪽 XPBD α=0. 같은 결과</figcaption>
+</figure>
 
 이것이 iteration 독립성의 메커니즘이다. PBD는 매 iteration 오차의 일부를 지우기만 하니 무한히 돌리면 무한 강성으로 간다. (PBD에서 첨부한 영상처럼.)
 XPBD는 constraint마다 총 multiplier $\lambda$를 누적하면서 그 constraint가 "지금까지 얼마나 constraint를 해소했는지"를 알고, compliance가 정한 평형에서 멈춘다.

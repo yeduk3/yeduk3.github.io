@@ -145,8 +145,9 @@
 /* figure는 문단 간격(24)보다 조금 더 띄운다. 위아래 대칭 — .prose > * + *의 margin-top을 이기므로 양쪽 명시. */
 .prose figure { margin: var(--space-6) 0; }
 /* 나란히 비교 — 영상/이미지 둘을 한 figure에. 좁으면 세로로 쌓인다. */
-.prose .compare { display:grid; grid-template-columns:1fr 1fr; gap: var(--space-3); }
-.prose .compare figcaption { grid-column: 1 / -1; }
+.prose .compare { display:flex; flex-wrap:wrap; gap: var(--space-3); }
+.prose .compare > video, .prose .compare > img { flex: 1 1 220px; min-width:0; }
+.prose .compare figcaption { flex-basis:100%; }
 .prose figcaption { margin-top: var(--space-2); color: var(--text-muted); font-size: var(--fs-caption); text-align:center; }
 .prose .footnote { font-size: var(--fs-body-sm); color: var(--text-secondary);
   border-top:1px solid var(--hairline); padding-top: var(--space-4); }
@@ -169,7 +170,6 @@
 }
 @media (max-width: 560px) {
   .glance { grid-template-columns:1fr; }
-  .prose .compare { grid-template-columns:1fr; }
   .glance > div { padding-left:0; border-left:0; }
   .cv-row { grid-template-columns:1fr; gap: var(--space-1); }
 }
