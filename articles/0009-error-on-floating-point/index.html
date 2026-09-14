@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<!-- 이 파일은 tools/build.py가 생성한다. 직접 고치지 말고 원본 .md를 고친 뒤 다시 빌드할 것. -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>컴퓨터에서 실수형 표현에 따른 error — yeduk3</title>
+<meta name="description" content="Justin Solomon 교수님의 Numerical Algorithms 교재를 보며 error를 공부해본다. Floating Point 컴퓨터에서 실수는 IEEE 754에서의 규칙을 따라 구현하게 된다. double형은 sign 1 bit + mantissa 54 b…" />
+<meta name="author" content="yeduk3" />
+<link rel="canonical" href="https://yeduk3.github.io/articles/0009-error-on-floating-point/" />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="yeduk3" />
+<meta property="og:locale" content="ko_KR" />
+<meta property="og:title" content="컴퓨터에서 실수형 표현에 따른 error" />
+<meta property="og:description" content="Justin Solomon 교수님의 Numerical Algorithms 교재를 보며 error를 공부해본다. Floating Point 컴퓨터에서 실수는 IEEE 754에서의 규칙을 따라 구현하게 된다. double형은 sign 1 bit + mantissa 54 b…" />
+<meta property="og:url" content="https://yeduk3.github.io/articles/0009-error-on-floating-point/" />
+<meta property="og:image" content="https://yeduk3.github.io/static/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="컴퓨터에서 실수형 표현에 따른 error" />
+<meta name="twitter:description" content="Justin Solomon 교수님의 Numerical Algorithms 교재를 보며 error를 공부해본다. Floating Point 컴퓨터에서 실수는 IEEE 754에서의 규칙을 따라 구현하게 된다. double형은 sign 1 bit + mantissa 54 b…" />
+<meta name="twitter:image" content="https://yeduk3.github.io/static/og.png" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": "https://yeduk3.github.io/#person",
+      "name": "yeduk3",
+      "url": "https://yeduk3.github.io/",
+      "email": "mailto:yeduk33@gmail.com",
+      "knowsAbout": [
+        "컴퓨터 그래픽스",
+        "물리 기반 시뮬레이션",
+        "충돌 검출",
+        "BVH",
+        "LBVH",
+        "GPU 프로그래밍",
+        "Metal",
+        "C++17",
+        "Swift"
+      ],
+      "sameAs": [
+        "https://github.com/yeduk3",
+        "https://solved.ac/profile/yeduk3",
+        "https://www.acmicpc.net/user/yeduk3"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://yeduk3.github.io/#site",
+      "url": "https://yeduk3.github.io/",
+      "name": "yeduk3",
+      "inLanguage": "ko",
+      "author": {
+        "@id": "https://yeduk3.github.io/#person"
+      }
+    },
+    {
+      "@type": "BlogPosting",
+      "headline": "컴퓨터에서 실수형 표현에 따른 error",
+      "author": {
+        "@id": "https://yeduk3.github.io/#person"
+      },
+      "mainEntityOfPage": "https://yeduk3.github.io/articles/0009-error-on-floating-point/",
+      "datePublished": "2026-09-14"
+    }
+  ]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/static/css/symplex.css" />
+<link rel="stylesheet" href="/style.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body)"></script>
+</head>
+<body>
+
+<nav class="sx-nav">
+  <a class="sx-nav__brand" href="/">yeduk3</a>
+  <div class="sx-nav__links">
+    <a class="sx-nav__link" href="/projects/">작업</a>
+    <a class="sx-nav__link" href="/articles/">글</a>
+    <a class="sx-nav__link" href="/about/">소개</a>
+  </div>
+  <div class="sx-nav__spacer"></div>
+  <!-- 시스템 규칙: 뷰포트당 primary는 하나. 각 페이지의 primary는 본문에 있으므로 nav는 secondary. -->
+  <a class="sx-btn sx-btn--secondary sx-btn--sm" href="mailto:yeduk33@gmail.com">메일 보내기</a>
+</nav>
+
+<header class="sec--tight post-head">
+  <div class="sx-container-text">
+    <a class="sx-micro post-back" href="/articles/">← 글 전체</a>
+    <p class="sx-eyebrow">Simulation</p>
+    <h1 class="sx-h1">컴퓨터에서 실수형 표현에 따른 error</h1>
+    <p class="sx-caption post-meta">2026.09.14 · 2 min</p>
+  </div>
+</header>
+
+<article class="sec--tight">
+  <div class="sx-container-text">
+    <div class="prose">
+<p>Justin Solomon 교수님의 Numerical Algorithms 교재를 보며 error를 공부해본다.</p>
+<h2 id="floating-point">Floating Point</h2>
+<p>컴퓨터에서 실수는 IEEE 754에서의 규칙을 따라 구현하게 된다.
+<code>double</code>형은 sign 1 bit + mantissa 54 bit + exponent 11 bit를 사용한다.
+<code>float</code>형은 mantissa만 22 bit로 줄여 사용한다.
+이 때, 이 floating point로 저장된 값들의 연산을 수행할 때 이 비트에 담기지 못하는 부분은 error가 되어 연산 과정에서 지속적으로 누적된다.</p>
+<p>이러한 실수형 사이의 연산에서 error의 scale에 영향을 주는 부분은 exponent의 크기이다.
+작은 floating point를 예로 들어보자.
+어떤 floating point가 mantissa 2 bit + exponent 2 bit로 구성된다고 하면 아래의 형태를 생각해볼 수 있다.</p>
+<p>\[
+1.\square\square_{(2)}\times 2^{\square_{\text{sign}}\square}
+\]</p>
+<p>여기서 나올 수 있는 가능한 수의 범위를 간단히 생각해보면,</p>
+<table>
+<thead>
+<tr>
+<th>mantissa \ exponent</th>
+<th>\(\times {2^{-1}}_{(10)}\)</th>
+<th>\(\times {2^{0}}_{(10)}\)</th>
+<th>\(\times {2^{1}}_{(10)}\)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>\(1.00_{(10)}\)</td>
+<td>0.50</td>
+<td>1.00</td>
+<td>2.00</td>
+</tr>
+<tr>
+<td>\(1.25_{(10)}\)</td>
+<td>0.625</td>
+<td>1.25</td>
+<td>2.50</td>
+</tr>
+<tr>
+<td>\(1.50_{(10)}\)</td>
+<td>0.75</td>
+<td>1.50</td>
+<td>3.00</td>
+</tr>
+<tr>
+<td>\(1.75_{(10)}\)</td>
+<td>0.875</td>
+<td>1.75</td>
+<td>3.5</td>
+</tr>
+</tbody>
+</table>
+<p>Exponent가 커질수록 mantissa에 따른 값 사이 거리가 커진다.
+즉, 큰 exponent의 값들을 다루면 연산의 정확도가 떨어질 수 있다는 것이다.</p>
+<!-- 어떤 실수 \(x, y\)의 에러를 \(\epsilon_x,\epsilon_y\)라고 하자.
+이 실수를 에러와 함께 \((x, \epsilon_x)\)라고 표현할 때, 각 연산에 대해 아래처럼 정의된다.
+
+- \((x,\epsilon_x)+(y,\epsilon_y)=(x+y,\epsilon_x+\epsilon_y+\epsilon_{x+y})\)
+- \((x,\epsilon_x)-(y,\epsilon_y)=(x-y,\epsilon_x+\epsilon_y+\epsilon_{x-y})\)
+- \((x,\epsilon_x)\times(y,\epsilon_y)=(x\times y,|y|\epsilon_x+|x|\epsilon_y+\epsilon_x\epsilon_y+\epsilon_{x\times y})\) -->
+
+<h3 id="translate-to-origin">Translate to Origin</h3>
+<p>하나의 사례를 보자.
+Point cloud를 입력으로 받았는데 이 입력 위치가 원점에서 멀리 떨어져있다고 하자.
+이 값들은 exponent가 클 것이다.
+이 상태에서 연산을 하는 것보다 이 point cloud들을 원점으로 이동시키는 것이 exponent를 줄여 error를 줄일 수 있을 것이다.</p>
+<h3 id="scale-the-data">Scale the data</h3>
+<p>또 하나의 사례를 보자.
+간격이 큰 sparse point cloud를 입력으로 받았다고 하자.
+이 점들은 원점 중심으로 위치해있다고 해도 point 사이의 벡터를 구하는 등의 연산을 취하면 이 벡터 역시 exponent가 큰 값으로 나오므로 error가 큰 벡터가 될 것이다.</p>
+<p>따라서 point cloud를 받으면 원점 중심에 적절한 스케일 값을 가지고 있어야 error를 최대한 적게 연산을 할 수 있을 것이다.</p>
+    </div>
+  </div>
+</article>
+
+<footer class="band colophon">
+  <div class="sx-container">
+    <p>Hosted by Github Pages.
+      <a href="https://github.com/yeduk3" target="_blank" rel="noreferrer">source</a><br>
+      If there are any problems, please contact to me.</p>
+  </div>
+</footer>
+</body>
+</html>
